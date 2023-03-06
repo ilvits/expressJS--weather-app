@@ -1,0 +1,21 @@
+{
+    "ru": {
+        "settings__header": "Настройки",
+        "settings__degrees": "Градусы",
+        "settings__wind": "Скорость ветра",
+        "settings__wind__state_1": "км/ч",
+        "settings__wind__state_2": "м/с",
+        "settings__pressure": "Давление",
+        "settings__theme": "Тема оформления",
+        "settings__theme__state_1": "Светлая",
+        "settings__theme__state_2": "Темная",
+        "settings__theme__state_3": "Системная",
+        "settings__details": "Показывать подробный прогноз",
+        "settings__about": "О приложении",
+        "settings__clear_locations": "Очистить список локаций",
+        "settings__reset": "Сбросить настройки"
+    },
+    "en": {
+        "settings_header": "Settings"
+    }
+}

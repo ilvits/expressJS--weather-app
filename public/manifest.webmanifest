@@ -1,0 +1,64 @@
+{
+    "id": "/",
+    "name": "FairyBrains Weather",
+    "short_name": "Weather",
+    "start_url": "/",
+    "description": "Weather App",
+    "lang": "en",
+    "dir": "auto",
+    "background_color": "#131E32",
+    "theme_color": "#131E32",
+    "theme_colors": [
+        {
+            "color": "#F3F4F7"
+        },
+        {
+            "color": "#131E32",
+            "media": "(prefers-color-scheme: dark)"
+        }
+    ],
+    "orientation": "portrait",
+    "display_override": [
+        "fullscreen",
+        "minimal-ui"
+    ],
+    "display": "standalone",
+    "icons": [
+        {
+            "src": "img/assets/pwa/manifest-icon-192.maskable.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "img/assets/pwa/manifest-icon-192.maskable.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "img/assets/pwa/manifest-icon-512.maskable.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "img/assets/pwa/manifest-icon-512.maskable.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "img/screenshots/screenshots/1280x800-screenshot.png",
+            "sizes": "1280x800",
+            "type": "image/png"
+        },
+        {
+            "src": "img/screenshots/screenshots/750x1334-screenshot.png",
+            "sizes": "750x1334",
+            "type": "image/png"
+        }
+    ]
+}
