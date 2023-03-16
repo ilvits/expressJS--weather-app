@@ -1,4 +1,4 @@
-let dom_utils = {};
+let domUtils = {};
 (function (context) {
     /**
      * @param {Object} o - object literal with element properties
@@ -45,7 +45,7 @@ let dom_utils = {};
         }
         return el;
     };
-})(dom_utils);
+})(domUtils);
 
 /* Passive Feature detection */
 let passiveIfSupported = false;

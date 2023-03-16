@@ -51,12 +51,12 @@
     ],
     "screenshots": [
         {
-            "src": "img/screenshots/screenshots/1280x800-screenshot.png",
+            "src": "img/assets/pwa/screenshots/1280x800-screenshot.png",
             "sizes": "1280x800",
             "type": "image/png"
         },
         {
-            "src": "img/screenshots/screenshots/750x1334-screenshot.png",
+            "src": "img/assets/pwa/screenshots/750x1334-screenshot.png",
             "sizes": "750x1334",
             "type": "image/png"
         }
