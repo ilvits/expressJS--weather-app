@@ -1,10 +1,5 @@
+var splide2;
 document.body.style.webkitTouchCallout = "none";
-
-let delLocation_flag = false;
-let editLocation_flag = false;
-let settings_modal__flag = false;
-let locations_modal__flag = false;
-
 const locationCardsContainer = document.querySelector(
 	"#location-cards--container"
 );
@@ -17,42 +12,20 @@ const svgClearText =
 	'<svg class="stroke-gray-300 dark:stroke-cosmic-500 stroke-1.5" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <circle cx="10" cy="10" r="9.25" /><path d="M7 13L10 10M10 10L13 7M10 10L7 7M10 10L13 13" stroke-linecap="round" stroke-linejoin="round" /></svg>';
 
 localStorage.setItem("lastPageUpdate", new Date());
-if (
-	typeof locations === "undefined" ||
-	locations === null ||
-	Object.entries(locations).length == 0
-) {
-	// locations_header__edit_btn.classList.add("invisible");
-	// mainPage_placeholder.classList.remove("hidden", "opacity-0");
-} else {
-	locations.forEach((el) => {
-		if (el !== null && !localStorage.getItem("weatherData-" + el.id)) {
-			getWeather(el.id, el.latitude, el.longitude);
-		}
-	});
-	window.onfocus = () => updateInfo();
 
-	for (const loc of locations) {
-		if (loc !== null) {
-			weatherData = JSON.parse(
-				localStorage.getItem(`weatherData-${loc.id}`)
-			);
-		}
-	}
-	setupSlip(locationCardsContainer);
-}
+checkDarkMode = () => document.documentElement.classList.contains("dark");
 
-addLocationCard = (data) => {
+addSlide = (data) => {
 	window.dispatchEvent(
-		new CustomEvent("addcard", {
+		new CustomEvent("addslide", {
 			detail: data,
 		})
 	);
 };
 
-addSlide = (data) => {
+addCard = (data) => {
 	window.dispatchEvent(
-		new CustomEvent("addslide", {
+		new CustomEvent("addcard", {
 			detail: data,
 		})
 	);
@@ -67,24 +40,44 @@ addPopup = (data) => {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-	for (const location of locations) {
-		if (location !== null) {
-			weatherData = JSON.parse(
-				localStorage.getItem(`weatherData-${location.id}`)
-			);
+	if (
+		typeof locations === "undefined" ||
+		locations === null ||
+		Object.entries(locations).length == 0
+	) {
+		// locations_header__edit_btn.classList.add("invisible");
+		// mainPage_placeholder.classList.remove("hidden", "opacity-0");
+	} else {
+		locations.forEach((location) => {
+			if (location !== null) {
+				weatherData = JSON.parse(
+					localStorage.getItem(`weatherData-${location.id}`)
+				);
 
-			addSlide({
-				id: Number(location.id),
-				location,
-				weatherData,
-			});
+				addSlide({
+					id: Number(location.id),
+					location,
+					weatherData,
+				});
+			}
+		});
+		locations.forEach((el, i) => {
+			if (el !== null && !localStorage.getItem("weatherData-" + el.id)) {
+				setTimeout(() => {
+					getWeather(el, el.latitude, el.longitude);
+				}, 1000 * i);
+			}
+		});
+		window.onfocus = () => updateInfo();
 
-			// addLocationCard({
-			// 	id: Number(location.id),
-			// 	location,
-			// 	weatherData,
-			// });
+		for (const loc of locations) {
+			if (loc !== null) {
+				weatherData = JSON.parse(
+					localStorage.getItem(`weatherData-${loc.id}`)
+				);
+			}
 		}
+		setupSlip(locationCardsContainer);
 	}
 });
 
@@ -121,78 +114,77 @@ function updateLocation(data) {
 			detail: { id, location: locations[index] },
 		})
 	);
-	// updateCard({ detail: { id: id, location: locations[index] } });
+	window.dispatchEvent(
+		new CustomEvent("updatecard", {
+			detail: { id, location: locations[index] },
+		})
+	);
 	setTimeout(() => {
 		splide.refresh();
 	}, 100);
 	localStorage.setItem("locations", JSON.stringify(locations));
 }
 
-function init() {
-	window.appData = {
+document.addEventListener("alpine:init", () => {
+	Alpine.data("main", () => ({
 		slides: [],
+		atTop: true,
+		isLoading: false,
 		editedCard: "",
+		newLocation: null,
 		inputValue: "",
+		inputFocus: false,
 		searchClearText: false,
 		clearText: false,
 		settingsChanged: false,
-		isLoading: false,
-		settings: settings,
 		menuLocations: false,
 		menuSettings: false,
 		mainBackdrop: false,
 		menuSettingsBackdrop: false,
 		menuLocationsBackdrop: false,
 		modalAbout: false,
-		modalSendReview: false,
 		modalResetSettings: false,
 		modalClearLocations: false,
+		settings: settings,
+		details: settings.details,
 		overflow: splide.options.pagination,
-		locationsLength: checkLocations(),
+		locationsLength: locations.length,
+		userLocation: false,
+		showUserLocationPlaceholder: true,
 		displaymode: displayMode(),
 		lang: languageStrings[language],
-		update(payloadOrEvent) {
-			if (payloadOrEvent instanceof CustomEvent) {
-				for (const key in payloadOrEvent.detail) {
-					this[key] = payloadOrEvent.detail[key];
-				}
-			} else {
-				window.dispatchEvent(
-					new CustomEvent("update", {
-						detail: payloadOrEvent,
-					})
-				);
-			}
+		checkUserLocation() {
+			const userLocation =
+				locations.findIndex(
+					(location) => location.isUserLocation === "true"
+				) !== -1;
+			console.log(userLocation);
+			this.userLocation = userLocation;
 		},
-	};
-	return window.appData;
-}
 
-document.addEventListener("alpine:init", () => {
-	Alpine.data("slides", () => ({
+		// update(payloadOrEvent) {
+		// 	if (payloadOrEvent instanceof CustomEvent) {
+		// 		for (const key in payloadOrEvent.detail) {
+		// 			this[key] = payloadOrEvent.detail[key];
+		// 		}
+		// 	} else {
+		// 		window.dispatchEvent(
+		// 			new CustomEvent("update", {
+		// 				detail: payloadOrEvent,
+		// 			})
+		// 		);
+		// 	}
+		// },
+
 		info() {
 			console.table(JSON.parse(JSON.stringify(this.slides)));
 		},
 		add(event) {
-			this.slides.push(event.detail);
+			event.detail.location.isUserLocation === "true"
+				? this.slides.unshift(event.detail)
+				: this.slides.push(event.detail);
 		},
-		removeslide(event) {
-			console.table(event);
-			const index = this.slides.findIndex(
-				(slide) => slide.id === event.id
-			);
-			splide.remove(index);
-			this.slides = this.slides.filter((i) => i.id !== event.id);
-
-			locations = locations.filter((i) => i.id !== event.id);
-			localStorage.setItem("locations", JSON.stringify(locations));
-			localStorage.removeItem(`weatherData-${event.id}`);
-		},
-		updateslide(event) {
-			console.log("Trying to update slides...", event.detail);
-			console.log(
-				this.slides.findIndex((slide) => slide.id === event.detail.id)
-			);
+		update(event) {
 			const index = this.slides.findIndex(
 				(slide) => slide.id === event.detail.id
 			);
@@ -220,78 +212,50 @@ document.addEventListener("alpine:init", () => {
 				splide.refresh();
 			}, 100);
 		},
+
+		removecard(event) {
+			const index = this.slides.findIndex(
+				(card) => card.id === event.detail.id
+			);
+			splide.remove(index);
+			this.slides = this.slides.filter((i) => i.id !== event.detail.id);
+
+			locations = locations.filter((i) => i.id !== event.detail.id);
+			localStorage.setItem("locations", JSON.stringify(locations));
+			localStorage.removeItem(`weatherData-${event.detail.id}`);
+		},
 	}));
 
-	Alpine.data("slide", () => ({
-		show: false,
-		atTop: true,
-		details: settings.details,
+	Alpine.data("card", () => ({
+		showcard: true,
 		init() {
-			console.log("show slide");
+			console.log("show card");
 			this.$nextTick(() => (this.show = true));
 		},
 		transitionOut() {
-			console.log("hide slide");
-			console.log(this.card);
+			console.log("hide card");
 			this.show = false;
-			setTimeout(() => this.removeslide(this.card), 500);
+			setTimeout(() => this.removecard(this.card), 500);
 		},
 	}));
-
-	// Alpine.data("locationCards", () => ({
-	// 	// add(event) {
-	// 	// 	this.locationCards.push(event.detail);
-	// 	// },
-	// 	// remove(card) {
-	// 	// 	this.locationCards = this.locationCards.filter(
-	// 	// 		(i) => i.id !== card.id
-	// 	// 	);
-	// 	// 	locations = locations.filter((i) => i.id !== String(card.id));
-	// 	// 	localStorage.setItem("locations", JSON.stringify(locations));
-	// 	// },
-	// 	update(event) {
-	// 		const index = this.locationCards.findIndex(
-	// 			(card) => Number(card.id) === Number(event.detail.id)
-	// 		);
-	// 		if (index !== -1) {
-	// 			for (key in event.detail) {
-	// 				this.locationCards[index] = {
-	// 					...this.locationCards[index],
-	// 					[key]: event.detail[key],
-	// 				};
-	// 			}
-	// 		} else {
-	// 			console.warn("card not found");
-	// 		}
-	// 	},
-	// 	// swap(event) {
-	// 	// 	const fromCard = event.detail.fromCard;
-	// 	// 	const toCard = event.detail.toCard;
-	// 	// 	const movedItem = this.locationCards[fromCard];
-	// 	// 	this.locationCards.splice(fromCard, 1); // Remove item from the previous position
-	// 	// 	this.locationCards.splice(toCard, 0, movedItem); // Insert item in the new position
-	// 	// },
-	// }));
-
-	// Alpine.data("card", () => ({
-	// 	show: false,
-	// 	init() {
-	// 		console.log("show card");
-	// 		this.$nextTick(() => (this.show = true));
-	// 	},
-	// 	transitionOut() {
-	// 		console.log("hide card");
-	// 		this.show = false;
-	// 		setTimeout(() => this.remove(this.card), 500);
-	// 	},
-	// }));
 
 	Alpine.data("popups", () => ({
 		popup1: [],
 		popup2: [],
+		popup3: [],
+		location: [],
+		legend: false,
 
-		popup1Info() {
-			console.log(JSON.parse(JSON.stringify(this.days)));
+		remove(el) {
+			el.style.display = "none";
+		},
+
+		addnewslide(event) {
+			console.log(event.detail);
+			this.location.push(event.detail);
+		},
+		popup1info() {
+			console.log(JSON.parse(JSON.stringify(this.popup1)));
 		},
 		addpopup1(event) {
 			this.popup1.push(event.detail);
@@ -305,6 +269,55 @@ document.addEventListener("alpine:init", () => {
 		removepopup2(popup) {
 			this.popup2 = this.popup2.filter((i) => i.id !== popup.id);
 		},
+		popup3info() {
+			console.log(JSON.parse(JSON.stringify(this.popup3)));
+		},
+		popup3locationinfo() {
+			console.log(JSON.parse(JSON.stringify(this.location)));
+		},
+		addpopup3(event) {
+			console.log(event.detail);
+			this.popup3.push(event.detail);
+		},
+		removepopup3(popup) {
+			this.popup3 = this.popup3.filter((i) => i.id !== popup.id);
+		},
+		removelocation() {
+			console.log("del slide");
+			this.location = [];
+		},
+	}));
+
+	Alpine.data("newLocation", () => ({
+		show: false,
+
+		init() {
+			console.log("show newLocation");
+			this.$nextTick(() => (this.show = true));
+		},
+
+		transitionOut() {
+			console.log("hide newLocation");
+			this.show = false;
+			setTimeout(() => this.removepopup3(this.newLocation), 500);
+			setTimeout(() => this.removelocation(this.slide), 500);
+		},
+	}));
+
+	Alpine.data("slide", () => ({
+		showslide: false,
+
+		init() {
+			console.log("show newSlide");
+			this.isLoading = false;
+			this.$nextTick(() => (this.showslide = true));
+		},
+
+		transitionOut() {
+			console.log("hide newSlide");
+			this.showslide = false;
+			setTimeout(() => this.removelocation(this.slide), 500);
+		},
 	}));
 
 	Alpine.data("detailedDays", () => ({
@@ -315,19 +328,41 @@ document.addEventListener("alpine:init", () => {
 
 		add(event) {
 			console.log(event.detail);
-			id = this.detailedDays.findIndex(
-				(item) =>
-					Number(item.id) === Number(event.detail.day.datetimeEpoch)
-			);
-			console.log(id);
-			if (id === -1) {
+			// id = this.detailedDays.findIndex(
+			// 	(item) =>
+			// 		Number(item.id) === Number(event.detail.day.datetimeEpoch)
+			// );
+			// console.log(id);
+			// if (id === -1) {
+			days = event.detail.days;
+			days.forEach((day) => {
 				this.detailedDays.push({
-					id: event.detail.day.datetimeEpoch,
-					weatherData: event.detail.day,
+					id: day.datetimeEpoch,
+					weatherData: day,
 				});
 				this.offset = 16 + event.detail.dayid * 50;
-			}
+			});
+			// }
+			console.log(event.detail.dayid);
+			setTimeout(() => {
+				splide2 = new Splide("#daysDetailed", {
+					pagination: false,
+					speed: 700,
+					perPage: 1,
+					perMove: 1,
+					start: event.detail.dayid,
+					gap: "3rem",
+					arrows: false,
+					easing: "cubic-bezier(.23,1,.32,1)",
+					noDrag: "input, textarea, .no-drag",
+				});
+				splide2.on("move", () => {
+					this.offset = 16 + splide2.index * 50;
+				});
+				splide2.mount();
+			}, 200);
 		},
+
 		removeday(event) {
 			if (
 				this.detailedDays.findIndex(
@@ -368,9 +403,12 @@ document.addEventListener("alpine:init", () => {
 			console.log("show detailedForecast");
 			this.$nextTick(() => (this.show = true));
 		},
-		close() {
+		transitionOut() {
 			console.log("hide detailedForecast");
 			this.show = false;
+
+			darkmode ? changeColor(false) : changeColor(true);
+
 			setTimeout(() => this.removepopup2(this.detailedForecast), 500);
 		},
 	}));
@@ -514,10 +552,12 @@ function updateInfo(force = false) {
 	const delta = (date.getTime() - lastPageUpdate.getTime()) / 1000; // in sec
 	if (typeof locations === undefined || locations.length === 0) {
 	} else if (force) {
-		console.log("Force update", delta);
+		console.log("*********** Force update *********** ");
 		// loadSettings();
-		locations.forEach((loc) => {
-			getWeather(loc.id, loc.latitude, loc.longitude);
+		locations.forEach((loc, i) => {
+			setTimeout(() => {
+				getWeather(loc, loc.latitude, loc.longitude);
+			}, 1000);
 		});
 		localStorage.setItem("lastPageUpdate", new Date());
 	} else {
@@ -534,7 +574,7 @@ function updateInfo(force = false) {
 		if (delta > 300) {
 			console.log("update from API:", delta);
 			locations.forEach((loc) => {
-				getWeather(loc.id, loc.latitude, loc.longitude);
+				getWeather(loc, loc.latitude, loc.longitude);
 			});
 			localStorage.setItem("lastPageUpdate", new Date());
 		}
@@ -617,14 +657,21 @@ function inputProcessing(el) {
 	}
 }
 
-function parseSuggestions(features, searchText) {
+function parseSuggestions(features, searchText, isUserLocation = false) {
 	const suggestionList = document.querySelector(".suggestions-list");
-	const searchInput = document.querySelector("#search-input");
+	const searchInput = document.querySelector("#searchInput");
 	const nothingFound = document.querySelector(
 		"#search-user-location--not-found"
 	);
 	suggestionList.innerHTML = "";
-	console.table(features);
+	const f = [];
+	features.forEach((el) => {
+		f.push({
+			id: Number(el.id.split(".")[1]),
+			name: el.text,
+		});
+	});
+	console.table(f);
 	if (features.length === 0) {
 		console.log("Nothing found");
 		nothingFound.classList.remove("hidden");
@@ -632,7 +679,6 @@ function parseSuggestions(features, searchText) {
 			nothingFound.classList.remove("opacity-0");
 		}, 100);
 	} else {
-		// Console.table(features)
 		nothingFound.classList.add("hidden", "opacity-0");
 		suggestionList.classList.remove("invisible", "opacity-0");
 		for (const feature of Object.values(features)) {
@@ -669,53 +715,162 @@ function parseSuggestions(features, searchText) {
 				item.id.includes("country")
 			);
 			const country = feature.context[contextCountryId].text;
-			const capText = searchText[0].toUpperCase() + searchText.slice(1);
-			const locationLi = document.createElement("li");
-			locationLi.onclick = () => showPosition(position, false);
-			if (
-				typeof locations !== "undefined" &&
-				locations.findIndex(
-					(item) => (Number(item.id) === Number(id)) !== -1
-				)
-			) {
-				locationLi.classList.add(
-					"flex",
-					"pointer-events-none",
-					"text-gray-300",
-					"pr-2",
-					"truncate"
-				);
-				text = `${name}${region ? ", " + region : ""}${
-					countryCode === userCountry ? "" : ", " + country
-				}`;
-			} else {
-				locationLi.classList.add("flex", "pr-2", "truncate");
-				text = `${name.replace(
-					capText,
-					`<div class="text-primary-light dark:text-primary-dark">${capText}</div>`
-				)}<div class="text-gray-300 dark:text-cosmic-500">${
-					region ? ", " + region : ""
-				}${countryCode === userCountry ? "" : ", " + country}</div>`;
-			}
 
-			locationLi.innerHTML = text;
-			if (searchInput.value.length > 0) {
-				suggestionList.appendChild(locationLi);
+			if (isUserLocation === true) {
+				window.dispatchEvent(
+					new CustomEvent("addpopup3", {
+						detail: {
+							id: id,
+							name: name,
+							country: country,
+							region: region,
+							countryCode: countryCode,
+							latitude: position.coords.latitude,
+							longitude: position.coords.longitude,
+							isUserLocation: "true",
+						},
+					})
+				);
 			} else {
-				suggestionList.innerHTML = "";
+				const capText =
+					searchText[0].toUpperCase() + searchText.slice(1);
+				const locationLi = document.createElement("li");
+				locationLi.onclick = () =>
+					window.dispatchEvent(
+						new CustomEvent("addpopup3", {
+							detail: {
+								id: id,
+								name: name,
+								country: country,
+								region: region,
+								countryCode: countryCode,
+								latitude: position.coords.latitude,
+								longitude: position.coords.longitude,
+								isUserLocation: "false",
+							},
+						})
+					);
+				if (
+					typeof locations !== "undefined" &&
+					locations.findIndex((item) => item.id === id) === -1
+				) {
+					locationLi.classList.add("flex", "pr-2", "truncate");
+					// locationLi.setAttribute(
+					// 	"@click",
+					// 	"$dispatch('addpopup3', this)"
+					// );
+					// locationLi.setAttribute(
+					// 	"data-latitude",
+					// 	position.coords.latitude
+					// );
+					// locationLi.setAttribute(
+					// 	"data-longitude",
+					// 	position.coords.longitude
+					// );
+					text = `${name.replace(
+						capText,
+						`<div class="text-primary-light dark:text-primary-dark">${capText}</div>`
+					)}<div class="text-gray-300 dark:text-cosmic-500">${
+						region ? ", " + region : ""
+					}${
+						countryCode === userCountry ? "" : ", " + country
+					}</div>`;
+				} else {
+					locationLi.classList.add(
+						"flex",
+						"pointer-events-none",
+						"text-gray-300",
+						"pr-2",
+						"truncate"
+					);
+					text = `${name}${region ? ", " + region : ""}${
+						countryCode === userCountry ? "" : ", " + country
+					}`;
+				}
+
+				locationLi.innerHTML = text;
+				if (searchInput.value.length > 0) {
+					suggestionList.appendChild(locationLi);
+				} else {
+					suggestionList.innerHTML = "";
+				}
 			}
 		}
 	}
 }
 
 function tempConverter(temp) {
-	return Math.round(settings.temp ? (temp * 9) / 5 + 32 : temp);
+	const result = settings.temp ? (temp * 9) / 5 + 32 : temp;
+	// console.log("temp", Math.round(result));
+	return Math.round(result);
 }
 
-windConverter = (wind) => Math.round(settings.wind ? wind : 0.277778 * wind);
+function windConverter(wind) {
+	const result = Math.round(settings.wind ? wind : 0.277778 * wind);
+	// console.log("wind", result);
+	return result;
+}
 
-pressureConverter = (p) =>
-	Math.round(settings.pressure ? (p * 0.1) / 0.1333223684 : p);
+function pressureConverter(p) {
+	const result = Math.round(settings.pressure ? p : (p * 0.1) / 0.1333223684);
+	// console.log("pressure", result);
+	return result;
+}
+
+function changeColor(atTop = true) {
+	darkmode = checkDarkMode();
+	if (atTop) {
+		if (darkmode) {
+			document
+				.querySelector('meta[name="theme-color"]')
+				.setAttribute("content", "#132846");
+		} else {
+			document
+				.querySelector('meta[name="theme-color"]')
+				.setAttribute("content", "#F3F4F7");
+		}
+	} else {
+		if (darkmode) {
+			document
+				.querySelector('meta[name="theme-color"]')
+				.setAttribute("content", "131E32");
+		} else {
+			document
+				.querySelector('meta[name="theme-color"]')
+				.setAttribute("content", "#FFF");
+		}
+	}
+}
+
+function moonphaseConverter(m) {
+	switch (true) {
+		case m === 0:
+			return "new";
+		case m < 0.25:
+			return "waxingcrescent";
+		case m === 0.25:
+			return "firstquarter";
+		case m < 0.5:
+			return "waxinggibbous";
+		case m === 0.5:
+			return "fullmoon";
+		case m < 0.75:
+			return "waninggibbous";
+		case m === 0.75:
+			return "lastquarter";
+		case m < 1:
+			return "waningcrescent";
+	}
+}
+
+// 0 – new moon
+// 0-0.25 – waxing crescent
+// 0.25 – first quarter
+// 0.25-0.5 – waxing gibbous
+// 0.5 – full moon
+// 0.5-0.75 – waning gibbous
+// 0.75 – last quarter
+// 0.75 -1 – waning crescent
 
 function minMax(array, days) {
 	var i;
@@ -757,25 +912,6 @@ function error(err) {
 	console.warn(`ERROR(${err.code}): ${err.message}`);
 }
 
-function showError(error) {
-	switch (error.code) {
-		case error.PERMISSION_DENIED:
-			console.log("User denied the request for Geolocation.");
-			hideLoadingAnimation();
-			localStorage.setItem("userGeoPosition", false);
-			break;
-		case error.POSITION_UNAVAILABLE:
-			console.log("Location information is unavailable.");
-			break;
-		case error.TIMEOUT:
-			console.log("The request to get user location timed out.");
-			break;
-		case error.UNKNOWN_ERROR:
-			console.log("An unknown error occurred.");
-			break;
-	}
-}
-
 // converting first letter to uppercase
 function capitalize(str) {
 	return str.charAt(0).toUpperCase() + str.slice(1);
@@ -788,5 +924,41 @@ function classToggle(el, ...args) {
 function paginationState() {
 	if (splide.length) {
 		return true;
+	}
+}
+
+function getUserLocation() {
+	const options = {
+		// enableHighAccuracy: true,
+		timeout: 10000,
+	};
+
+	console.log(navigator.geolocation);
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(
+			resolveAdress,
+			showError,
+			options
+		);
+	} else {
+		x = "Geolocation is not supported by this browser.";
+	}
+}
+
+function showError(error) {
+	switch (error.code) {
+		case error.PERMISSION_DENIED:
+			console.log("User denied the request for Geolocation.");
+			localStorage.setItem("userGeoPosition", false);
+			break;
+		case error.POSITION_UNAVAILABLE:
+			console.log("Location information is unavailable.");
+			break;
+		case error.TIMEOUT:
+			console.log("The request to get user location timed out.");
+			break;
+		case error.UNKNOWN_ERROR:
+			console.log("An unknown error occurred.");
+			break;
 	}
 }

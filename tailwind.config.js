@@ -60,6 +60,13 @@ module.exports = {
 				"wiggle-3": "wiggle-3 1s ease-in-out infinite",
 				"wiggle-6": "wiggle-6 1s ease-in-out infinite",
 			},
+			zIndex: {
+				60: "60",
+				70: "70",
+				80: "80",
+				90: "90",
+				100: "100",
+			},
 		},
 		colors: {
 			cosmic: {

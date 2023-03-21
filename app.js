@@ -14,6 +14,7 @@ require("dotenv").config();
 const indexRouter = require("./routes/index");
 const apiWeatherRouter = require("./routes/API/weatherAPI");
 const apiSuggestionsRouter = require("./routes/API/suggestionsAPI");
+const apiResolveRouter = require("./routes/API/resolveadressAPI");
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/api/weather", apiWeatherRouter);
 app.use("/api/suggestions", apiSuggestionsRouter);
+app.use("/api/resolveadress", apiResolveRouter);
 
 // Catch 404 and forward to error handler
 app.use((req, res, next) => {

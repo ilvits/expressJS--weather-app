@@ -19,10 +19,15 @@ router.get("/", async (req, res) => {
 		const baseurl = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline`;
 		const params = {
 			unitGroup: "metric",
-			key: Token_3,
+			key: Token_1,
 			elements: [
 				// "name",
 				// "datetime",
+				"description",
+				"resolvedAddress",
+				"moonphase",
+				"moonriseEpoch",
+				"moonsetEpoch",
 				"datetimeEpoch",
 				"conditions",
 				"temp",
@@ -41,6 +46,8 @@ router.get("/", async (req, res) => {
 				// "severerisk",
 				"icon",
 			],
+			iconSet: "icons2",
+			includeAstronomy: true,
 			include: ["days", "hours", "current"],
 			// include: ["days", "hours", "current", "alerts", "events"],
 			contentType: "json",
@@ -55,6 +62,7 @@ router.get("/", async (req, res) => {
 		const lon = req.query.lon;
 
 		const url = baseurl + `/${lat},${lon}?` + paramsArray.join("&");
+		console.log(url);
 		// const url =
 		// 	baseurl + `/${lat},${lon}/next30days?` + paramsArray.join("&");
 

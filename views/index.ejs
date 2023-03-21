@@ -215,6 +215,7 @@
 		</script>
 		<script src="js/i18n.js"></script>
 		<script src="js/init.js"></script>
+
 		<!-- <script src="js/moment/moment-with-locales.js"></script> -->
 		<script src="js/utils/theme.js"></script>
 		<script src="js/alpine/timeout.min.js"></script>
@@ -239,8 +240,12 @@
 
 	<body
 		class="overflow-hidden bg-gray-100 dark:bg-cosmic-900 text-cosmic-900 dark:text-white"
-		x-data="init()"
-		@update.window="update"
+		x-data="main"
+		@slidesinfo.window="info()"
+		@addslide.window="add($event)"
+		@swapslides.window="swap($event)"
+		@updateslide.window="update($event)"
+		@removecard.window="removecard($event)"
 	>
 		<div
 			id="main-page--placeholder"
@@ -258,33 +263,31 @@
 			<button
 				id="mainpage--search-btn"
 				class="px-12 py-3 text-white rounded-md bg-primary-light dark:bg-primary-dark dark:text-cosmic-900"
-				@click=""
+				@click="
+					menuLocations = true; 
+					setTimeout(() => { inputFocus = true }, 150);
+					"
 			>
 				Искать локации
 			</button>
 		</div>
-		<!-- <div class="fixed bg-black/50 backdrop-blur-sm text-white text-sm text-center top-0 left-1/2 -translate-x-1/2 z-[100000] px-2 pb-[2px] mt-3 rounded-full"
-       x-text="standalone">
-  </div> -->
+		<!-- <div
+			@click="$dispatch('addpopup3', { foo: 'bar' })"
+			class="fixed bg-black/50 backdrop-blur-sm text-white text-sm text-center top-0 left-1/2 -translate-x-1/2 z-[100000] px-2 pb-[2px] mt-3 rounded-full"
+			x-text="displaymode"
+		></div> -->
 		<!-- <pre
 			x-text="JSON.stringify(lang, null, 4)"
 			class="font-sans text-sm font-light"
 		></pre> -->
 
-		<main class="splide" aria-label="Splide">
+		<main id="main" class="splide" aria-label="Splide">
 			<!-- Splide -->
 			<div class="splide__track">
-				<ul
-					x-data="slides"
-					@slidesinfo.window="info()"
-					@addslide.window="add($event)"
-					@swapslides.window="swap($event)"
-					@updateslide.window="updateslide($event)"
-					class="splide__list"
-				>
+				<ul class="splide__list">
 					<!-- ! Slide -->
 					<template x-for="slide in slides" :key="slide.id">
-						<li x-data="slide" class="w-full splide__slide">
+						<li class="w-full splide__slide">
 							<section
 								class="h-screen pb-20 overflow-y-scroll bg-gray-100 dark:bg-cosmic-900"
 								:class="{'pb-40': displaymode !== 'standalone'}"
@@ -379,7 +382,7 @@
 													></div>
 													<div
 														x-show="slide.weatherData.currentConditions.windgust"
-														x-text="lang.weather.windgust + windConverter(slide.weatherData.currentConditions.windgust) + ' ' + lang.weather.units.wind[settings.wind ? 1 : 0]"
+														x-text="lang.weather.windgust + ' ' + windConverter(slide.weatherData.currentConditions.windgust) + ' ' + lang.weather.units.wind[settings.wind ? 1 : 0]"
 														class="windgust"
 													></div>
 													<div
@@ -389,9 +392,13 @@
 															x-text="lang.weather.feelslike"
 														></div>
 														<strong
-															x-text="tempConverter(slide.weatherData.currentConditions.feelslike) + ' °'"
+															x-text="windConverter(slide.weatherData.currentConditions.feelslike) + '°'"
 														></strong>
 													</div>
+													<!-- <pre
+														class="font-light text-xxs"
+														x-text="JSON.stringify(slide.weatherData.currentConditions, 0, 4)"
+													></pre> -->
 												</div>
 											</div>
 											<div
@@ -635,7 +642,7 @@
 													? lang.datetime.tomorrow 
 													: moment.unix(day.datetimeEpoch).locale(language).format('DD MMMM');"
 											class="w-full py-[2px] font-light flex flex-nowrap gap-5 items-center"
-											@click="console.log(id); $dispatch('addpopup2', slide); setTimeout(() => {$dispatch('detaileddaysadd', { dayid : id, day: slide.weatherData.days[id] })}, 150);"
+											@click="console.log(id); $dispatch('addpopup2', slide); setTimeout(() => {$dispatch('detaileddaysadd', { dayid : id, days: slide.weatherData.days.slice(0, 10) })}, 150);"
 										>
 											<div
 												x-show="day.icon"
@@ -701,7 +708,7 @@
 								</ul>
 								<section>
 									<div
-										@click="$dispatch('addpopup2', slide); setTimeout(() => {$dispatch('detaileddaysadd', { dayid : 0, day: slide.weatherData.days[0] })}, 150);"
+										@click="$dispatch('addpopup2', slide); setTimeout(() => {$dispatch('detaileddaysadd', { dayid : 0, days: slide.weatherData.days.slice(0,10) })}, 150);"
 										class="flex justify-between px-4 py-2"
 									>
 										<div
@@ -749,766 +756,32 @@
 				</ul>
 			</div>
 
-			<!-- ! PopUps -->
-			<section
-				x-data="popups"
-				@addpopup1.window="addpopup1($event)"
-				@addpopup2.window="addpopup2($event)"
-			>
-				<template x-for="detailedForecast in popup2">
-					<div
-						x-data="detailedForecast"
-						x-show="show"
-						x-transition:enter-start="translate-x-full"
-						x-transition:leave-end="translate-x-full"
-						class="fixed top-0 left-0 w-full h-full z-[10000] overflow-y-scroll bg-gray-100 transition-all-500 dark:bg-cosmic-900"
-					>
-						<header
-							class="sticky top-0 z-50 flex flex-col gap-4 pt-3 pb-4 bg-gray-100 dark:bg-cosmic-900"
-						>
-							<div class="flex items-center w-full px-4">
-								<button type="button" @click="close()">
-									<svg
-										class="fill-primary-light dark:fill-[#FEB800]"
-										width="24"
-										height="24"
-										viewBox="0 0 24 24"
-										fill="none"
-										xmlns="http://www.w3.org/2000/svg"
-									>
-										<path
-											fill-rule="evenodd"
-											clip-rule="evenodd"
-											d="M19.4999 12.0001C19.4999 12.2487 19.4011 12.4871 19.2253 12.663C19.0495 12.8388 18.811 12.9375 18.5624 12.9375H7.70076L11.7263 16.9612C11.8135 17.0484 11.8826 17.1518 11.9298 17.2657C11.977 17.3796 12.0012 17.5017 12.0012 17.6249C12.0012 17.7482 11.977 17.8703 11.9298 17.9841C11.8826 18.098 11.8135 18.2015 11.7263 18.2887C11.6391 18.3758 11.5357 18.445 11.4218 18.4922C11.3079 18.5393 11.1858 18.5636 11.0626 18.5636C10.9393 18.5636 10.8172 18.5393 10.7034 18.4922C10.5895 18.445 10.486 18.3758 10.3988 18.2887L4.77395 12.6638C4.68665 12.5767 4.61738 12.4733 4.57012 12.3594C4.52286 12.2455 4.49854 12.1234 4.49854 12.0001C4.49854 11.8768 4.52286 11.7547 4.57012 11.6408C4.61738 11.5269 4.68665 11.4234 4.77395 11.3363L10.3988 5.71145C10.5749 5.53542 10.8136 5.43652 11.0626 5.43652C11.3115 5.43652 11.5503 5.53542 11.7263 5.71145C11.9023 5.88749 12.0012 6.12624 12.0012 6.37519C12.0012 6.62414 11.9023 6.86289 11.7263 7.03892L7.70076 11.0626H18.5624C18.811 11.0626 19.0495 11.1614 19.2253 11.3372C19.4011 11.513 19.4999 11.7514 19.4999 12.0001Z"
-										/>
-									</svg>
-								</button>
-								<div
-									x-text="lang.slides.headers.tenDaysForecast"
-									class="text-base font-semibold leading-5 text-center grow shrink-0 transition-all-500"
-								></div>
-								<div x-data="{ show: false }">
-									<button
-										type="button"
-										@click="show = ! show"
-										class="ten_days_detailed--legend-btn stroke-primary-light dark:stroke-primary-dark"
-									>
-										<svg
-											width="24"
-											height="24"
-											viewBox="0 0 24 24"
-											fill="none"
-											xmlns="http://www.w3.org/2000/svg"
-										>
-											<path
-												d="M13 16H12V12H11M12 8H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
-												stroke-width="2"
-												stroke-linecap="round"
-												stroke-linejoin="round"
-											/>
-										</svg>
-									</button>
-									<div
-										id="main-backdrop"
-										class="fixed top-0 left-0 z-50 w-full h-full bg-primary-backdrop/70 dark:bg-primary-backdrop/80 transition-500"
-										x-show="show"
-										x-transition:enter-start="opacity-0"
-										x-transition:leave-end="opacity-0"
-									></div>
-									<!-- MODAL LEGEND -->
-									<div
-										id="ten_days_detailed--modal-legend"
-										@click.away="show = false"
-										class="transition-300 origin-top-right fixed top-12 right-4 w-[calc(100%_-_32px)] min-w-[300px] max-w-[343px] rounded-2xl p-6 bg-white dark:bg-cosmic-900 border border-gray-100 dark:border-cosmic-800 shadow-md z-[1000]"
-										x-show="show"
-										x-transition:enter-start="scale-0 opacity-0"
-										x-transition:leave-end="scale-0 opacity-0"
-									>
-										<header
-											class="mb-4 text-lg font-bold leading-5 text-center"
-										>
-											Легенда
-										</header>
-										<ol class="flex flex-col gap-4">
-											<li class="flex gap-2">
-												<img
-													class="w-5 h-5"
-													src="img/assets/icons/feels-like.svg"
-												/>
-												<div class="text-sm">
-													Температура по ощущению
-												</div>
-											</li>
-											<li class="flex gap-2">
-												<img
-													class="w-5 h-5"
-													src="img/assets/icons/clarity_compass-line.svg"
-												/>
-												<div class="text-sm">
-													Скорость ветра и направление
-												</div>
-											</li>
-											<li class="flex gap-2">
-												<img
-													class="w-5 h-5"
-													src="img/assets/icons/ion_water-outline.svg"
-												/>
-												<div class="text-sm">
-													Влажность
-												</div>
-											</li>
-											<li class="flex gap-2">
-												<img
-													class="w-5 h-5"
-													src="img/assets/icons/wi_barometer.svg"
-												/>
-												<div class="text-sm">
-													Атмосферное давление
-												</div>
-											</li>
-										</ol>
-										<div
-											@click="show = false"
-											class="absolute close-modal right-4 top-4 stroke-cosmic-900 dark:stroke-white"
-										>
-											<svg
-												width="16"
-												height="16"
-												viewBox="0 0 16 16"
-												fill="none"
-												xmlns="http://www.w3.org/2000/svg"
-											>
-												<path
-													d="M4.2998 11.3L7.7998 7.80005M7.7998 7.80005L11.2998 4.30005M7.7998 7.80005L4.2998 4.30005M7.7998 7.80005L11.2998 11.3"
-													stroke-width="1.5"
-													stroke-linecap="round"
-													stroke-linejoin="round"
-												/>
-											</svg>
-										</div>
-									</div>
-								</div>
-							</div>
-							<!-- DayList -->
-
-							<ul
-								x-ref="daylist"
-								class="ten-days-forecast-detailed--dates py-2 dark:bg-cosmic-800 scroll-smooth relative grid grid-flow-col gap-2.5 snap-mandatory snap-x scroll-pl-4 px-4 overflow-x-scroll"
-							>
-								<div
-									class="absolute z-0 w-10 mt-2 rounded-lg bg-primary-light dark:bg-primary-dark h-14 transition-all-500"
-									:style="'transform: translateX(' + offset + 'px)'"
-								></div>
-								<template
-									x-for="(day, id) in detailedForecast.weatherData.days.slice(0, 10)"
-									:key="day.datetimeEpoch"
-								>
-									<li
-										x-effect="$refs.daylist.scrollLeft = offset - 150"
-										class="flex flex-col gap-1 items-center text-white dark:text-cosmic-900 snap-start w-10 h-14 rounded-lg px-2.5 py-2 transition-500"
-										@click="offset = $el.offsetLeft; $dispatch('detaileddayclose', {id: day.datetimeEpoch}); $dispatch('detaileddaysadd', { dayid : id, day: day })"
-										:class="{ 'text-white dark:text-cosmic-900': offset === $el.offsetLeft }"
-									>
-										<div
-											x-text="moment.unix(day.datetimeEpoch).locale(language).format('dd')"
-											class="text-xs font-bold"
-										></div>
-										<div
-											x-text="moment.unix(day.datetimeEpoch).locale(language).format('DD')"
-											class="text-base font-semibold leading-5"
-										></div>
-									</li>
-								</template>
-							</ul>
-						</header>
-						<!-- DayParts -->
-						<section class="flex flex-col gap-4">
-							<section
-								x-data="detailedDays"
-								@detaileddaysinfo.window="info($event)"
-								@detaileddaysadd.window="add($event)"
-								@detaileddaysremove.window="remove($event)"
-							>
-								<template
-									x-for="detailedDay in detailedDays"
-									:key="detailedDay.id"
-								>
-									<div
-										x-data="detailedDay"
-										x-show="show"
-										x-transition:enter-start="opacity-0"
-										@detaileddayclose.window="closeday($event);"
-										class="flex flex-col w-full gap-4 mb-24 transition-opacity-500"
-									>
-										<ul
-											class="flex flex-col w-full mt-2 mb-20 divide-y divide-cosmic-800"
-										>
-											<li class="mx-2">
-												<header
-													x-text="lang.datetime.morning"
-													class="mb-2 ml-4 text-sm text-gray-300 dark:text-cosmic-500"
-												></header>
-												<div
-													class="flex flex-col w-full gap-4 p-4 bg-white dark:bg-cosmic-900 rounded-2xl"
-												>
-													<div
-														class="flex gap-2.5 justify-between"
-													>
-														<div
-															class="flex flex-col gap-2"
-														>
-															<div
-																class="flex items-center gap-4"
-															>
-																<div
-																	x-text="tempConverter(detailedDay.weatherData.hours[6].temp) + '°'"
-																	class="text-2xl font-semibold leading-7"
-																></div>
-																<div
-																	class="flex items-end gap-1 text-base font-semibold leading-5"
-																>
-																	<img
-																		class="w-5 h-5"
-																		src="img/assets/icons/feels-like.svg"
-																		alt=""
-																	/>
-																	<div
-																		x-text="tempConverter(detailedDay.weatherData.hours[6].feelslike) + '°'"
-																	></div>
-																</div>
-															</div>
-															<div
-																x-text="detailedDay.weatherData.hours[6].conditions"
-																class="text-sm"
-															></div>
-														</div>
-														<div>
-															<img
-																class="w-14 h-14"
-																:src="detailedDay.weatherData.hours[6].icon"
-																alt=""
-																srcset=""
-															/>
-														</div>
-													</div>
-													<div class="flex gap-4">
-														<div
-															class="flex gap-1.5 items-center"
-														>
-															<img
-																class="w-4 h-4"
-																:style="`rotate: ${-detailedDay.weatherData.hours[6].winddir}deg`"
-																src="img/assets/icons/clarity_compass-line.svg"
-																alt=""
-															/>
-															<div
-																x-text="windConverter(detailedDay.weatherData.hours[6].windspeed) + ' ' + (settings.wind ? lang.weather.units.wind[1] : lang.weather.units.wind[0]) + ', ' + windDegreeToString(detailedDay.weatherData.hours[6].winddir)"
-																class="text-sm leading-4"
-															></div>
-														</div>
-														<div
-															class="flex gap-1.5 items-center"
-														>
-															<img
-																class="w-4 h-4"
-																src="img/assets/icons/wi_barometer.svg"
-																alt=""
-															/>
-															<div
-																x-text="pressureConverter(detailedDay.weatherData.hours[6].pressure) + ' ' + (settings.pressure ? lang.weather.units.pressure[1] : lang.weather.units.pressure[0])"
-																class="text-sm leading-4"
-															></div>
-														</div>
-														<div
-															class="flex gap-1.5 items-center"
-														>
-															<img
-																class="w-4 h-4"
-																src="img/assets/icons/ion_water-outline.svg"
-																alt=""
-															/>
-															<div
-																x-text="Math.round(detailedDay.weatherData.hours[6].humidity) + ' %'"
-																class="text-sm leading-4"
-															></div>
-														</div>
-													</div>
-												</div>
-											</li>
-											<li class="pt-4 mx-2">
-												<header
-													x-text="lang.datetime.morning"
-													class="mb-2 ml-4 text-sm text-gray-300 dark:text-cosmic-500"
-												></header>
-												<div
-													class="flex flex-col w-full gap-4 p-4 bg-white dark:bg-cosmic-900 rounded-2xl"
-												>
-													<div
-														class="flex gap-2.5 justify-between"
-													>
-														<div
-															class="flex flex-col gap-2"
-														>
-															<div
-																class="flex items-center gap-4"
-															>
-																<div
-																	x-text="tempConverter(detailedDay.weatherData.hours[12].temp) + '°'"
-																	class="text-2xl font-semibold leading-7"
-																></div>
-																<div
-																	class="flex items-end gap-1 text-base font-semibold leading-5"
-																>
-																	<img
-																		class="w-5 h-5"
-																		src="img/assets/icons/feels-like.svg"
-																		alt=""
-																	/>
-																	<div
-																		x-text="tempConverter(detailedDay.weatherData.hours[12].feelslike) + '°'"
-																	></div>
-																</div>
-															</div>
-															<div
-																x-text="detailedDay.weatherData.hours[12].conditions"
-																class="text-sm"
-															></div>
-														</div>
-														<div>
-															<img
-																class="w-14 h-14"
-																:src="detailedDay.weatherData.hours[12].icon"
-																alt=""
-																srcset=""
-															/>
-														</div>
-													</div>
-													<div class="flex gap-4">
-														<div
-															class="flex gap-1.5 items-center"
-														>
-															<img
-																class="w-4 h-4"
-																:style="`rotate: ${-detailedDay.weatherData.hours[12].winddir}deg`"
-																src="img/assets/icons/clarity_compass-line.svg"
-																alt=""
-															/>
-															<div
-																x-text="windConverter(detailedDay.weatherData.hours[12].windspeed) + ' ' + (settings.wind ? lang.weather.units.wind[1] : lang.weather.units.wind[0]) + ', ' + windDegreeToString(detailedDay.weatherData.hours[12].winddir)"
-																class="text-sm leading-4"
-															></div>
-														</div>
-														<div
-															class="flex gap-1.5 items-center"
-														>
-															<img
-																class="w-4 h-4"
-																src="img/assets/icons/wi_barometer.svg"
-																alt=""
-															/>
-															<div
-																x-text="pressureConverter(detailedDay.weatherData.hours[12].pressure) + ' ' + (settings.pressure ? lang.weather.units.pressure[1] : lang.weather.units.pressure[0])"
-																class="text-sm leading-4"
-															></div>
-														</div>
-														<div
-															class="flex gap-1.5 items-center"
-														>
-															<img
-																class="w-4 h-4"
-																src="img/assets/icons/ion_water-outline.svg"
-																alt=""
-															/>
-															<div
-																x-text="Math.round(detailedDay.weatherData.hours[12].humidity) + ' %'"
-																class="text-sm leading-4"
-															></div>
-														</div>
-													</div>
-												</div>
-											</li>
-											<li class="pt-4 mx-2">
-												<header
-													x-text="lang.datetime.morning"
-													class="mb-2 ml-4 text-sm text-gray-300 dark:text-cosmic-500"
-												></header>
-												<div
-													class="flex flex-col w-full gap-4 p-4 bg-white dark:bg-cosmic-900 rounded-2xl"
-												>
-													<div
-														class="flex gap-2.5 justify-between"
-													>
-														<div
-															class="flex flex-col gap-2"
-														>
-															<div
-																class="flex items-center gap-4"
-															>
-																<div
-																	x-text="tempConverter(detailedDay.weatherData.hours[18].temp) + '°'"
-																	class="text-2xl font-semibold leading-7"
-																></div>
-																<div
-																	class="flex items-end gap-1 text-base font-semibold leading-5"
-																>
-																	<img
-																		class="w-5 h-5"
-																		src="img/assets/icons/feels-like.svg"
-																		alt=""
-																	/>
-																	<div
-																		x-text="tempConverter(detailedDay.weatherData.hours[18].feelslike) + '°'"
-																	></div>
-																</div>
-															</div>
-															<div
-																x-text="detailedDay.weatherData.hours[18].conditions"
-																class="text-sm"
-															></div>
-														</div>
-														<div>
-															<img
-																class="w-14 h-14"
-																:src="detailedDay.weatherData.hours[18].icon"
-																alt=""
-																srcset=""
-															/>
-														</div>
-													</div>
-													<div class="flex gap-4">
-														<div
-															class="flex gap-1.5 items-center"
-														>
-															<img
-																class="w-4 h-4"
-																:style="`rotate: ${-detailedDay.weatherData.hours[18].winddir}deg`"
-																src="img/assets/icons/clarity_compass-line.svg"
-																alt=""
-															/>
-															<div
-																x-text="windConverter(detailedDay.weatherData.hours[18].windspeed) + ' ' + (settings.wind ? lang.weather.units.wind[1] : lang.weather.units.wind[0]) + ', ' + windDegreeToString(detailedDay.weatherData.hours[18].winddir)"
-																class="text-sm leading-4"
-															></div>
-														</div>
-														<div
-															class="flex gap-1.5 items-center"
-														>
-															<img
-																class="w-4 h-4"
-																src="img/assets/icons/wi_barometer.svg"
-																alt=""
-															/>
-															<div
-																x-text="pressureConverter(detailedDay.weatherData.hours[18].pressure) + ' ' + (settings.pressure ? lang.weather.units.pressure[1] : lang.weather.units.pressure[0])"
-																class="text-sm leading-4"
-															></div>
-														</div>
-														<div
-															class="flex gap-1.5 items-center"
-														>
-															<img
-																class="w-4 h-4"
-																src="img/assets/icons/ion_water-outline.svg"
-																alt=""
-															/>
-															<div
-																x-text="Math.round(detailedDay.weatherData.hours[18].humidity) + ' %'"
-																class="text-sm leading-4"
-															></div>
-														</div>
-													</div>
-												</div>
-											</li>
-											<li class="pt-4 mx-2">
-												<header
-													x-text="lang.datetime.morning"
-													class="mb-2 ml-4 text-sm text-gray-300 dark:text-cosmic-500"
-												></header>
-												<div
-													class="flex flex-col w-full gap-4 p-4 bg-white dark:bg-cosmic-900 rounded-2xl"
-												>
-													<div
-														class="flex gap-2.5 justify-between"
-													>
-														<div
-															class="flex flex-col gap-2"
-														>
-															<div
-																class="flex items-center gap-4"
-															>
-																<div
-																	x-text="tempConverter(detailedDay.weatherData.hours[23].temp) + '°'"
-																	class="text-2xl font-semibold leading-7"
-																></div>
-																<div
-																	class="flex items-end gap-1 text-base font-semibold leading-5"
-																>
-																	<img
-																		class="w-5 h-5"
-																		src="img/assets/icons/feels-like.svg"
-																		alt=""
-																	/>
-																	<div
-																		x-text="tempConverter(detailedDay.weatherData.hours[23].feelslike) + '°'"
-																	></div>
-																</div>
-															</div>
-															<div
-																x-text="detailedDay.weatherData.hours[23].conditions"
-																class="text-sm"
-															></div>
-														</div>
-														<div>
-															<img
-																class="w-14 h-14"
-																:src="detailedDay.weatherData.hours[23].icon"
-																alt=""
-																srcset=""
-															/>
-														</div>
-													</div>
-													<div class="flex gap-4">
-														<div
-															class="flex gap-1.5 items-center"
-														>
-															<img
-																class="w-4 h-4"
-																:style="`rotate: ${-detailedDay.weatherData.hours[23].winddir}deg`"
-																src="img/assets/icons/clarity_compass-line.svg"
-																alt=""
-															/>
-															<div
-																x-text="windConverter(detailedDay.weatherData.hours[23].windspeed) + ' ' + (settings.wind ? lang.weather.units.wind[1] : lang.weather.units.wind[0]) + ', ' + windDegreeToString(detailedDay.weatherData.hours[23].winddir)"
-																class="text-sm leading-4"
-															></div>
-														</div>
-														<div
-															class="flex gap-1.5 items-center"
-														>
-															<img
-																class="w-4 h-4"
-																src="img/assets/icons/wi_barometer.svg"
-																alt=""
-															/>
-															<div
-																x-text="pressureConverter(detailedDay.weatherData.hours[23].pressure) + ' ' + (settings.pressure ? lang.weather.units.pressure[1] : lang.weather.units.pressure[0])"
-																class="text-sm leading-4"
-															></div>
-														</div>
-														<div
-															class="flex gap-1.5 items-center"
-														>
-															<img
-																class="w-4 h-4"
-																src="img/assets/icons/ion_water-outline.svg"
-																alt=""
-															/>
-															<div
-																x-text="Math.round(detailedDay.weatherData.hours[23].humidity) + ' %'"
-																class="text-sm leading-4"
-															></div>
-														</div>
-													</div>
-												</div>
-											</li>
-
-											<li class="pt-4 mx-2">
-												<header
-													x-text="lang.weather.skylights"
-													class="mb-2 ml-4 text-sm text-gray-300 dark:text-cosmic-500"
-												></header>
-												<div
-													class="grid grid-cols-2 gap-1 p-4"
-												>
-													<div
-														class="grid grid-flow-col grid-rows-2 gap-1.5 justify-start justify-items-center"
-													>
-														<div
-															class="row-span-2 mr-1.5 self-center"
-														>
-															<img
-																:src="`img/assets/icons/sunrise2.svg`"
-																alt=""
-															/>
-														</div>
-														<div
-															x-text="lang.datetime.sunrise"
-															class="text-gray-300 dark:text-cosmic-400 font-light text-xs leading-[14px] self-end place-self-start"
-														></div>
-														<div
-															x-text="detailedDay.weatherData.sunrise"
-															class="text-base font-semibold leading-5 text-white"
-														></div>
-													</div>
-													<div
-														class="grid grid-flow-col grid-rows-2 gap-1.5 justify-start justify-items-center"
-													>
-														<div
-															class="row-span-2 mr-1.5 self-center"
-														>
-															<img
-																:src="`img/assets/icons/sunset2.svg`"
-																alt=""
-															/>
-														</div>
-														<div
-															x-text="lang.datetime.sunset"
-															class="text-gray-300 dark:text-cosmic-400 font-light text-xs leading-[14px] self-end place-self-start"
-														></div>
-														<div
-															x-text="detailedDay.weatherData.sunset"
-															class="text-base font-semibold leading-5 text-white"
-														></div>
-													</div>
-													<div
-														class="grid grid-flow-col grid-rows-2 gap-1.5 justify-start justify-items-center"
-													>
-														<div
-															class="row-span-2 mr-1.5 self-center"
-														>
-															<img
-																:src="`img/assets/icons/clear-day2.svg`"
-																alt=""
-															/>
-														</div>
-														<div
-															x-text="lang.datetime.daylight"
-															class="text-gray-300 dark:text-cosmic-400 font-light text-xs leading-[14px] self-end place-self-start"
-														></div>
-														<div
-															x-text="detailedDay.weatherData.daylight"
-															class="text-base font-semibold leading-5 text-white"
-														></div>
-													</div>
-													<div
-														class="grid grid-flow-col grid-rows-2 gap-1.5 justify-start justify-items-center"
-													>
-														<div
-															class="row-span-2 mr-1.5 self-center"
-														>
-															<img
-																:src="`img/assets/icons/clear-night.svg`"
-																alt=""
-															/>
-														</div>
-														<div
-															x-text="lang.datetime.moon"
-															class="text-gray-300 dark:text-cosmic-400 font-light text-xs leading-[14px] self-end place-self-start"
-														></div>
-														<div
-															x-text="detailedDay.weatherData.moon"
-															class="text-base font-semibold leading-5 text-white"
-														></div>
-													</div>
-												</div>
-											</li>
-										</ul>
-									</div>
-								</template>
-							</section>
-						</section>
-					</div>
-				</template>
-
-				<template x-for="monthlyForecast in popup1">
-					<div
-						x-data="monthlyForecast"
-						x-show="show"
-						x-transition:enter-start="translate-x-full"
-						x-transition:leave-end="translate-x-full"
-						class="fixed top-0 left-0 w-full h-full z-[10000] overflow-y-scroll bg-gray-100 transition-all-500 text-cosmic-900 dark:text-white dark:bg-cosmic-900"
-					>
-						<header
-							class="sticky z-[10000] top-0 left-0 w-full p-4 bg-gray-100 dark:bg-cosmic-900"
-						>
-							<button
-								@click="transitionOut(), mainBackdrop = false;"
-							>
-								close
-							</button>
-						</header>
-						<ul class="grid grid-flow-row mx-4 mb-8 daily">
-							<template
-								x-for="(day, index) in monthlyForecast.weatherData.days"
-								x-init="temprange = minMax(monthlyForecast.weatherData.days, monthlyForecast.weatherData.days.length)"
-								:key="index"
-							>
-								<li
-									x-init="lineStyles = tempRangeLineStyles(day, temprange, monthlyForecast.weatherData.currentConditions.temp);"
-									class="w-full py-[2px] font-light flex flex-nowrap gap-5 items-center"
-								>
-									<div
-										x-show="day.icon"
-										class="small-icon w-[52px] h-[52px] shrink-0 bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645] rounded-2xl py-1 relative"
-									>
-										<img
-											class="w-[44px] h-[44px] mx-auto"
-											:src="day.icon"
-											alt=""
-										/>
-										<div
-											x-show="day.precipprob > 30"
-											x-text="Math.round(day.precipprob) + ' %'"
-											class="absolute bg-gray-100 dark:bg-cosmic-900 p-[5px] -bottom-2 -right-2 text-xxs text-gray-300 dark:text-cosmic-300 rounded-3xl"
-										></div>
-									</div>
-									<div
-										class="flex flex-col justify-center gap-1 w-28 shrink-0"
-									>
-										<div
-											x-text="index === 0 
-												? lang.datetime.today 
-												: index === 1
-												? lang.datetime.tomorrow 
-												: moment.unix(day.datetimeEpoch).locale(language).format('DD MMMM')"
-											class="text-sm leading-[17px] dark:text-white"
-										></div>
-										<div
-											x-text="day.conditions"
-											class="text-xs leading-[14px] text-gray-300 dark:text-cosmic-400"
-										></div>
-									</div>
-									<div class="w-full my-4">
-										<div
-											id="labels"
-											class="flex justify-between pb-2 mx-auto leading-5"
-										>
-											<div
-												x-text="tempConverter(day.tempmin) + '°'"
-												class="text-gray-300 dark:text-cosmic-400"
-											></div>
-											<div
-												x-text="tempConverter(day.tempmax) + '°'"
-											></div>
-										</div>
-										<div
-											class="relative h-1 rounded-md bg-[#D4D4D4]/40 dark:bg-cosmic-800"
-										>
-											<div
-												:style="{width:`${lineStyles.width}%`, left:`${lineStyles.left}%`}"
-												class="absolute h-full rounded-md bg-gradient-to-l from-[#647DFF] to-[#14CDFF] dark:from-[#DEDEDE] dark:to-[#3FD5FE]"
-											>
-												<div
-													x-show="index === 0"
-													class="absolute h-[8px] w-[8px] -top-[2px] rounded-full bg-[#6390F0] dark:bg-white border-[1.5px] border-gray-100 dark:border-cosmic-900"
-													:style="{left:`${lineStyles.dotShift}%`}"
-												></div>
-											</div>
-										</div>
-									</div>
-								</li>
-							</template>
-						</ul>
-					</div>
-				</template>
-			</section>
-
 			<!-- *? Locations ?* -->
 			<section
 				x-cloak
 				x-show="menuLocations"
 				x-init="
-					$watch('inputFocus', () => { searchClearText = false; $refs.searchInput.value = ''; $refs.suggestions.innerHTML = ''})
+					$watch('inputFocus', (focus) => {
+						if (focus) {
+							menuLocationsBackdrop = true; 
+							locationsLength = checkLocations();
+							searchClearText = false; 
+							locationsEditMode = false; 
+							locationEditModal = false;
+							$refs.searchInput.value = ''; 
+							$refs.suggestions.innerHTML = '';
+							checkUserLocation();
+							showUserLocationPlaceholder = true;
+							setTimeout(() => { $refs.searchInput.focus() }, 500);
+						} else {
+							menuLocationsBackdrop = false; 
+							locationsLength = checkLocations(); 
+							searchClearText= false;
+							$refs.searchInput.value = '';
+							$refs.suggestions.innerHTML = '';
+							$refs.notFound.classList.add('opacity-0');
+						}
+					})
 					$watch('menuLocations', () => { 
 						inputFocus = false; 
 						locationsEditMode = false; 
@@ -1516,8 +789,8 @@
 						menuLocationsBackdrop = false; 
 						
 					})"
-				x-data="{ inputFocus: false, locationsEditMode: false, locationEditModal: false, menuLocationsBackdrop: false, }"
-				class="fixed top-0 left-0 w-full h-full pb-20 overflow-y-scroll backdrop-blur-xl bg-gray-100/80 dark:bg-cosmic-900/90 transition-all-500 overflow-x-clip"
+				x-data="{ locationsEditMode: false, locationEditModal: false, }"
+				class="fixed top-0 left-0 w-full h-full pb-20 overflow-y-scroll bg-gray-100 dark:bg-cosmic-900 transition-all-500 overflow-x-clip"
 			>
 				<!-- Backdrop -->
 				<div
@@ -1534,7 +807,7 @@
 				>
 					<!-- HEADER -->
 					<header
-						class="sticky top-0 flex items-center justify-center w-full h-12 px-4 pt-4 pb-1 bg-gray-100/50 dark:bg-cosmic-900/80 backdrop-blur-md"
+						class="sticky top-0 flex items-center justify-center w-full h-12 px-4 pt-4 pb-1 bg-gray-100 dark:bg-cosmic-900"
 					>
 						<div class="w-16 grow-0 shrink-0"></div>
 						<div
@@ -1557,23 +830,21 @@
 					>
 						<div class="relative flex h-12 flex-nowrap">
 							<input
+								autofocus
 								type="search"
-								id="search-input"
-								name="search-input"
+								id="searchInput"
+								name="searchInput"
 								x-ref="searchInput"
 								:placeholder="lang.locations.searchPlaceholder"
 								class="shrink-0 px-9 mr-4 focus:outline-none rounded-lg truncate h-12 transition-width duration-500 ease-[cubic-bezier(.23,1,.32,1)] dark:bg-cosmic-800 caret-primary-light dark:caret-primary-dark placeholder-gray-300 dark:placeholder-cosmic-500"
 								:class="{ 'w-full': !inputFocus, 'w-[calc(100%_-_70px)]': inputFocus }"
-								@focus="
-									inputFocus = true; 
-									menuLocationsBackdrop = true; 
-									locationsLength = checkLocations();"
+								@focus="inputFocus = true"
 								@input.debounce.500ms="inputProcessing($el); 
 									if ($el.value.length > 0) {
-									$refs.userGeo.classList.add('opacity-0');
+									showUserLocationPlaceholder = false,
 									searchClearText = true;
 									} else {
-									$refs.userGeo.classList.remove('opacity-0');
+									showUserLocationPlaceholder = true,
 									searchClearText = false;
 									$refs.notFound.classList.add('opacity-0');
 									}"
@@ -1581,15 +852,7 @@
 							<button
 								id="location-search--cancel-button"
 								class="h-12 text-primary-light dark:text-primary-dark"
-								@click="
-									inputFocus = false; 
-									menuLocationsBackdrop = false; 
-									locationsLength = checkLocations(); 
-									searchClearText= false;
-									$refs.searchInput.value = '';
-									$refs.suggestions.innerHTML = '';
-									$refs.notFound.classList.add('opacity-0');
-									"
+								@click="inputFocus = false"
 							>
 								Отмена
 							</button>
@@ -1618,7 +881,7 @@
 									searchClearText = false,
 									$refs.searchInput.value = '', 
 									$refs.searchInput.focus(), 
-									$refs.userGeo.classList.remove('opacity-0'), 
+									showUserLocationPlaceholder = true, 
 									$refs.suggestions.innerHTML = ''
 									$refs.notFound.classList.add('opacity-0');"
 								x-transition:enter-start="opacity-0"
@@ -1639,9 +902,9 @@
 							></ol>
 							<div
 								id="search-user-location--placeholder"
-								class="flex flex-col items-center justify-center w-full gap-3 text-center transition-all-500"
+								class="flex flex-col items-center justify-center w-[calc(100%_-_32px)] mt-20 gap-3 text-center transition-all-500"
 								x-ref="userGeo"
-								x-show="locationsLength"
+								x-show="!userLocation && showUserLocationPlaceholder"
 								x-transition:enter-start="opacity-0"
 								x-transition:leave-end="opacity-0"
 							>
@@ -1656,7 +919,8 @@
 									чтобы не тратить время на поиск.
 								</div>
 								<button
-									id="search-user-location--btn"
+									type="button"
+									@click="console.log('click'); getUserLocation()"
 									class="mt-3 px-12 py-3 bg-primary-light dark:bg-primary-dark rounded-[10px] text-white dark:text-cosmic-900"
 								>
 									Найти мою геолокацию
@@ -1665,7 +929,7 @@
 							<div
 								id="search-user-location--not-found"
 								x-ref="notFound"
-								class="absolute flex flex-col items-center justify-center w-full gap-3 mt-20 text-center opacity-0 transition-all-500"
+								class="absolute flex flex-col items-center justify-center w-[calc(100%_-_32px)] gap-3 text-center opacity-0 transition-all-500"
 							>
 								<img
 									class="w-[70px] h-[70px]"
@@ -1682,22 +946,17 @@
 					</section>
 					<!-- ! Location Cards List -->
 					<ol
-						x-data="slides"
 						id="location-cards--container"
 						class="flex flex-col w-full h-full px-4 slip-swiping-container transition-all-500"
+						:class="{'pb-20': displaymode !== 'standalone'}"
 						tabindex="0"
 						role="listbox"
 					>
 						<!-- CARDS -->
-						<template
-							x-for="(card, index) in slides"
-							:key="card.id"
-						>
+						<template x-for="card in slides" :key="card.id">
 							<li
 								@click="locationsEditMode ? false : splide.go(slides.findIndex((item) => item.id === card.id)); locationsEditMode ? false : menuLocations = false"
-								x-data="slide"
-								x-ref="card"
-								x-show="show"
+								x-ref="cardItem"
 								x-transition:leave-end="opacity-0 h-0 my-0 -translate-x-full"
 								class="flex h-[85px] my-2 items-center no-reorder no-swipe transition-all-500"
 								:isuserlocation="card.location.isUserLocation"
@@ -1714,8 +973,8 @@
 								>
 									<button
 										type="button"
-										@click="$refs.card.classList.add('-translate-x-24')"
-										@click.outside="$refs.card.classList.remove('-translate-x-24')"
+										@click="$el.closest('li').classList.add('-translate-x-24')"
+										@click.outside="$el.closest('li').classList.remove('-translate-x-24')"
 										class="location-del no-reorder no-swipe"
 									>
 										<img
@@ -1729,7 +988,7 @@
 									<button
 										type="button"
 										x-show="locationsEditMode"
-										@click="transitionOut(); setTimeout(() => { slides.length ? false : locationsLength = 0 }, 500)"
+										@click="$el.closest('li').classList.add('opacity-0', 'h-0', 'my-0', '-translate-x-[calc(100%_+_100px)]'); setTimeout(() => { $dispatch('removecard', card); slides.length ? false : locationsLength = 0 }, 500)"
 										class="trash absolute z-50 -right-[100px] no-reorder no-swipe"
 									>
 										<img src="img/assets/icons/trash.svg" />
@@ -1776,31 +1035,52 @@
 										class="flex flex-col flex-auto truncate card__location-info"
 									>
 										<small
-											x-timeout:10000="$el.innerText=moment().locale(language).utcOffset(card.weatherData.timezone).format('HH:mm')"
+											x-timeout:5000="$el.innerText=moment().locale(language).utcOffset(card.weatherData.timezone).format('HH:mm')"
 											class="card__current-time"
 										></small>
-										<div class="flex">
+										<div class="relative flex">
 											<div
 												x-text="card.location.name"
 												class="mb-2 text-lg font-semibold leading-5 truncate card__location-name transition-all-500"
+												:class="locationsEditMode && 'pr-6'"
 											></div>
 											<div
-												class="duration-150 card__location-pin transition-300"
-											></div>
+												x-show="card.location.isUserLocation === 'true' && !locationsEditMode"
+												x-transition:enter-start="opacity-0 scale-50"
+												x-transition:leave-end="opacity-0 scale-50"
+												class="absolute right-0 duration-150 card__location-pin transition-all-500"
+											>
+												<svg
+													class="fill-cosmic-900 dark:fill-white"
+													width="16"
+													height="17"
+													viewBox="0 0 16 17"
+													fill="none"
+													xmlns="http://www.w3.org/2000/svg"
+												>
+													<path
+														d="M8 4.5C7.50555 4.5 7.0222 4.64662 6.61107 4.92133C6.19995 5.19603 5.87952 5.58648 5.6903 6.04329C5.50108 6.50011 5.45157 7.00277 5.54804 7.48773C5.6445 7.97268 5.8826 8.41814 6.23223 8.76777C6.58186 9.1174 7.02732 9.3555 7.51227 9.45196C7.99723 9.54843 8.49989 9.49892 8.95671 9.3097C9.41352 9.12048 9.80397 8.80005 10.0787 8.38893C10.3534 7.9778 10.5 7.49445 10.5 7C10.4992 6.33719 10.2356 5.70175 9.76693 5.23307C9.29825 4.7644 8.66281 4.50076 8 4.5ZM8 8.5C7.70333 8.5 7.41332 8.41203 7.16664 8.2472C6.91997 8.08238 6.72771 7.84811 6.61418 7.57403C6.50065 7.29994 6.47094 6.99834 6.52882 6.70736C6.5867 6.41639 6.72956 6.14912 6.93934 5.93934C7.14912 5.72956 7.41639 5.5867 7.70736 5.52882C7.99834 5.47094 8.29994 5.50065 8.57403 5.61418C8.84811 5.72771 9.08238 5.91997 9.2472 6.16664C9.41203 6.41332 9.5 6.70333 9.5 7C9.49955 7.39769 9.34138 7.77896 9.06017 8.06017C8.77896 8.34137 8.39769 8.49955 8 8.5ZM8 1.5C6.54182 1.50165 5.14383 2.08165 4.11274 3.11274C3.08165 4.14383 2.50165 5.54182 2.5 7C2.5 8.96225 3.40687 11.0424 5.12269 13.0156C5.89481 13.9072 6.76367 14.7101 7.71325 15.4096C7.7973 15.4685 7.89741 15.5 8 15.5C8.10259 15.5 8.2027 15.4685 8.28675 15.4096C9.23633 14.7101 10.1052 13.9072 10.8773 13.0156C12.5931 11.0424 13.5 8.96231 13.5 7C13.4983 5.54182 12.9184 4.14383 11.8873 3.11274C10.8562 2.08165 9.45818 1.50165 8 1.5ZM8 14.3737C6.96669 13.5632 3.5 10.5769 3.5 7C3.5 5.80653 3.97411 4.66193 4.81802 3.81802C5.66193 2.97411 6.80653 2.5 8 2.5C9.19347 2.5 10.3381 2.97411 11.182 3.81802C12.0259 4.66193 12.5 5.80653 12.5 7C12.5 10.577 9.03312 13.5634 8 14.3737Z"
+													/>
+												</svg>
+											</div>
 										</div>
 										<span
-											x-show.transition="!locationsEditMode"
+											x-show="!locationsEditMode"
+											x-transition:enter-start="opacity-0 translate-y-1 h-[0px]"
+											x-transition:leave-end="opacity-0 translate-y-1 h-[0px]"
 											x-text="card.weatherData.currentConditions.conditions"
-											class="truncate card__current-condition transition-all-300"
+											class="h-4 truncate card__current-condition transition-all-300"
 										></span>
 									</div>
 									<div
 										x-show="!locationsEditMode"
-										class="flex flex-col items-center w-20 card__weather-info transition-all-500"
+										x-transition:enter-start="opacity-0 scale-50 translate-x-20"
+										x-transition:leave-end="opacity-0 scale-50 translate-x-20"
+										class="flex flex-col items-center w-20 shrink-0 card__weather-info transition-500"
 									>
 										<div
 											x-text="tempConverter(card.weatherData.currentConditions.temp) + ' °'"
-											class="text-3xl font-medium text-center card__current-temp transition-300"
+											class="text-3xl font-medium text-center card__current-temp transition-500"
 										></div>
 										<small
 											class="card__temp-range flex gap-[2px] items-center text-gray-300 dark:text-cosmic-300"
@@ -1845,6 +1125,8 @@
 									</div>
 									<div
 										x-show="!locationsEditMode"
+										x-transition:enter-start="opacity-0 scale-50"
+										x-transition:leave-end="opacity-0 scale-50"
 										class="w-12 h-12 card__weather-icon shrink-0 transition-all-500"
 									>
 										<img
@@ -1856,19 +1138,21 @@
 								</section>
 								<button
 									x-show="locationsEditMode"
+									x-transition:enter-start="opacity-0"
+									x-transition:leave-end="opacity-0"
 									@click="
 										clearText = true;
 										locationEditModal = true;
 										editedCard = card.location;
-										menuLocationsBdackdrop = true;
+										menuLocationsBackdrop = true;
 										$refs.editLocationInput.value = card.location.name;
 										$refs.editLocationConfirmBtn.removeAttribute('disabled');
 										setTimeout(() => $refs.editLocationInput.focus(), 500)
 										"
-									class="absolute card__edit-btn right-14 transition-300 no-reorder no-swipe"
+									class="absolute card__edit-btn right-14 transition-500 no-reorder no-swipe"
 								>
 									<svg
-										class="fill-cosmin-900 dark:fill-white no-reorder no-swipe"
+										class="fill-cosmic-900 dark:fill-white no-reorder no-swipe"
 										width="48"
 										height="48"
 										viewBox="0 0 48 48"
@@ -1884,98 +1168,98 @@
 								</button>
 							</li>
 						</template>
-						<!-- TODO Modal section -->
-						<div
-							x-cloak
-							id="location-edit-modal"
-							x-show="locationEditModal"
-							x-transition:enter-start="opacity-0 scale-95"
-							x-transition:leave-end="opacity-0 scale-95"
-							class="absolute transition-[opacity,margin] duration-300 ease-[cubic-bezier(.23,1,.32,1)] z-[100] p-6 min-w-[343px] bg-white rounded-2xl dark:bg-cosmic-900 -mt-4 border border-gray-100 dark:border-cosmic-800 top-10 left-1/2 transform -translate-x-1/2 text-center"
-							aria-labelledby="hs-dropdown-item-checkbox"
-						>
-							<h3 class="mb-4">Переименовать локацию</h3>
-							<div class="relative mb-6">
-								<input
-									x-ref="editLocationInput"
-									class="bg-gray-100 dark:bg-cosmic-800 py-[14px] px-4 pr-10 truncate w-full rounded-md outline-none focus:outline-none caret-primary-light dark:caret-primary-dark placeholder-gray-300 dark:placeholder-cosmic-500"
-									type="text"
-									name="location-name"
-									id="location-modal-input"
-									placeholder="Введите название"
-									:value="editedCard.name"
-									autocomplete="nope"
-									@input="if ($el.value.length > 0) {
-										clearText = true;
-										$refs.editLocationConfirmBtn.removeAttribute('disabled')
-									} else {
-										clearText = false;
-										$refs.editLocationConfirmBtn.setAttribute('disabled', '')
-										}"
-								/>
-								<div
-									x-show="clearText"
-									@click="
-										clearText = false;
-										$refs.editLocationInput.value = ''; 
-										$refs.editLocationInput.focus(); 
-										$refs.editLocationConfirmBtn.setAttribute('disabled', '')
-										"
-									class="absolute clear-text-cross right-3 top-4 transition-opacity duration-500 ease-[cubic-bezier(.23,1,.32,1)]"
-								>
-									<svg
-										class="stroke-gray-300 dark:stroke-cosmic-500 stroke-1.5"
-										width="20"
-										height="20"
-										viewBox="0 0 20 20"
-										fill="none"
-										xmlns="http://www.w3.org/2000/svg"
-									>
-										<circle cx="10" cy="10" r="9.25" />
-										<path
-											d="M7 13L10 10M10 10L13 7M10 10L7 7M10 10L13 13"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-										/>
-									</svg>
-								</div>
-								<button
-									id="restore-name"
-									x-text="lang.locations.restoreName"
-									x-show="editedCard.name !== editedCard.originalName"
-									@click="
-										console.log(editedCard);
-										locationEditModal = false; 
-										menuLocationsBackdrop = false;
-										updateLocation({ detail: { id: editedCard.id, name: editedCard.originalName }})
-										$dispatch('toast', { content: `Название локации изменено на ${editedCard.originalName}` })
-									"
-									class="pt-4 text-sm text-left text-primary-light dark:text-primary-dark"
-								></button>
-							</div>
-							<div class="flex justify-around">
-								<button
-									class="w-1/2 p-2 mr-2 text-sm font-semibold border rounded-lg settings--modal--cancel-btn border-primary-light dark:border-primary-dark text-primary-light dark:text-primary-dark"
-									type="button"
-									@click="locationEditModal = false; menuLocationsBackdrop = false"
-									x-text="lang.common.buttons.cancel"
-								></button>
-								<button
-									x-ref="editLocationConfirmBtn"
-									class="w-1/2 p-2 ml-2 text-sm font-semibold text-white rounded-lg settings--modal--ok-btn bg-primary-light dark:bg-primary-dark disabled:bg-primary-light/50 disabled:dark:bg-primary-dark/50 disabled:dark:text-cosmic-900 dark:text-cosmic-900"
-									type="button"
-									@click="
-										console.log(editedCard);
-										locationEditModal = false; 
-										menuLocationsBackdrop = false;
-										updateLocation({ detail: { id: editedCard.id, name: $refs.editLocationInput.value }})
-										$dispatch('toast', { content: `Название локации изменено на ${$refs.editLocationInput.value}` })
-										"
-									x-text="lang.common.buttons.ok"
-								></button>
-							</div>
-						</div>
 					</ol>
+					<!-- TODO Modal section -->
+					<div
+						x-cloak
+						id="location-edit-modal"
+						x-show="locationEditModal"
+						x-transition:enter-start="opacity-0 scale-95"
+						x-transition:leave-end="opacity-0 scale-95"
+						class="absolute transition-[opacity,margin] duration-300 ease-[cubic-bezier(.23,1,.32,1)] z-[100] p-6 min-w-[343px] bg-white rounded-2xl dark:bg-cosmic-900 -mt-4 border border-gray-100 dark:border-cosmic-800 top-10 left-1/2 transform -translate-x-1/2 text-center"
+						aria-labelledby="hs-dropdown-item-checkbox"
+					>
+						<h3 class="mb-4">Переименовать локацию</h3>
+						<div class="relative mb-6">
+							<input
+								x-ref="editLocationInput"
+								class="bg-gray-100 dark:bg-cosmic-800 py-[14px] px-4 pr-10 truncate w-full rounded-md outline-none focus:outline-none caret-primary-light dark:caret-primary-dark placeholder-gray-300 dark:placeholder-cosmic-500"
+								type="text"
+								name="location-name"
+								id="location-modal-input"
+								placeholder="Введите название"
+								:value="editedCard.name"
+								autocomplete="nope"
+								@input="if ($el.value.length > 0) {
+									clearText = true;
+									$refs.editLocationConfirmBtn.removeAttribute('disabled')
+								} else {
+									clearText = false;
+									$refs.editLocationConfirmBtn.setAttribute('disabled', '')
+									}"
+							/>
+							<div
+								x-show="clearText"
+								@click="
+									clearText = false;
+									$refs.editLocationInput.value = ''; 
+									$refs.editLocationInput.focus(); 
+									$refs.editLocationConfirmBtn.setAttribute('disabled', '')
+									"
+								class="absolute clear-text-cross right-3 top-4 transition-opacity duration-500 ease-[cubic-bezier(.23,1,.32,1)]"
+							>
+								<svg
+									class="stroke-gray-300 dark:stroke-cosmic-500 stroke-1.5"
+									width="20"
+									height="20"
+									viewBox="0 0 20 20"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg"
+								>
+									<circle cx="10" cy="10" r="9.25" />
+									<path
+										d="M7 13L10 10M10 10L13 7M10 10L7 7M10 10L13 13"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+									/>
+								</svg>
+							</div>
+							<button
+								id="restore-name"
+								x-text="lang.locations.restoreName"
+								x-show="editedCard.name !== editedCard.originalName"
+								@click="
+									console.log(editedCard);
+									locationEditModal = false; 
+									menuLocationsBackdrop = false;
+									updateLocation({ detail: { id: editedCard.id, name: editedCard.originalName }})
+									$dispatch('toast', { content: `Название локации изменено на ${editedCard.originalName}` })
+								"
+								class="pt-4 text-sm text-left text-primary-light dark:text-primary-dark"
+							></button>
+						</div>
+						<div class="flex justify-around">
+							<button
+								class="w-1/2 p-2 mr-2 text-sm font-semibold border rounded-lg settings--modal--cancel-btn border-primary-light dark:border-primary-dark text-primary-light dark:text-primary-dark"
+								type="button"
+								@click="locationEditModal = false; menuLocationsBackdrop = false"
+								x-text="lang.common.buttons.cancel"
+							></button>
+							<button
+								x-ref="editLocationConfirmBtn"
+								class="w-1/2 p-2 ml-2 text-sm font-semibold text-white rounded-lg settings--modal--ok-btn bg-primary-light dark:bg-primary-dark disabled:bg-primary-light/50 disabled:dark:bg-primary-dark/50 disabled:dark:text-cosmic-900 dark:text-cosmic-900"
+								type="button"
+								@click="
+									console.log(editedCard);
+									locationEditModal = false; 
+									menuLocationsBackdrop = false;
+									updateLocation({ detail: { id: editedCard.id, name: $refs.editLocationInput.value }})
+									$dispatch('toast', { content: `Название локации изменено на ${$refs.editLocationInput.value}` })
+									"
+								x-text="lang.common.buttons.ok"
+							></button>
+						</div>
+					</div>
 
 					<!-- Placeholders -->
 					<section
@@ -2034,9 +1318,8 @@
 
 			<!-- *? Settings ?* -->
 			<section
-				x-data="{ changes: false }"
-				class="fixed top-0 left-0 w-full h-full pb-20 overflow-y-scroll backdrop-blur-xl bg-gray-100/80 dark:bg-cosmic-900/80 transition-all-500 overflow-x-clip"
 				x-cloak
+				class="fixed top-0 left-0 w-full h-full pb-20 overflow-y-scroll bg-gray-100 dark:bg-cosmic-900 transition-all-500 overflow-x-clip"
 				x-show="menuSettings"
 			>
 				<div
@@ -2053,12 +1336,33 @@
 				>
 					<!-- HEADER -->
 					<header
-						class="sticky top-0 z-10 flex items-center justify-center w-full h-12 px-4 pt-4 pb-1 bg-gray-100/50 dark:bg-cosmic-900/80 backdrop-blur-md"
+						@click="settingsChanged ? updateInfo(true) : ''; settingsChanged = false;"
+						class="sticky top-0 z-10 flex flex-col items-center justify-center w-full h-12 px-4 pt-4 pb-1 bg-gray-100 dark:bg-cosmic-900"
 					>
 						<div
 							x-text="lang.settings.header"
 							class="text-lg font-semibold leading-5"
 						></div>
+						<!-- <ul>
+							<template x-for="card in slides" :key="card.id">
+								<li>
+									<div class="flex gap-2">
+										<div
+											@click="$dispatch('removecard', card)"
+											x-text="tempConverter(card.weatherData.currentConditions.temp) + ' °  '"
+										></div>
+										<div
+											@click="transitionOut()"
+											x-text="windConverter(card.weatherData.currentConditions.windspeed)"
+										></div>
+										<div
+											@click="transitionOut()"
+											x-text="pressureConverter(card.weatherData.currentConditions.pressure)"
+										></div>
+									</div>
+								</li>
+							</template>
+						</ul> -->
 					</header>
 					<!--  -->
 					<div
@@ -2067,13 +1371,13 @@
 						<section
 							id="set_temp"
 							class="flex items-center justify-between"
+							@click="settingsChanged = true; settings.temp = !settings.temp; updateSettings('temp', settings.temp);"
 						>
 							<div
 								class="text-base font-medium leading-5"
 								x-text="lang.settings.temperature"
 							></div>
 							<div
-								@click="settingsChanged = true; settings.temp = !settings.temp; updateSettings('temp', settings.temp);"
 								class="relative w-32 border rounded-md h-7 border-primary-light dark:border-primary-dark"
 							>
 								<div
@@ -2136,6 +1440,7 @@
 						</section>
 						<section
 							id="set_pressure"
+							@click="settingsChanged = true; settings.pressure = !settings.pressure; updateSettings('pressure', settings.pressure);"
 							class="flex items-center justify-between"
 						>
 							<div
@@ -2143,7 +1448,6 @@
 								x-text="lang.settings.pressure.label"
 							></div>
 							<div
-								@click="settingsChanged = true; settings.pressure = !settings.pressure; updateSettings('pressure', settings.pressure);"
 								class="relative w-32 border rounded-md h-7 border-primary-light dark:border-primary-dark"
 							>
 								<div
@@ -2174,6 +1478,10 @@
 					>
 						<section
 							id="set_lang"
+							@click="settingsChanged = true; 
+								settings.lang = !settings.lang; updateSettings('lang', settings.lang); 
+								lang = languageStrings[settings.lang ? 'en': 'ru'];
+								language = settings.lang ? 'en' : 'ru';"
 							class="flex items-center justify-between"
 						>
 							<div
@@ -2181,10 +1489,6 @@
 								x-text="lang.settings.lang.label"
 							></div>
 							<div
-								@click="settingsChanged = true; 
-									settings.lang = !settings.lang; updateSettings('lang', settings.lang); 
-									lang = languageStrings[settings.lang ? 'en': 'ru']; 
-									language = settings.lang ? 'en' : 'ru';"
 								class="relative w-32 border rounded-md h-7 border-primary-light dark:border-primary-dark"
 							>
 								<div
@@ -2213,15 +1517,14 @@
 							id="settings-theme-dropdown"
 							x-data="{ themeDropdown: false }"
 							class="relative inline-flex items-center justify-between"
+							@click="themeDropdown = !themeDropdown"
 						>
 							<div
-								@click="themeDropdown = ! themeDropdown"
 								class="text-base font-medium leading-7"
 								x-text="lang.settings.theme.label"
 							></div>
 							<button
 								type="button"
-								@click="themeDropdown = ! themeDropdown"
 								x-text="lang.settings.theme.themes[settings.theme]"
 								class="items-center text-base font-medium leading-5 text-primary-light dark:text-primary-dark"
 							></button>
@@ -2289,15 +1592,16 @@
 								</div>
 							</div>
 						</section>
-						<section class="flex items-center justify-between">
+						<section
+							@click="settings.details = !settings.details; updateSettings('details', settings.details);"
+							class="flex items-center justify-between"
+						>
 							<div
-								@click="settings.details = !settings.details; updateSettings('details', settings.details);"
 								class="text-base font-medium leading-5"
 								x-text="lang.settings.details"
 							></div>
 							<div
 								class="relative flex items-center h-[28px] w-[50px] border border-gray-300 dark:border-cosmic-500 rounded-full text-center ease-[cubic-bezier(.23,1,.32,1)] transform-gpu duration-500"
-								@click="settings.details = !settings.details; updateSettings('details', settings.details);"
 								:class="{' border-primary-light dark:border-primary-dark': settings.details === true }"
 							>
 								<div
@@ -2361,7 +1665,9 @@
 									menuSettingsBackdrop = false;
 									deleteLocations();
 									slides = [];
-									splide.refresh();
+									setTimeout(() => {
+										splide.refresh();
+									}, 500);
 									locationsLength = 0;
 									$dispatch('toast', { content: 'Все добавленные локации удалены' })
 									"
@@ -2521,7 +1827,7 @@
 						class="absolute flex flex-col justify-end left-1/2 -translate-x-1/2 translate-y-0 bottom-0 w-[50%] overflow-x-scroll delay-300 transition duration-300 ease-[cubic-bezier(.23,1,.32,1)]"
 					>
 						<div
-							class="items-center splide__pagination truncate h-4 my-2.5 flex justify-center gap-2 !relative z-10"
+							class="items-center splide__pagination truncate h-10 my-2.5 flex justify-center gap-2 !relative z-10"
 						></div>
 						<div
 							id="weather-btn"
@@ -2636,6 +1942,1328 @@
 				class="fixed top-0 left-0 z-10 w-full h-full dark:bg-cosmic-900/80 backdrop-blur-lg transition-all-500"
 			></div>
 		</main>
+		<!-- ! PopUps -->
+		<section
+			x-data="popups"
+			@popup3info.window="popup3info()"
+			@popup3locationinfo.window="popup3locationinfo()"
+			@addpopup1.window="addpopup1($event)"
+			@addpopup2.window="addpopup2($event)"
+			@addpopup3.window="addpopup3($event)"
+			@addnewslide.window="addnewslide($event)"
+		>
+			<template x-for="detailedForecast in popup2">
+				<div
+					x-data="detailedForecast"
+					x-init="atTop = true, changeColor(false)"
+					x-show="show"
+					x-transition:enter-start="translate-x-full"
+					x-transition:leave-end="translate-x-full"
+					@scroll="atTop = $el.scrollTop < 44 ? true : false; legend = false; atTop ? changeColor(false) : changeColor(true)"
+					class="fixed top-0 left-0 w-full h-full z-[10000] overflow-y-scroll overflow-x-clip bg-white transition-all-500 dark:bg-cosmic-900"
+				>
+					<header
+						:class="atTop ? 'bg-white dark:bg-cosmic-900' : 'bg-gray-100 dark:bg-cosmic-800'"
+						class="top-0 z-50 flex flex-col gap-4 pt-3 duration-1000 transition-500"
+					>
+						<div class="flex items-center w-full px-4">
+							<button type="button" @click="transitionOut()">
+								<svg
+									class="fill-primary-light dark:fill-[#FEB800]"
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg"
+								>
+									<path
+										fill-rule="evenodd"
+										clip-rule="evenodd"
+										d="M19.4999 12.0001C19.4999 12.2487 19.4011 12.4871 19.2253 12.663C19.0495 12.8388 18.811 12.9375 18.5624 12.9375H7.70076L11.7263 16.9612C11.8135 17.0484 11.8826 17.1518 11.9298 17.2657C11.977 17.3796 12.0012 17.5017 12.0012 17.6249C12.0012 17.7482 11.977 17.8703 11.9298 17.9841C11.8826 18.098 11.8135 18.2015 11.7263 18.2887C11.6391 18.3758 11.5357 18.445 11.4218 18.4922C11.3079 18.5393 11.1858 18.5636 11.0626 18.5636C10.9393 18.5636 10.8172 18.5393 10.7034 18.4922C10.5895 18.445 10.486 18.3758 10.3988 18.2887L4.77395 12.6638C4.68665 12.5767 4.61738 12.4733 4.57012 12.3594C4.52286 12.2455 4.49854 12.1234 4.49854 12.0001C4.49854 11.8768 4.52286 11.7547 4.57012 11.6408C4.61738 11.5269 4.68665 11.4234 4.77395 11.3363L10.3988 5.71145C10.5749 5.53542 10.8136 5.43652 11.0626 5.43652C11.3115 5.43652 11.5503 5.53542 11.7263 5.71145C11.9023 5.88749 12.0012 6.12624 12.0012 6.37519C12.0012 6.62414 11.9023 6.86289 11.7263 7.03892L7.70076 11.0626H18.5624C18.811 11.0626 19.0495 11.1614 19.2253 11.3372C19.4011 11.513 19.4999 11.7514 19.4999 12.0001Z"
+									/>
+								</svg>
+							</button>
+							<div
+								x-text="lang.slides.headers.tenDaysForecast"
+								class="text-base font-semibold leading-5 text-center grow shrink-0 transition-all-500"
+							></div>
+							<div x-data="{ show: false }" x-ref="legend">
+								<button
+									type="button"
+									@click="legend = ! legend"
+									class="ten_days_detailed--legend-btn stroke-primary-light dark:stroke-primary-dark"
+								>
+									<svg
+										width="24"
+										height="24"
+										viewBox="0 0 24 24"
+										fill="none"
+										xmlns="http://www.w3.org/2000/svg"
+									>
+										<path
+											d="M13 16H12V12H11M12 8H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+											stroke-width="2"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+										/>
+									</svg>
+								</button>
+								<div
+									id="main-backdrop"
+									class="absolute top-0 left-0 z-50 w-full h-screen bg-primary-backdrop/70 dark:bg-primary-backdrop/80 transition-500"
+									x-show="legend"
+									x-transition:enter-start="opacity-0"
+									x-transition:leave-end="opacity-0"
+								></div>
+								<!-- MODAL LEGEND -->
+								<div
+									id="ten_days_detailed--modal-legend"
+									@click.away="legend = false"
+									class="transition-300 origin-top-right absolute top-12 right-4 w-[calc(100%_-_32px)] min-w-[300px] max-w-[343px] rounded-2xl p-6 bg-white dark:bg-cosmic-900 border border-gray-100 dark:border-cosmic-800 shadow-md z-[1000]"
+									x-show="legend"
+									x-transition:enter-start="scale-50 opacity-0"
+									x-transition:leave-end="scale-50 opacity-0"
+								>
+									<header
+										class="mb-4 text-lg font-bold leading-5 text-center"
+									>
+										Легенда
+									</header>
+									<ol class="flex flex-col gap-4">
+										<li class="flex gap-2">
+											<img
+												class="w-5 h-5"
+												src="img/assets/icons/feels-like.svg"
+											/>
+											<div class="text-sm">
+												Температура по ощущению
+											</div>
+										</li>
+										<li class="flex gap-2">
+											<img
+												class="w-5 h-5"
+												src="img/assets/icons/clarity_compass-line.svg"
+											/>
+											<div class="text-sm">
+												Скорость ветра и направление
+											</div>
+										</li>
+										<li class="flex gap-2">
+											<img
+												class="w-5 h-5"
+												src="img/assets/icons/ion_water-outline.svg"
+											/>
+											<div class="text-sm">Влажность</div>
+										</li>
+										<li class="flex gap-2">
+											<img
+												class="w-5 h-5"
+												src="img/assets/icons/wi_barometer.svg"
+											/>
+											<div class="text-sm">
+												Атмосферное давление
+											</div>
+										</li>
+									</ol>
+									<div
+										@click="legend = false"
+										class="absolute close-modal right-4 top-4 stroke-cosmic-900 dark:stroke-white"
+									>
+										<svg
+											width="16"
+											height="16"
+											viewBox="0 0 16 16"
+											fill="none"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path
+												d="M4.2998 11.3L7.7998 7.80005M7.7998 7.80005L11.2998 4.30005M7.7998 7.80005L4.2998 4.30005M7.7998 7.80005L11.2998 11.3"
+												stroke-width="1.5"
+												stroke-linecap="round"
+												stroke-linejoin="round"
+											/>
+										</svg>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- DayList -->
+						<!-- <section id="dayList" class="splide">
+								<div class="splide__track"> -->
+
+						<!-- </div>
+							</section> -->
+					</header>
+					<!-- DayParts -->
+					<section id="daysDetailed" class="splide">
+						<div class="splide__track">
+							<ul
+								x-ref="daylist"
+								:class="atTop ? 'bg-white dark:bg-cosmic-900' : 'bg-gray-100 dark:bg-cosmic-800'"
+								class="sticky top-0 z-10 transition-500 duration-1000 no-drag ten-days-forecast-detailed--dates py-4 scroll-smooth grid grid-flow-col gap-2.5 snap-mandatory snap-x scroll-pl-4 px-4 overflow-x-scroll"
+							>
+								<div
+									class="absolute z-0 w-10 mt-4 rounded-lg no-drag bg-primary-light dark:bg-primary-dark h-14 transition-all-500"
+									:style="'transform: translateX(' + offset + 'px)'"
+								></div>
+								<template
+									x-for="(day, id) in detailedForecast.weatherData.days.slice(0, 10)"
+									:key="id"
+								>
+									<li
+										x-effect="$refs.daylist.scrollLeft = offset - 150"
+										class="flex flex-col gap-1 no-drag items-center text-white dark:text-cosmic-900 snap-start w-10 h-14 rounded-lg px-2.5 py-2 transition-500"
+										@click="offset = $el.offsetLeft; splide2.go(id)"
+										:class="{ 'text-white dark:text-cosmic-900': offset === $el.offsetLeft }"
+									>
+										<div
+											x-text="moment.unix(day.datetimeEpoch).locale(language).format('dd')"
+											class="text-xs font-bold no-drag"
+										></div>
+										<div
+											x-text="moment.unix(day.datetimeEpoch).locale(language).format('DD')"
+											class="text-base font-semibold leading-5 no-drag"
+										></div>
+									</li>
+								</template>
+							</ul>
+							<ul
+								class="splide__list"
+								x-data="detailedDays"
+								@detaileddaysinfo.window="info($event)"
+								@detaileddaysadd.window="add($event)"
+								@detaileddaysremove.window="remove($event)"
+							>
+								<template
+									x-for="detailedDay in detailedDays"
+									:key="detailedDay.id"
+								>
+									<li
+										x-data="detailedDay"
+										x-show="show"
+										x-transition:enter-start="opacity-0"
+										@detaileddayclose.window="closeday($event);"
+										class="flex flex-col w-full gap-4 mb-24 bg-white splide__slide transition-opacity-500 dark:bg-cosmic-900"
+									>
+										<ul
+											class="flex flex-col mt-2 mb-20 divide-y divide-gray-100 dark:divide-cosmic-800"
+										>
+											<li class="px-6 pt-4 pb-2">
+												<header
+													x-text="lang.datetime.morning"
+													class="h-6 text-sm text-gray-300 dark:text-cosmic-500"
+												></header>
+												<div
+													class="flex flex-col w-full gap-4 pb-4 bg-white dark:bg-cosmic-900"
+												>
+													<div
+														class="flex gap-2.5 justify-between pt-4"
+													>
+														<div
+															class="flex flex-col gap-2"
+														>
+															<div
+																class="flex items-center gap-4"
+															>
+																<div
+																	x-text="tempConverter(detailedDay.weatherData.hours[6].temp) + '°'"
+																	class="text-2xl font-semibold leading-7"
+																></div>
+																<div
+																	class="flex items-end gap-1 text-base font-semibold leading-5"
+																>
+																	<img
+																		class="w-5 h-5"
+																		src="img/assets/icons/feels-like.svg"
+																		alt=""
+																	/>
+																	<div
+																		x-text="tempConverter(detailedDay.weatherData.hours[6].feelslike) + '°'"
+																	></div>
+																</div>
+															</div>
+															<div
+																x-text="detailedDay.weatherData.hours[6].conditions"
+																class="text-sm"
+															></div>
+														</div>
+														<div>
+															<img
+																class="w-14 h-14"
+																:src="detailedDay.weatherData.hours[6].icon"
+																alt=""
+																srcset=""
+															/>
+														</div>
+													</div>
+													<div class="flex gap-4">
+														<div
+															class="flex gap-1.5 items-center"
+														>
+															<img
+																class="w-4 h-4"
+																:style="`rotate: ${-detailedDay.weatherData.hours[6].winddir}deg`"
+																src="img/assets/icons/clarity_compass-line.svg"
+																alt=""
+															/>
+															<div
+																x-text="windConverter(detailedDay.weatherData.hours[6].windspeed) + ' ' + (settings.wind ? lang.weather.units.wind[1] : lang.weather.units.wind[0]) + ', ' + windDegreeToString(detailedDay.weatherData.hours[6].winddir)"
+																class="text-sm leading-4"
+															></div>
+														</div>
+														<div
+															class="flex gap-1.5 items-center"
+														>
+															<img
+																class="w-4 h-4"
+																src="img/assets/icons/wi_barometer.svg"
+																alt=""
+															/>
+															<div
+																x-text="pressureConverter(detailedDay.weatherData.hours[6].pressure) + ' ' + (settings.pressure ? lang.weather.units.pressure[1] : lang.weather.units.pressure[0])"
+																class="text-sm leading-4"
+															></div>
+														</div>
+														<div
+															class="flex gap-1.5 items-center"
+														>
+															<img
+																class="w-4 h-4"
+																src="img/assets/icons/ion_water-outline.svg"
+																alt=""
+															/>
+															<div
+																x-text="Math.round(detailedDay.weatherData.hours[6].humidity) + ' %'"
+																class="text-sm leading-4"
+															></div>
+														</div>
+													</div>
+												</div>
+												<div
+													class="flex gap-1.5 items-center"
+												>
+													<img
+														class="w-4 h-4"
+														src="img/assets/icons/rain-percent.svg"
+														alt=""
+													/>
+													<div
+														x-text="lang.weather.precipprob + ' ' + detailedDay.weatherData.hours[6].precipprob + '%'"
+														class="text-sm leading-4"
+													></div>
+												</div>
+											</li>
+											<li class="px-6 pt-4 pb-2">
+												<header
+													x-text="lang.datetime.noon"
+													class="h-6 text-sm text-gray-300 dark:text-cosmic-500"
+												></header>
+												<div
+													class="flex flex-col w-full gap-4 pb-4 bg-white dark:bg-cosmic-900"
+												>
+													<div
+														class="flex gap-2.5 justify-between pt-4"
+													>
+														<div
+															class="flex flex-col gap-2"
+														>
+															<div
+																class="flex items-center gap-4"
+															>
+																<div
+																	x-text="tempConverter(detailedDay.weatherData.hours[12].temp) + '°'"
+																	class="text-2xl font-semibold leading-7"
+																></div>
+																<div
+																	class="flex items-end gap-1 text-base font-semibold leading-5"
+																>
+																	<img
+																		class="w-5 h-5"
+																		src="img/assets/icons/feels-like.svg"
+																		alt=""
+																	/>
+																	<div
+																		x-text="tempConverter(detailedDay.weatherData.hours[12].feelslike) + '°'"
+																	></div>
+																</div>
+															</div>
+															<div
+																x-text="detailedDay.weatherData.hours[12].conditions"
+																class="text-sm"
+															></div>
+														</div>
+														<div>
+															<img
+																class="w-14 h-14"
+																:src="detailedDay.weatherData.hours[12].icon"
+																alt=""
+																srcset=""
+															/>
+														</div>
+													</div>
+													<div class="flex gap-4">
+														<div
+															class="flex gap-1.5 items-center"
+														>
+															<img
+																class="w-4 h-4"
+																:style="`rotate: ${-detailedDay.weatherData.hours[12].winddir}deg`"
+																src="img/assets/icons/clarity_compass-line.svg"
+																alt=""
+															/>
+															<div
+																x-text="windConverter(detailedDay.weatherData.hours[12].windspeed) + ' ' + (settings.wind ? lang.weather.units.wind[1] : lang.weather.units.wind[0]) + ', ' + windDegreeToString(detailedDay.weatherData.hours[12].winddir)"
+																class="text-sm leading-4"
+															></div>
+														</div>
+														<div
+															class="flex gap-1.5 items-center"
+														>
+															<img
+																class="w-4 h-4"
+																src="img/assets/icons/wi_barometer.svg"
+																alt=""
+															/>
+															<div
+																x-text="pressureConverter(detailedDay.weatherData.hours[12].pressure) + ' ' + (settings.pressure ? lang.weather.units.pressure[1] : lang.weather.units.pressure[0])"
+																class="text-sm leading-4"
+															></div>
+														</div>
+														<div
+															class="flex gap-1.5 items-center"
+														>
+															<img
+																class="w-4 h-4"
+																src="img/assets/icons/ion_water-outline.svg"
+																alt=""
+															/>
+															<div
+																x-text="Math.round(detailedDay.weatherData.hours[12].humidity) + ' %'"
+																class="text-sm leading-4"
+															></div>
+														</div>
+													</div>
+												</div>
+												<div
+													class="flex gap-1.5 items-center"
+												>
+													<img
+														class="w-4 h-4"
+														src="img/assets/icons/rain-percent.svg"
+														alt=""
+													/>
+													<div
+														x-text="lang.weather.precipprob + ' ' + detailedDay.weatherData.hours[12].precipprob + '%'"
+														class="text-sm leading-4"
+													></div>
+												</div>
+											</li>
+											<li class="px-6 pt-4 pb-2">
+												<header
+													x-text="lang.datetime.evening"
+													class="h-6 text-sm text-gray-300 dark:text-cosmic-500"
+												></header>
+												<div
+													class="flex flex-col w-full gap-4 pb-4 bg-white dark:bg-cosmic-900"
+												>
+													<div
+														class="flex gap-2.5 justify-between pt-4"
+													>
+														<div
+															class="flex flex-col gap-2"
+														>
+															<div
+																class="flex items-center gap-4"
+															>
+																<div
+																	x-text="tempConverter(detailedDay.weatherData.hours[18].temp) + '°'"
+																	class="text-2xl font-semibold leading-7"
+																></div>
+																<div
+																	class="flex items-end gap-1 text-base font-semibold leading-5"
+																>
+																	<img
+																		class="w-5 h-5"
+																		src="img/assets/icons/feels-like.svg"
+																		alt=""
+																	/>
+																	<div
+																		x-text="tempConverter(detailedDay.weatherData.hours[18].feelslike) + '°'"
+																	></div>
+																</div>
+															</div>
+															<div
+																x-text="detailedDay.weatherData.hours[18].conditions"
+																class="text-sm"
+															></div>
+														</div>
+														<div>
+															<img
+																class="w-14 h-14"
+																:src="detailedDay.weatherData.hours[18].icon"
+																alt=""
+																srcset=""
+															/>
+														</div>
+													</div>
+													<div class="flex gap-4">
+														<div
+															class="flex gap-1.5 items-center"
+														>
+															<img
+																class="w-4 h-4"
+																:style="`rotate: ${-detailedDay.weatherData.hours[18].winddir}deg`"
+																src="img/assets/icons/clarity_compass-line.svg"
+																alt=""
+															/>
+															<div
+																x-text="windConverter(detailedDay.weatherData.hours[18].windspeed) + ' ' + (settings.wind ? lang.weather.units.wind[1] : lang.weather.units.wind[0]) + ', ' + windDegreeToString(detailedDay.weatherData.hours[18].winddir)"
+																class="text-sm leading-4"
+															></div>
+														</div>
+														<div
+															class="flex gap-1.5 items-center"
+														>
+															<img
+																class="w-4 h-4"
+																src="img/assets/icons/wi_barometer.svg"
+																alt=""
+															/>
+															<div
+																x-text="pressureConverter(detailedDay.weatherData.hours[18].pressure) + ' ' + (settings.pressure ? lang.weather.units.pressure[1] : lang.weather.units.pressure[0])"
+																class="text-sm leading-4"
+															></div>
+														</div>
+														<div
+															class="flex gap-1.5 items-center"
+														>
+															<img
+																class="w-4 h-4"
+																src="img/assets/icons/ion_water-outline.svg"
+																alt=""
+															/>
+															<div
+																x-text="Math.round(detailedDay.weatherData.hours[18].humidity) + ' %'"
+																class="text-sm leading-4"
+															></div>
+														</div>
+													</div>
+												</div>
+												<div
+													class="flex gap-1.5 items-center"
+												>
+													<img
+														class="w-4 h-4"
+														src="img/assets/icons/rain-percent.svg"
+														alt=""
+													/>
+													<div
+														x-text="lang.weather.precipprob + ' ' + detailedDay.weatherData.hours[18].precipprob + '%'"
+														class="text-sm leading-4"
+													></div>
+												</div>
+											</li>
+											<li class="px-6 pt-4 pb-2">
+												<header
+													x-text="lang.datetime.night"
+													class="h-6 text-sm text-gray-300 dark:text-cosmic-500"
+												></header>
+												<div
+													class="flex flex-col w-full gap-4 pb-4 bg-white dark:bg-cosmic-900"
+												>
+													<div
+														class="flex gap-2.5 justify-between pt-4"
+													>
+														<div
+															class="flex flex-col gap-2"
+														>
+															<div
+																class="flex items-center gap-4"
+															>
+																<div
+																	x-text="tempConverter(detailedDay.weatherData.hours[6].temp) + '°'"
+																	class="text-2xl font-semibold leading-7"
+																></div>
+																<div
+																	class="flex items-end gap-1 text-base font-semibold leading-5"
+																>
+																	<img
+																		class="w-5 h-5"
+																		src="img/assets/icons/feels-like.svg"
+																		alt=""
+																	/>
+																	<div
+																		x-text="tempConverter(detailedDay.weatherData.hours[6].feelslike) + '°'"
+																	></div>
+																</div>
+															</div>
+															<div
+																x-text="detailedDay.weatherData.hours[6].conditions"
+																class="text-sm"
+															></div>
+														</div>
+														<div>
+															<img
+																class="w-14 h-14"
+																:src="detailedDay.weatherData.hours[22].icon"
+																alt=""
+																srcset=""
+															/>
+														</div>
+													</div>
+													<div class="flex gap-4">
+														<div
+															class="flex gap-1.5 items-center"
+														>
+															<img
+																class="w-4 h-4"
+																:style="`rotate: ${-detailedDay.weatherData.hours[22].winddir}deg`"
+																src="img/assets/icons/clarity_compass-line.svg"
+																alt=""
+															/>
+															<div
+																x-text="windConverter(detailedDay.weatherData.hours[22].windspeed) + ' ' + (settings.wind ? lang.weather.units.wind[1] : lang.weather.units.wind[0]) + ', ' + windDegreeToString(detailedDay.weatherData.hours[22].winddir)"
+																class="text-sm leading-4"
+															></div>
+														</div>
+														<div
+															class="flex gap-1.5 items-center"
+														>
+															<img
+																class="w-4 h-4"
+																src="img/assets/icons/wi_barometer.svg"
+																alt=""
+															/>
+															<div
+																x-text="pressureConverter(detailedDay.weatherData.hours[22].pressure) + ' ' + (settings.pressure ? lang.weather.units.pressure[1] : lang.weather.units.pressure[0])"
+																class="text-sm leading-4"
+															></div>
+														</div>
+														<div
+															class="flex gap-1.5 items-center"
+														>
+															<img
+																class="w-4 h-4"
+																src="img/assets/icons/ion_water-outline.svg"
+																alt=""
+															/>
+															<div
+																x-text="Math.round(detailedDay.weatherData.hours[22].humidity) + ' %'"
+																class="text-sm leading-4"
+															></div>
+														</div>
+													</div>
+												</div>
+												<div
+													class="flex gap-1.5 items-center"
+												>
+													<img
+														class="w-4 h-4"
+														src="img/assets/icons/rain-percent.svg"
+														alt=""
+													/>
+													<div
+														x-text="lang.weather.precipprob + ' ' + detailedDay.weatherData.hours[22].precipprob + '%'"
+														class="text-sm leading-4"
+													></div>
+												</div>
+											</li>
+
+											<li class="pt-4">
+												<div
+													class="grid grid-cols-2 gap-1 px-6 py-4"
+												>
+													<div
+														class="grid grid-flow-col grid-rows-2 gap-1.5 justify-start justify-items-center"
+													>
+														<div
+															class="row-span-2 mr-1.5 self-center"
+														>
+															<img
+																:src="`img/assets/icons/sunrise2.svg`"
+																alt=""
+															/>
+														</div>
+														<div
+															x-text="lang.datetime.sunrise"
+															class="text-gray-300 dark:text-cosmic-400 font-light text-xs leading-[14px] self-end place-self-start"
+														></div>
+														<div
+															x-text="detailedDay.weatherData.sunrise"
+															class="text-base font-semibold leading-5 text-cosmic-900 dark:text-white"
+														></div>
+													</div>
+													<div
+														class="grid grid-flow-col grid-rows-2 gap-1.5 justify-start justify-items-center"
+													>
+														<div
+															class="row-span-2 mr-1.5 self-center"
+														>
+															<img
+																:src="`img/assets/icons/sunset2.svg`"
+																alt=""
+															/>
+														</div>
+														<div
+															x-text="lang.datetime.sunset"
+															class="text-gray-300 dark:text-cosmic-400 font-light text-xs leading-[14px] self-end place-self-start"
+														></div>
+														<div
+															x-text="detailedDay.weatherData.sunset"
+															class="text-base font-semibold leading-5 text-cosmic-900 dark:text-white"
+														></div>
+													</div>
+													<div
+														class="grid grid-flow-col grid-rows-2 gap-1.5 justify-start justify-items-center"
+													>
+														<div
+															class="row-span-2 mr-1.5 self-center"
+														>
+															<img
+																:src="`img/assets/icons/clear-day2.svg`"
+																alt=""
+															/>
+														</div>
+														<div
+															x-text="lang.datetime.daylight"
+															class="text-gray-300 dark:text-cosmic-400 font-light text-xs leading-[14px] self-end place-self-start"
+														></div>
+														<div
+															x-text="detailedDay.weatherData.daylight"
+															class="text-base font-semibold leading-5 text-cosmic-900 dark:text-white"
+														></div>
+													</div>
+													<div
+														class="grid grid-flow-col grid-rows-2 gap-1.5 justify-start justify-items-center"
+													>
+														<div
+															class="row-span-2 mr-1.5 self-center"
+														>
+															<img
+																:src="`img/assets/icons/clear-night.svg`"
+																alt=""
+															/>
+														</div>
+														<div
+															x-text="lang.datetime.moon"
+															class="text-gray-300 dark:text-cosmic-400 font-light text-xs leading-[14px] self-end place-self-start"
+														></div>
+														<div
+															x-text="lang.weather.moonphase[moonphaseConverter(detailedDay.weatherData.moonphase)]"
+															class="text-base font-semibold leading-5 text-cosmic-900 dark:text-white"
+														></div>
+													</div>
+												</div>
+												<div
+													x-text="detailedDay.weatherData.description"
+													class="px-6"
+												></div>
+											</li>
+										</ul>
+									</li>
+								</template>
+							</ul>
+						</div>
+					</section>
+				</div>
+			</template>
+
+			<template x-for="monthlyForecast in popup1">
+				<div
+					x-data="monthlyForecast"
+					x-show="show"
+					x-transition:enter-start="translate-x-full"
+					x-transition:leave-end="translate-x-full"
+					class="fixed top-0 left-0 w-full h-full z-[10000] overflow-y-scroll bg-gray-100 transition-all-500 text-cosmic-900 dark:text-white dark:bg-cosmic-900"
+				>
+					<header
+						class="sticky top-0 z-50 flex flex-col gap-4 pt-3 pb-1 duration-1000 bg-gray-100 dark:bg-cosmic-900 transition-500"
+					>
+						<div class="flex items-center w-full px-4">
+							<button type="button" @click="transitionOut()">
+								<svg
+									class="fill-primary-light dark:fill-[#FEB800]"
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg"
+								>
+									<path
+										fill-rule="evenodd"
+										clip-rule="evenodd"
+										d="M19.4999 12.0001C19.4999 12.2487 19.4011 12.4871 19.2253 12.663C19.0495 12.8388 18.811 12.9375 18.5624 12.9375H7.70076L11.7263 16.9612C11.8135 17.0484 11.8826 17.1518 11.9298 17.2657C11.977 17.3796 12.0012 17.5017 12.0012 17.6249C12.0012 17.7482 11.977 17.8703 11.9298 17.9841C11.8826 18.098 11.8135 18.2015 11.7263 18.2887C11.6391 18.3758 11.5357 18.445 11.4218 18.4922C11.3079 18.5393 11.1858 18.5636 11.0626 18.5636C10.9393 18.5636 10.8172 18.5393 10.7034 18.4922C10.5895 18.445 10.486 18.3758 10.3988 18.2887L4.77395 12.6638C4.68665 12.5767 4.61738 12.4733 4.57012 12.3594C4.52286 12.2455 4.49854 12.1234 4.49854 12.0001C4.49854 11.8768 4.52286 11.7547 4.57012 11.6408C4.61738 11.5269 4.68665 11.4234 4.77395 11.3363L10.3988 5.71145C10.5749 5.53542 10.8136 5.43652 11.0626 5.43652C11.3115 5.43652 11.5503 5.53542 11.7263 5.71145C11.9023 5.88749 12.0012 6.12624 12.0012 6.37519C12.0012 6.62414 11.9023 6.86289 11.7263 7.03892L7.70076 11.0626H18.5624C18.811 11.0626 19.0495 11.1614 19.2253 11.3372C19.4011 11.513 19.4999 11.7514 19.4999 12.0001Z"
+									/>
+								</svg>
+							</button>
+							<div
+								x-text="lang.slides.headers.monthlyForecast"
+								class="text-base font-semibold leading-5 text-center grow shrink-0 transition-all-500"
+							></div>
+							<div class="w-6 h-6"></div>
+						</div>
+					</header>
+					<ul class="grid grid-flow-row mx-4 mb-8 daily">
+						<template
+							x-for="(day, index) in monthlyForecast.weatherData.days"
+							x-init="temprange = minMax(monthlyForecast.weatherData.days, monthlyForecast.weatherData.days.length)"
+							:key="index"
+						>
+							<li
+								x-init="lineStyles = tempRangeLineStyles(day, temprange, monthlyForecast.weatherData.currentConditions.temp);"
+								class="w-full py-[2px] font-light flex flex-nowrap gap-5 items-center"
+							>
+								<div
+									x-show="day.icon"
+									class="small-icon w-[52px] h-[52px] shrink-0 bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645] rounded-2xl py-1 relative"
+								>
+									<img
+										class="w-[44px] h-[44px] mx-auto"
+										:src="day.icon"
+										alt=""
+									/>
+									<div
+										x-show="day.precipprob > 30"
+										x-text="Math.round(day.precipprob) + ' %'"
+										class="absolute bg-gray-100 dark:bg-cosmic-900 p-[5px] -bottom-2 -right-2 text-xxs text-gray-300 dark:text-cosmic-300 rounded-3xl"
+									></div>
+								</div>
+								<div
+									class="flex flex-col justify-center gap-1 w-28 shrink-0"
+								>
+									<div
+										x-text="index === 0 
+												? lang.datetime.today 
+												: index === 1
+												? lang.datetime.tomorrow 
+												: moment.unix(day.datetimeEpoch).locale(language).format('DD MMMM')"
+										class="text-sm leading-[17px] dark:text-white"
+									></div>
+									<div
+										x-text="day.conditions"
+										class="text-xs leading-[14px] text-gray-300 dark:text-cosmic-400"
+									></div>
+								</div>
+								<div class="w-full my-4">
+									<div
+										id="labels"
+										class="flex justify-between pb-2 mx-auto leading-5"
+									>
+										<div
+											x-text="tempConverter(day.tempmin) + '°'"
+											class="text-gray-300 dark:text-cosmic-400"
+										></div>
+										<div
+											x-text="tempConverter(day.tempmax) + '°'"
+										></div>
+									</div>
+									<div
+										class="relative h-1 rounded-md bg-[#D4D4D4]/40 dark:bg-cosmic-800"
+									>
+										<div
+											:style="{width:`${lineStyles.width}%`, left:`${lineStyles.left}%`}"
+											class="absolute h-full rounded-md bg-gradient-to-l from-[#647DFF] to-[#14CDFF] dark:from-[#DEDEDE] dark:to-[#3FD5FE]"
+										>
+											<div
+												x-show="index === 0"
+												class="absolute h-[8px] w-[8px] -top-[2px] rounded-full bg-[#6390F0] dark:bg-white border-[1.5px] border-gray-100 dark:border-cosmic-900"
+												:style="{left:`${lineStyles.dotShift}%`}"
+											></div>
+										</div>
+									</div>
+								</div>
+							</li>
+						</template>
+					</ul>
+				</div>
+			</template>
+
+			<template x-for="newLocation in popup3">
+				<section
+					x-data="newLocation"
+					x-init="
+							isLoading = true; 
+							console.log('popupInit', newLocation); 
+							getWeather(newLocation, newLocation.latitude, newLocation.longitude, true);
+							"
+					x-show="show"
+					x-transition:enter-start="translate-y-full"
+					x-transition:leave-end="translate-y-full"
+					class="fixed top-7 left-0 w-full h-full z-[9999] rounded-t-xl overflow-y-scroll bg-gray-100/60 transition-all-500 text-cosmic-900 dark:text-white dark:bg-cosmic-900/60 backdrop-blur-md"
+				>
+					<div
+						x-show.transition="!isLoading"
+						class="absolute top-4 left-4 z-[9999]"
+						@click="transitionOut(); isLoading = false"
+					>
+						Close
+					</div>
+					<div
+						x-show.transition="!isLoading"
+						class="absolute top-4 right-4 z-[1000000]"
+						@click="
+							transitionOut();
+							isLoading = false;
+							console.log('newLocation', newLocation);
+							newLocation.isUserLocation = newLocation.isUserLocation;
+							newLocation.originalName = newLocation.name;
+							newLocation.isUserLocation === 'true' ? locations.unshift(newLocation) : locations.push(newLocation);
+							localStorage.setItem('locations', JSON.stringify(locations));
+							getWeather(newLocation, newLocation.latitude, newLocation.longitude)
+								.then((w) => { addSlide({
+										id: newLocation.id,
+										location: newLocation,
+										w, 
+									}) 
+								})
+								inputFocus = false; 
+							menuLocationsBackdrop = false; 
+							locationsLength = checkLocations(); 
+							searchClearText= false;
+							$refs.searchInput.value = '';
+							$refs.suggestions.innerHTML = '';
+							$refs.notFound.classList.add('opacity-0');
+							$dispatch('toast', { content: `Добавлена новая локация ${newLocation.name}` })
+							"
+					>
+						Add
+					</div>
+					<template x-for="slide in location" :key="slide.id">
+						<li
+							x-show="showslide"
+							x-transition:enter-start="opacity-0"
+							x-transition:leave-end="opacity-0"
+							x-data="slide"
+							class="w-full splide__slide transition-500"
+						>
+							<section
+								class="h-screen pb-20 overflow-y-scroll bg-gray-100 dark:bg-cosmic-900"
+								:class="{'pb-40': displaymode !== 'standalone'}"
+							>
+								<!-- * HEADER * -->
+								<header
+									class="sticky top-0 z-50 flex gap-1 px-6 py-4 bg-gray-100 dark:bg-cosmic-900 transition-opacity-500"
+								>
+									<div class="w-1/5"></div>
+									<label
+										x-text="slide.location.name"
+										class="w-4/5 text-lg font-semibold leading-5 text-center truncate"
+									></label>
+
+									<div class="w-1/5"></div>
+								</header>
+								<!-- * MAIN INFO * -->
+								<section
+									id="general-weather-info"
+									class="px-4 mx-auto dark:bg-cosmic-900"
+								>
+									<div
+										class="flex flex-col w-full p-5 rounded-2xl bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645] transition-all-500"
+									>
+										<!-- * GENERAL * -->
+										<div
+											class="flex flex-row justify-between transition-all-500"
+										>
+											<div class="flex flex-col gap-2">
+												<div
+													x-text="moment().locale(language).utcOffset(slide.weatherData.timezone).format('ddd, DD MMMM, HH:mm')"
+													x-timeout:10000="$el.innerText=moment().locale(language).utcOffset(slide.weatherData.timezone).format('ddd, DD MMMM, HH:mm')"
+													class="text-xs text-gray-300 current-day dark:text-cosmic-400 transition-all-500"
+												></div>
+												<div
+													class="temperature flex text-6xl leading-[60px] font-semibold align-text-top relative"
+												>
+													<div
+														x-text="tempConverter(slide.weatherData.currentConditions.temp)"
+													></div>
+													<span
+														x-text="settings.temp ? '°F' : '°C'"
+														class="text-2xl font-bold leading-9"
+													>
+													</span>
+												</div>
+												<div
+													class="flex flex-col gap-1 text-sm leading-4"
+												>
+													<div
+														x-text="slide.weatherData.currentConditions.conditions"
+														class="conditions"
+													></div>
+													<div
+														x-show="slide.weatherData.currentConditions.windgust"
+														x-text="lang.weather.windgust + ' ' + windConverter(slide.weatherData.currentConditions.windgust) + ' ' + lang.weather.units.wind[settings.wind ? 1 : 0]"
+														class="windgust"
+													></div>
+													<div
+														class="flex items-baseline gap-1 feelslike"
+													>
+														<div
+															x-text="lang.weather.feelslike"
+														></div>
+														<strong
+															x-text="windConverter(slide.weatherData.currentConditions.feelslike) + ' °'"
+														></strong>
+													</div>
+													<!-- <pre
+														class="font-light text-xxs"
+														x-text="JSON.stringify(slide.weatherData.currentConditions, 0, 4)"
+													></pre> -->
+												</div>
+											</div>
+											<div
+												x-show="slide.weatherData.currentConditions.icon"
+												class="weather-icon"
+											>
+												<img
+													class="w-[120px] h-[120px] shrink-0"
+													:src="slide.weatherData.currentConditions.icon"
+													alt=""
+												/>
+											</div>
+										</div>
+										<!-- * DETAILS * -->
+										<div
+											class="w-full h-[200px] overflow-hidden transition-all-500"
+										>
+											<div
+												id="details-1"
+												class="relative h-[120px] w-full grid grid-flow-col justify-around items-end"
+											>
+												<div
+													class="absolute flex justify-center w-full h-full -translate-x-1 -translate-y-5 detail-item transition-300"
+												>
+													<div
+														class="absolute w-[150px] h-[75px] bottom-0"
+													>
+														<div
+															class="w-full h-full border border-b-0 border-dashed rounded-t-full border-[#6390F0]/60 dark:border-cyan/60"
+														></div>
+														<!-- ? SKY -->
+														<div
+															x-show="slide.weatherData.currentConditions.sunposition < 0 && slide.weatherData.currentConditions.sunposition > -180"
+															:style="`rotate: ${slide.weatherData.currentConditions.sunposition}deg`"
+															class="sky absolute top-0 w-full h-full origin-bottom border border-b-0 border-solid rounded-t-full border-cosmic-400 dark:border-cyan bg-gradient-to-b from-[#EDF8FF] dark:from-[#0F3C5C] to-transparent"
+														></div>
+														<div
+															class="w-[150px] h-[75px] bg-white dark:bg-cosmic-800 absolute"
+														></div>
+														<div
+															class="w-2 h-2 rounded-full bg-cosmic-400 dark:bg-cyan -bottom-[4px] -left-[4px] absolute"
+														></div>
+														<div
+															class="w-2 h-2 rounded-full bg-cosmic-400 dark:bg-cyan -bottom-[4px] -right-[4px] absolute"
+														></div>
+														<!-- ! SUN -->
+														<div
+															x-show="slide.weatherData.currentConditions.sunposition < 0 && slide.weatherData.currentConditions.sunposition > -180"
+															:style="`rotate: ${slide.weatherData.currentConditions.sunposition}deg`"
+															class="absolute w-1/2 origin-left sun left-1/2"
+														>
+															<div
+																class="w-[7.5px] h-[7.5px] rounded-full bg-yellow outline-[5px] outline outline-white dark:outline-cosmic-800 outline-offset-0 -bottom-[4px] -right-[4px] absolute"
+															></div>
+															<svg
+																class="w-[18px] h-[18px] rounded-full -bottom-[9px] -right-[9px] absolute"
+																width="18"
+																height="18"
+																viewBox="0 0 18 18"
+																fill="none"
+																xmlns="http://www.w3.org/2000/svg"
+															>
+																<path
+																	d="M9.17923 2.28564C9.28979 2.28564 9.39582 2.33174 9.47399 2.41379C9.55217 2.49583 9.59609 2.60711 9.59609 2.72314V3.59581C9.59609 3.71184 9.55217 3.82312 9.47399 3.90517C9.39582 3.98722 9.28979 4.03331 9.17923 4.03331C9.06867 4.03331 8.96264 3.98722 8.88446 3.90517C8.80628 3.82312 8.76236 3.71184 8.76236 3.59581V2.72314C8.76236 2.60711 8.80628 2.49583 8.88446 2.41379C8.96264 2.33174 9.06867 2.28564 9.17923 2.28564ZM15.4322 9.72314C15.5427 9.72314 15.6488 9.67705 15.7269 9.595C15.8051 9.51296 15.849 9.40168 15.849 9.28564C15.849 9.16961 15.8051 9.05833 15.7269 8.97629C15.6488 8.89424 15.5427 8.84814 15.4322 8.84814H14.6001C14.4896 8.84814 14.3835 8.89424 14.3053 8.97629C14.2272 9.05833 14.1833 9.16961 14.1833 9.28564C14.1833 9.40168 14.2272 9.51296 14.3053 9.595C14.3835 9.67705 14.4896 9.72314 14.6001 9.72314H15.4322ZM9.17923 14.538C9.28979 14.538 9.39582 14.5841 9.47399 14.6661C9.55217 14.7482 9.59609 14.8594 9.59609 14.9755V15.8481C9.59609 15.9642 9.55217 16.0755 9.47399 16.1575C9.39582 16.2396 9.28979 16.2856 9.17923 16.2856C9.06867 16.2856 8.96264 16.2396 8.88446 16.1575C8.80628 16.0755 8.76236 15.9642 8.76236 15.8481V14.9755C8.76236 14.8594 8.80628 14.7482 8.88446 14.6661C8.96264 14.5841 9.06867 14.538 9.17923 14.538ZM3.76 9.72314C3.87056 9.72314 3.97659 9.67705 4.05477 9.595C4.13295 9.51296 4.17687 9.40168 4.17687 9.28564C4.17687 9.16961 4.13295 9.05833 4.05477 8.97629C3.97659 8.89424 3.87056 8.84814 3.76 8.84814H2.92628C2.81572 8.84814 2.70969 8.89424 2.63151 8.97629C2.55333 9.05833 2.50941 9.16961 2.50941 9.28564C2.50941 9.40168 2.55333 9.51296 2.63151 9.595C2.70969 9.67705 2.81572 9.72314 2.92628 9.72314H3.76ZM4.29859 4.16339C4.37675 4.08146 4.48271 4.03545 4.59317 4.03545C4.70364 4.03545 4.8096 4.08146 4.88776 4.16339L5.72148 5.03839C5.79512 5.12133 5.83521 5.23102 5.8333 5.34437C5.8314 5.45771 5.78765 5.56585 5.71127 5.64601C5.63489 5.72617 5.53185 5.77208 5.42386 5.77408C5.31586 5.77608 5.21134 5.73401 5.13232 5.65673L4.29859 4.78173C4.22053 4.6997 4.17668 4.5885 4.17668 4.47256C4.17668 4.35662 4.22053 4.24543 4.29859 4.16339ZM4.88776 14.4067C4.80873 14.484 4.70422 14.5261 4.59622 14.5241C4.48822 14.5221 4.38518 14.4762 4.30881 14.396C4.23243 14.3158 4.18868 14.2077 4.18678 14.0944C4.18487 13.981 4.22496 13.8713 4.29859 13.7884L5.13232 12.9134C5.21134 12.8361 5.31586 12.794 5.42386 12.796C5.53185 12.798 5.63489 12.844 5.71127 12.9241C5.78765 13.0043 5.8314 13.1124 5.8333 13.2258C5.83521 13.3391 5.79512 13.4488 5.72148 13.5317L4.88776 14.4067ZM14.0587 4.16339C13.9806 4.08146 13.8746 4.03545 13.7642 4.03545C13.6537 4.03545 13.5477 4.08146 13.4696 4.16339L12.6359 5.03839C12.5622 5.12133 12.5221 5.23102 12.524 5.34437C12.5259 5.45771 12.5697 5.56585 12.6461 5.64601C12.7224 5.72617 12.8255 5.77208 12.9335 5.77408C13.0415 5.77608 13.146 5.73401 13.225 5.65673L14.0587 4.78173C14.1368 4.6997 14.1807 4.5885 14.1807 4.47256C14.1807 4.35662 14.1368 4.24543 14.0587 4.16339ZM13.4701 14.4073C13.5083 14.4503 13.5543 14.4848 13.6055 14.5087C13.6566 14.5326 13.7118 14.5455 13.7678 14.5465C13.8237 14.5475 13.8793 14.5367 13.9312 14.5147C13.9831 14.4927 14.0303 14.46 14.0699 14.4184C14.1095 14.3769 14.1407 14.3274 14.1616 14.2729C14.1826 14.2184 14.1929 14.1601 14.1919 14.1013C14.1909 14.0426 14.1787 13.9847 14.1559 13.931C14.1331 13.8773 14.1003 13.829 14.0593 13.789L13.2256 12.914C13.1874 12.871 13.1414 12.8365 13.0903 12.8126C13.0391 12.7887 12.9839 12.7758 12.928 12.7748C12.872 12.7738 12.8164 12.7846 12.7645 12.8066C12.7126 12.8286 12.6654 12.8613 12.6258 12.9029C12.5862 12.9444 12.555 12.9939 12.5341 13.0484C12.5131 13.1029 12.5028 13.1612 12.5038 13.2199C12.5048 13.2787 12.517 13.3366 12.5398 13.3903C12.5626 13.444 12.5955 13.4923 12.6364 13.5323L13.4701 14.4073Z"
+																	fill="#FEB800"
+																></path>
+															</svg>
+														</div>
+													</div>
+												</div>
+												<div
+													class="detail-item w-full text-center -translate-y-5 -translate-x-1 transition-300 grid grid-flow-row gap-[6px]"
+												>
+													<div
+														x-text="lang.datetime.sunrise"
+														class="text-xs text-gray-300 dark:text-cosmic-400"
+													></div>
+													<div
+														x-text="slide.weatherData.currentConditions.sunrise"
+														class="font-semibold sunrise"
+													></div>
+												</div>
+												<div
+													class="detail-item w-full text-center -translate-y-5 -translate-x-1 transition-300 grid grid-flow-row gap-[6px] justify-center z-10"
+												>
+													<div
+														x-text="lang.datetime.daylight"
+														class="text-xs text-gray-300 dark:text-cosmic-400"
+													></div>
+													<div
+														x-text="slide.weatherData.currentConditions.daylight"
+														class="font-semibold daylight"
+													></div>
+												</div>
+												<div
+													class="detail-item w-full text-center -translate-y-5 -translate-x-1 transition-300 grid grid-flow-row gap-[6px]"
+												>
+													<div
+														x-text="lang.datetime.sunset"
+														class="text-xs text-gray-300 dark:text-cosmic-400"
+													></div>
+													<div
+														x-text="slide.weatherData.currentConditions.sunset"
+														class="font-semibold sunset"
+													></div>
+												</div>
+											</div>
+											<div
+												id="details-2"
+												class="relative grid grid-cols-3"
+											>
+												<div
+													class="text-center detail-item transition-300"
+												>
+													<div>
+														<div
+															x-text="lang.weather.tempmax"
+															class="text-xs text-gray-300 dark:text-cosmic-400"
+														></div>
+														<div
+															x-text="tempConverter(slide.weatherData.currentConditions.tempmax) + ' °'"
+															class="tempmax"
+														></div>
+													</div>
+													<div>
+														<div
+															x-text="lang.weather.tempmin"
+															class="text-xs text-gray-300 dark:text-cosmic-400"
+														></div>
+														<div
+															x-text="tempConverter(slide.weatherData.currentConditions.tempmin) + ' °'"
+															class="tempmin"
+														></div>
+													</div>
+												</div>
+												<div
+													class="text-center detail-item transition-300"
+												>
+													<div
+														class="grid grid-flow-row"
+													>
+														<div
+															x-text="lang.weather.precipprob"
+															class="text-xs text-gray-300 dark:text-cosmic-400"
+														></div>
+														<div
+															x-text="slide.weatherData.currentConditions.precipitation + ' %'"
+															class="precipprob"
+														></div>
+													</div>
+													<div>
+														<div
+															x-text="lang.weather.humidity"
+															class="text-xs text-gray-300 dark:text-cosmic-400"
+														></div>
+														<div
+															x-text="slide.weatherData.currentConditions.humidity + ' %'"
+															class="humidity"
+														></div>
+													</div>
+												</div>
+												<div
+													class="text-center detail-item transition-300"
+												>
+													<div>
+														<div
+															x-text="lang.weather.pressure"
+															class="text-xs text-gray-300 dark:text-cosmic-400"
+														></div>
+														<div
+															x-text="pressureConverter(slide.weatherData.currentConditions.pressure) + ' ' + (settings.pressure ? lang.weather.units.pressure[1] : lang.weather.units.pressure[0])"
+															class="pressure"
+														></div>
+													</div>
+													<div>
+														<div
+															x-text="lang.weather.wind"
+															class="text-xs text-gray-300 dark:text-cosmic-400"
+														></div>
+														<div
+															x-text="windConverter(slide.weatherData.currentConditions.windspeed) + ' ' + (settings.wind ? lang.weather.units.wind[1] : lang.weather.units.wind[0])"
+															class="windspeed"
+														></div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</section>
+								<!-- * HOURLY * -->
+								<ul
+									class="relative flex gap-2 px-3 pt-4 overflow-hidden overflow-x-scroll hourlyToday hourly no-drag no-scrollbar scroll-smooth snap-x snap-mandatory"
+								>
+									<template x-for="i in 24" :key="i">
+										<li
+											class="flex flex-col items-center justify-end px-2 no-drag scroll-ml-3 snap-start"
+										>
+											<div
+												x-text="moment().add(i - 1, 'h').utcOffset(slide.weatherData.timezone).format('HH') === '00' ? moment().locale(language).add(i - 1, 'h').utcOffset(slide.weatherData.timezone).format('D MMMM') : ''"
+												class="pb-1 text-xs text-gray-300 truncate no-drag date dark:text-cosmic-500"
+											></div>
+											<div
+												class="no-drag icon w-11 h-11 bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645] rounded-xl flex justify-center items-center relative"
+											>
+												<img
+													:src="slide.weatherData.days[moment().isSame(moment().add(i - 1, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i - 1, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].smallicon"
+													class="w-6 h-6 no-drag"
+													alt=""
+												/>
+												<div
+													x-show="slide.weatherData.days[moment().isSame(moment().add(i - 1, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i - 1, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].precipprob > 30"
+													x-text="Math.round(slide.weatherData.days[moment().isSame(moment().add(i - 1, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i - 1, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].precipprob) + ' %'"
+													class="no-drag absolute bg-gray-100 dark:bg-cosmic-900 p-[5px] -bottom-2 -right-2 text-xxs text-gray-300 dark:text-cosmic-300 rounded-3xl"
+												></div>
+											</div>
+											<div
+												x-text="moment().isSame(moment().add(i - 1, 'h').utcOffset(slide.weatherData.timezone), slide.weatherData.days[moment().isSame(moment().add(i - 1, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().add(i - 1, 'h').utcOffset(slide.weatherData.timezone).format('HH'))]) ? lang.datetime.now : moment().locale(language).add(i - 1, 'h').utcOffset(slide.weatherData.timezone).format('HH:00')"
+												class="pt-3 text-xs font-light text-gray-300 no-drag time dark:text-cosmic-400"
+											></div>
+											<div
+												x-text="tempConverter(slide.weatherData.days[moment().isSame(moment().add(i - 1, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i - 1, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].temp) + '°'"
+												class="pt-1 text-lg font-semibold leading-5 no-drag temp"
+											></div>
+										</li>
+									</template>
+								</ul>
+								<!-- * DAILY * -->
+								<ul class="grid grid-flow-row py-6 mx-4 daily">
+									<template
+										x-for="(day, id) in slide.weatherData.days.slice(0, 10)"
+										x-init="temprange = minMax(slide.weatherData.days.slice(0, 10), 10)"
+										:key="id"
+									>
+										<li
+											x-init="lineStyles = tempRangeLineStyles(day, temprange, slide.weatherData.currentConditions.temp);
+													date = 
+													id === 0 
+													? lang.datetime.today 
+													: id === 1
+													? lang.datetime.tomorrow 
+													: moment.unix(day.datetimeEpoch).locale(language).format('DD MMMM');"
+											class="w-full py-[2px] font-light flex flex-nowrap gap-5 items-center"
+											@click="console.log(id); $dispatch('addpopup2', slide); setTimeout(() => {$dispatch('detaileddaysadd', { dayid : id, days: slide.weatherData.days.slice(0, 10) })}, 150);"
+										>
+											<div
+												x-show="day.icon"
+												class="small-icon w-[52px] h-[52px] shrink-0 bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645] rounded-2xl py-1 relative"
+											>
+												<img
+													class="w-[44px] h-[44px] mx-auto"
+													:src="day.icon"
+													alt=""
+												/>
+												<div
+													x-show="day.precipprob > 30"
+													x-text="Math.round(day.precipprob) + ' %'"
+													class="absolute bg-gray-100 dark:bg-cosmic-900 p-[5px] -bottom-2 -right-2 text-xxs text-gray-300 dark:text-cosmic-300 rounded-3xl"
+												></div>
+											</div>
+											<div
+												class="flex flex-col justify-center gap-1 w-28 shrink-0"
+											>
+												<div
+													x-text="id === 0 
+					? lang.datetime.today 
+					: id === 1
+					? lang.datetime.tomorrow 
+					: moment.unix(day.datetimeEpoch).locale(language).format('DD MMMM')"
+													class="text-sm leading-[17px] dark:text-white"
+												></div>
+												<div
+													x-text="day.conditions"
+													class="text-xs leading-[14px] text-gray-300 dark:text-cosmic-400"
+												></div>
+											</div>
+											<div class="w-full my-4">
+												<div
+													id="labels"
+													class="flex justify-between pb-2 mx-auto leading-5"
+												>
+													<div
+														x-text="tempConverter(day.tempmin) + '°'"
+														class="text-gray-300 dark:text-cosmic-400"
+													></div>
+													<div
+														x-text="tempConverter(day.tempmax) + '°'"
+													></div>
+												</div>
+												<div
+													class="relative h-1 rounded-md bg-[#D4D4D4]/40 dark:bg-cosmic-800"
+												>
+													<div
+														:style="{width:`${lineStyles.width}%`, left:`${lineStyles.left}%`}"
+														class="absolute h-full rounded-md bg-gradient-to-l from-[#647DFF] to-[#14CDFF] dark:from-[#DEDEDE] dark:to-[#3FD5FE]"
+													>
+														<div
+															x-show="id === 0"
+															class="absolute h-[8px] w-[8px] -top-[2px] rounded-full bg-[#6390F0] dark:bg-white border-[1.5px] border-gray-100 dark:border-cosmic-900"
+															:style="{left:`${lineStyles.dotShift}%`}"
+														></div>
+													</div>
+												</div>
+											</div>
+										</li>
+									</template>
+								</ul>
+								<section>
+									<div
+										@click="$dispatch('addpopup2', slide); setTimeout(() => {$dispatch('detaileddaysadd', { dayid : 0, days: slide.weatherData.days.slice(0,10) })}, 150);"
+										class="flex justify-between px-4 py-2"
+									>
+										<div
+											x-text="lang.slides.headers.tenDaysForecast"
+											class="text-base font-medium leading-5"
+										></div>
+										<svg
+											class="-rotate-90 detail-weather-toggle--img fill-gray-200 dark:fill-cosmic-500"
+											width="16"
+											height="17"
+											viewBox="0 0 16 17"
+											fill="none"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path
+												d="M8.09606 10.8817C7.94029 10.882 7.78933 10.8278 7.66939 10.7284L3.66939 7.39507C3.53325 7.28191 3.44763 7.1193 3.43138 6.94302C3.41513 6.76673 3.46957 6.59121 3.58273 6.45507C3.69589 6.31892 3.85849 6.23331 4.03478 6.21705C4.21106 6.2008 4.38658 6.25524 4.52273 6.3684L8.09606 9.35507L11.6694 6.47507C11.7376 6.41969 11.8161 6.37834 11.9003 6.35338C11.9845 6.32843 12.0728 6.32037 12.1602 6.32966C12.2475 6.33895 12.3322 6.36542 12.4093 6.40753C12.4864 6.44965 12.5544 6.50658 12.6094 6.57507C12.6704 6.64362 12.7167 6.72403 12.7452 6.81128C12.7737 6.89853 12.7839 6.99073 12.7752 7.08211C12.7664 7.17348 12.7389 7.26206 12.6943 7.3423C12.6497 7.42254 12.589 7.49271 12.5161 7.5484L8.51606 10.7684C8.39267 10.8521 8.24479 10.892 8.09606 10.8817V10.8817Z"
+											></path>
+										</svg>
+									</div>
+									<div
+										@click="$dispatch('addpopup1', slide)"
+										class="flex justify-between px-4 py-2"
+									>
+										<div
+											x-text="lang.slides.headers.monthlyForecast"
+											class="text-base font-medium leading-5"
+										></div>
+										<svg
+											class="-rotate-90 detail-weather-toggle--img fill-gray-200 dark:fill-cosmic-500"
+											width="16"
+											height="17"
+											viewBox="0 0 16 17"
+											fill="none"
+											xmlns="http://www.w3.org/2000/svg"
+										>
+											<path
+												d="M8.09606 10.8817C7.94029 10.882 7.78933 10.8278 7.66939 10.7284L3.66939 7.39507C3.53325 7.28191 3.44763 7.1193 3.43138 6.94302C3.41513 6.76673 3.46957 6.59121 3.58273 6.45507C3.69589 6.31892 3.85849 6.23331 4.03478 6.21705C4.21106 6.2008 4.38658 6.25524 4.52273 6.3684L8.09606 9.35507L11.6694 6.47507C11.7376 6.41969 11.8161 6.37834 11.9003 6.35338C11.9845 6.32843 12.0728 6.32037 12.1602 6.32966C12.2475 6.33895 12.3322 6.36542 12.4093 6.40753C12.4864 6.44965 12.5544 6.50658 12.6094 6.57507C12.6704 6.64362 12.7167 6.72403 12.7452 6.81128C12.7737 6.89853 12.7839 6.99073 12.7752 7.08211C12.7664 7.17348 12.7389 7.26206 12.6943 7.3423C12.6497 7.42254 12.589 7.49271 12.5161 7.5484L8.51606 10.7684C8.39267 10.8521 8.24479 10.892 8.09606 10.8817V10.8817Z"
+											></path>
+										</svg>
+									</div>
+								</section>
+							</section>
+						</li>
+					</template>
+				</section>
+			</template>
+		</section>
 
 		<!-- ************************ -->
 		<!-- *        Toast         * -->
@@ -2707,8 +3335,10 @@
 		<!-- ************************ -->
 		<section
 			x-show="isLoading"
+			x-transition:enter-start="scale-0 opacity-0"
+			x-transition:leave-end="scale-0 opacity-0"
 			id="loading-animation"
-			class="fixed z-[60] scale-0 opacity-0 top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full backdrop-blur-sm w-14 h-14 ease-[cubic-bezier(.18,.89,.32,1)] duration-500"
+			class="fixed z-[10060] top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full backdrop-blur-sm w-14 h-14 ease-[cubic-bezier(.18,.89,.32,1)] duration-500"
 		>
 			<img
 				class="absolute w-16 h-16 -translate-x-2 -translate-y-4 animate-fly"
@@ -2732,17 +3362,19 @@
 			/>
 		</section>
 
-		<!-- <div class="install-btn">Install APP</div> -->
+		<!-- <button class="install-btn z-[100000]">Install APP</button> -->
 
 		<script src="https://cdn.jsdelivr.net/npm/slipjs@3.0.0/slip.min.js"></script>
 		<script src="js/api.js"></script>
 		<script src="js/utils/domUtils.js"></script>
 		<script src="js/renderForecast.js"></script>
 		<script src="js/script.js"></script>
+		<!-- <script src="js/installPromo.js"></script> -->
+
 		<script>
 			// localStorage.activeSlide = 0;
 			const active_slide = localStorage.activeSlide;
-			var splide = new Splide(".splide", {
+			var splide = new Splide("#main", {
 				// type: 'slide',
 				pagination: false,
 				speed: 700,

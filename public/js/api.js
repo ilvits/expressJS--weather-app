@@ -1,4 +1,4 @@
-async function getWeather(id, lat, lon) {
+async function getWeather(location, lat, lon, isPreview = false) {
 	try {
 		axios({
 			url: "/api/weather",
@@ -8,17 +8,27 @@ async function getWeather(id, lat, lon) {
 				lon,
 				lang: language,
 			},
-		})
-			.then((response) => parseWeatherData(Number(id), response.data))
-			.then((weatherData) => {
-				return weatherData;
-			});
+		}).then((response) => getKindex(location, response.data, isPreview));
 	} catch (err) {
 		console.warn({ message: err });
 	}
 }
 
-function parseWeatherData(id, data) {
+async function getKindex(location, weatherData, isPreview) {
+	try {
+		axios({
+			url: "https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json",
+			method: "get",
+		}).then((kIndexData) =>
+			parseWeatherData(location, weatherData, kIndexData.data, isPreview)
+		);
+	} catch (err) {
+		console.warn({ message: err });
+	}
+}
+
+function parseWeatherData(location, data, kIndexData, isPreview) {
+	id = Number(location.id);
 	const delta =
 		data.currentConditions.sunsetEpoch -
 		data.currentConditions.sunriseEpoch;
@@ -41,33 +51,35 @@ function parseWeatherData(id, data) {
 			`HH [${languageStrings[language].datetime.hourShort}] mm [${languageStrings[language].datetime.minShort}]`
 		);
 
-	const weatherData = {
+	let weatherData = {
 		id: id,
+		raw: data,
+		kIndex: kIndexData,
 		coordinates: {
 			latitude: data.latitude,
 			longitude: data.longitude,
 		},
 		timezone: timezone,
 		currentConditions: {
-			temp: Math.round(data.currentConditions.temp),
-			tempmax: Math.round(data.days[0].tempmax),
-			tempmin: Math.round(data.days[0].tempmin),
-			feelslike: Math.round(data.currentConditions.feelslike),
+			temp: data.currentConditions.temp,
+			tempmax: data.days[0].tempmax,
+			tempmin: data.days[0].tempmin,
+			feelslike: data.currentConditions.feelslike,
 			conditions: data.currentConditions.conditions,
 			sunrise: sunrise,
 			sunset: sunset,
 			daylight: dayLight,
-			// moonphase: data.currentConditions.moonphase,
+			moonphase: data.currentConditions.moonphase,
 			sunposition: sunPositionDegree(
 				data.currentConditions.sunriseEpoch,
 				data.currentConditions.sunsetEpoch,
 				moment().unix()
 			),
+			pressure: data.currentConditions.pressure,
+			windspeed: data.currentConditions.windspeed,
+			winddir: data.currentConditions.winddir,
+			windgust: data.currentConditions.windgust,
 			humidity: Math.round(data.currentConditions.humidity),
-			pressure: Math.round(data.currentConditions.pressure),
-			windspeed: Math.round(data.currentConditions.windspeed),
-			winddir: Math.round(data.currentConditions.winddir),
-			windgust: Math.round(data.currentConditions.windgust),
 			precipitation: Math.round(data.currentConditions.precipprob),
 			icon: data.currentConditions.icon,
 		},
@@ -123,7 +135,33 @@ function parseWeatherData(id, data) {
 			day.hours[i] = hours[i];
 		}
 	});
-	saveWeatherData(id, weatherData);
+	console.log("isPreview", isPreview);
+	if (isPreview) {
+		console.log("weather", weatherData);
+		window.dispatchEvent(
+			new CustomEvent("addnewslide", {
+				detail: {
+					id: id,
+					location,
+					weatherData,
+				},
+			})
+		);
+	} else {
+		saveWeatherData(id, weatherData);
+	}
+}
+
+function saveWeatherData(id, weatherData) {
+	localStorage.setItem("weatherData-" + id, JSON.stringify(weatherData));
+	window.dispatchEvent(
+		new CustomEvent("weatherSaved", {
+			detail: {
+				id,
+				weatherData,
+			},
+		})
+	);
 }
 
 async function getSuggestions(query) {
@@ -144,16 +182,21 @@ async function getSuggestions(query) {
 	}
 }
 
-function saveWeatherData(id, weatherData) {
-	localStorage.setItem("weatherData-" + id, JSON.stringify(weatherData));
-	window.dispatchEvent(
-		new CustomEvent("weatherSaved", {
-			detail: {
-				id,
-				weatherData,
+async function resolveAdress(position) {
+	try {
+		const response = await axios({
+			url: "/api/resolveadress",
+			method: "get",
+			params: {
+				latitude: position.coords.latitude,
+				longitude: position.coords.longitude,
+				lang: language,
 			},
-		})
-	);
+		});
+		const { data } = response;
+		parseSuggestions(data.features, "", true);
+		return await data;
+	} catch (err) {
+		console.warn({ message: err });
+	}
 }
-
-// WeatherData = getWeather().then(weatherData => console.table(weatherData.products))

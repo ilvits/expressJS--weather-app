@@ -1,14 +1,14 @@
 let userCountry = "Unknown";
 let locTemplate = [
 	{
-		id: 894030,
-		name: "Париж",
-		originalName: "Париж",
-		nameTranslit: "Parizh",
-		latitude: 48.8534951,
-		longitude: 2.3483915,
-		countryCode: "fr",
-		country: "Франция",
+		id: 26970193,
+		name: "Кобулети",
+		originalName: "Кобулети",
+		nameTranslit: "Kobuleti",
+		latitude: 41.811360153,
+		longitude: 41.779320175,
+		countryCode: "ge",
+		country: "Грузия",
 		isUserLocation: "true",
 	},
 	{
@@ -20,17 +20,6 @@ let locTemplate = [
 		longitude: -73.9866,
 		countryCode: "us",
 		country: "США",
-		isUserLocation: "false",
-	},
-	{
-		id: 26970193,
-		name: "Кобулети",
-		originalName: "Кобулети",
-		nameTranslit: "Kobuleti",
-		latitude: 41.811360153,
-		longitude: 41.779320175,
-		countryCode: "ge",
-		country: "Грузия",
 		isUserLocation: "false",
 	},
 	{
@@ -56,8 +45,8 @@ let locTemplate = [
 		isUserLocation: "false",
 	},
 ];
-localStorage.locations = JSON.stringify(locTemplate);
-let locations = JSON.parse(localStorage.getItem("locations"));
+// localStorage.locations = JSON.stringify(locTemplate);
+let locations = JSON.parse(localStorage.getItem("locations")) || [];
 
 let settings = initSettings();
 let language = settings.lang === true ? "en" : "ru";
