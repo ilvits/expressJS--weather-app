@@ -5,6 +5,7 @@ const languageStrings = {
 			buttons: {
 				ok: "OK",
 				cancel: "Отмена",
+				add: "Добавить",
 				reset: "Сбросить",
 				delete: "Удалить",
 				locations: "Мои локации",
@@ -43,23 +44,23 @@ const languageStrings = {
 				winddir: ["СВ", "СЗ", "ЮЗ", "ЮВ", "В", "С", "З", "Ю"],
 			},
 			moonphase: {
-				new: "Новый полдень",
-				waxingcrescent: "Восход",
-				firstquarter: "Первый квартал",
-				waxinggibbous: "Восход",
-				fullmoon: "Полный лунный день",
-				waninggibbous: "Восход",
-				lastquarter: "Последний квартал",
-				waningcrescent: "Восход",
+				new: "Новолуние",
+				waxingcrescent: "Молодая луна",
+				firstquarter: "Первая четверть",
+				waxinggibbous: "Прибывающая луна",
+				fullmoon: "Полнолуние",
+				waninggibbous: "Убывающая луна",
+				lastquarter: "Последняя четверть",
+				waningcrescent: "Старая луна",
 			},
 		},
 		slides: {
 			header: {
-				details: ["Подробнее", "Скрыть"],
+				details: ["Подробнее", "Свернуть"],
 			},
 			headers: {
-				tenDaysForecast: "Прогноз на 10 дней",
-				monthlyForecast: "Прогноз погоды на месяц",
+				tenDaysForecast: "Подробный прогноз на 10 дней",
+				monthlyForecast: "Краткий прогноз на 30 дней",
 			},
 		},
 		locations: {
@@ -114,6 +115,7 @@ const languageStrings = {
 			buttons: {
 				ok: "OK",
 				cancel: "Cancel",
+				add: "Add",
 				reset: "Reset",
 				delete: "Delete",
 				locations: "My locations",
@@ -152,7 +154,7 @@ const languageStrings = {
 				winddir: ["NE", "NW", "SW", "SE", "E", "N", "W", "S"],
 			},
 			moonphase: {
-				new: "New",
+				new: "New Moon",
 				waxingcrescent: "Waxing Crescent",
 				firstquarter: "First Quarter",
 				waxinggibbous: "Waxing Gibbous",

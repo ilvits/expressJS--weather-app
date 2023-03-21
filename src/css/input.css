@@ -80,7 +80,7 @@ input[type="search"]::-webkit-search-results-decoration {
 
 /*Change text in autofill textbox*/
 input:-webkit-autofill {
-	-webkit-text-fill-color: white !important;
+	-webkit-text-fill-color: #132846 !important;
 }
 
 input {
@@ -174,14 +174,6 @@ input {
 	-webkit-user-select: auto;
 }
 
-.tempSwitch:checked {
-	animation: changeLetter 150ms ease-in-out 1;
-}
-
-.tempSwitch:not(:checked) {
-	animation: changeLetterB 150ms ease-in-out 1;
-}
-
 /* Hide scrollbar for Chrome, Safari and Opera */
 .no-scrollbar::-webkit-scrollbar {
 	display: none !important;
@@ -199,10 +191,6 @@ input {
 	/* IE and Edge */
 	scrollbar-width: none !important;
 	/* Firefox */
-}
-
-#header {
-	mask: linear-gradient(black 70%, transparent);
 }
 
 * {
