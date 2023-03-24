@@ -36,17 +36,17 @@ function parseWeatherData(location, data, kIndexData, isPreview) {
 	const sunrise = moment
 		.unix(data.currentConditions.sunriseEpoch)
 		.utcOffset(timezone)
-		.locale(lang)
+		.locale(language)
 		.format("HH:mm");
 	const sunset = moment
 		.unix(data.currentConditions.sunsetEpoch)
 		.utcOffset(timezone)
-		.locale(lang)
+		.locale(language)
 		.format("HH:mm");
 	const dayLight = moment
 		.unix(delta)
 		.utc()
-		.locale(lang)
+		.locale(language)
 		.format(
 			`HH [${languageStrings[language].datetime.hourShort}] mm [${languageStrings[language].datetime.minShort}]`
 		);
@@ -80,60 +80,54 @@ function parseWeatherData(location, data, kIndexData, isPreview) {
 			winddir: data.currentConditions.winddir,
 			windgust: data.currentConditions.windgust,
 			humidity: Math.round(data.currentConditions.humidity),
-			precipitation: Math.round(data.currentConditions.precipprob),
+			precipprob: Math.round(data.currentConditions.precipprob),
 			icon: data.currentConditions.icon,
 		},
 		days: data.days,
 	};
-	const icon = weatherData.currentConditions.icon;
-	weatherData.currentConditions.icon =
-		"img/assets/icons/weather-conditions/" + icon + ".svg";
-	weatherData.currentConditions.smallicon =
-		"img/assets/icons/weather-conditions/small/" + icon + ".svg";
+	// const icon = weatherData.currentConditions.icon;
+	// weatherData.currentConditions.icon =
+	// 	"img/assets/icons/weather-conditions/" + icon + ".svg";
+	// weatherData.currentConditions.smallicon =
+	// 	"img/assets/icons/weather-conditions/small/" + icon + ".svg";
 
 	weatherData.days.forEach((day, i) => {
-		const icon = day.icon;
-		day.icon = "img/assets/icons/weather-conditions/" + icon + ".svg";
-		day.smallicon =
-			"img/assets/icons/weather-conditions/small/" + icon + ".svg";
+		// const icon = day.icon;
+		// day.icon = "img/assets/icons/weather-conditions/" + icon + ".svg";
+		// day.smallicon =
+		// 	"img/assets/icons/weather-conditions/small/" + icon + ".svg";
 		const delta = day.sunsetEpoch - day.sunriseEpoch;
 		day.daylight = moment
 			.unix(delta)
 			.utc()
-			.locale(lang)
+			.locale(language)
 			.format(
 				`HH [${languageStrings[language].datetime.hourShort}] mm [${languageStrings[language].datetime.minShort}]`
 			);
 		day.sunrise = moment
 			.unix(day.sunriseEpoch)
 			.utcOffset(timezone)
-			.locale(lang)
+			.locale(language)
 			.format("HH:mm");
 		day.sunset = moment
 			.unix(day.sunsetEpoch)
 			.utcOffset(timezone)
-			.locale(lang)
+			.locale(language)
 			.format("HH:mm");
-		if (i === 0) {
-			day.sunposition = sunPositionDegree(
-				data.currentConditions.sunriseEpoch,
-				data.currentConditions.sunsetEpoch,
-				moment().unix()
-			);
-		}
-		if (i < 16) {
-			hours = day.hours;
-			hours.forEach((hour) => {
-				const icon = hour.icon;
-				hour.icon =
-					"img/assets/icons/weather-conditions/" + icon + ".svg";
-				hour.smallicon =
-					"img/assets/icons/weather-conditions/small/" +
-					icon +
-					".svg";
-			});
-			day.hours[i] = hours[i];
-		}
+
+		// if (i < 16) {
+		// 	hours = day.hours;
+		// 	hours.forEach((hour) => {
+		// 		const icon = hour.icon;
+		// 		hour.icon =
+		// 			"img/assets/icons/weather-conditions/" + icon + ".svg";
+		// 		hour.smallicon =
+		// 			"img/assets/icons/weather-conditions/small/" +
+		// 			icon +
+		// 			".svg";
+		// 	});
+		// 	day.hours[i] = hours[i];
+		// }
 	});
 	console.log("isPreview", isPreview);
 	if (isPreview) {
@@ -147,6 +141,7 @@ function parseWeatherData(location, data, kIndexData, isPreview) {
 				},
 			})
 		);
+		saveWeatherData(id, weatherData);
 	} else {
 		saveWeatherData(id, weatherData);
 	}
@@ -154,6 +149,7 @@ function parseWeatherData(location, data, kIndexData, isPreview) {
 
 function saveWeatherData(id, weatherData) {
 	localStorage.setItem("weatherData-" + id, JSON.stringify(weatherData));
+	console.log("SUN: ", weatherData.currentConditions.sunposition);
 	window.dispatchEvent(
 		new CustomEvent("weatherSaved", {
 			detail: {

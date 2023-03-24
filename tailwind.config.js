@@ -1,11 +1,15 @@
 /** @type {import('tailwindcss').Config} */
-/** @type {import('tailwindcss').Config} */
 
 const colors = require("tailwindcss/colors");
 
 module.exports = {
 	darkMode: "class",
-	content: ["./src/**/*.js", "./public/**/*.js", "./views/**/*.ejs"],
+	content: [
+		"./src/**/*.js",
+		"./views/**/*.ejs",
+		"./public/**/*.js",
+		"./public/**/*.html",
+	],
 	theme: {
 		screens: {
 			xs: "380px",
@@ -19,8 +23,8 @@ module.exports = {
 				1.5: "1.5px",
 			},
 			transitionProperty: {
-				height: "height",
 				width: "width",
+				height: "height",
 				spacing: "margin, padding",
 			},
 			fontFamily: {
@@ -71,9 +75,9 @@ module.exports = {
 		colors: {
 			cosmic: {
 				300: "#D7F4FE",
-				400: "#ACD8E7",
+				400: "#6C788E",
 				500: "#6892B9",
-				600: "#3377FF",
+				600: "#6A9CFF",
 				800: "#132846",
 				900: "#131E32",
 			},
@@ -88,6 +92,8 @@ module.exports = {
 			cyan: "#3FD5FE",
 			blue: "#3377FF",
 			yellow: "#FEB800",
+			lemon: "#FDF72A",
+			lemonDark: "#F7D056",
 			orange: "#F5804E",
 			violet: "#D580FF",
 			transparent: "transparent",

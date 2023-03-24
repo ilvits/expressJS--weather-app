@@ -59,6 +59,7 @@ function initSettings() {
 		lang: false,
 		details: false,
 		theme: 2,
+		userGeo: true,
 	};
 	localStorage.setItem("settings", JSON.stringify(settings));
 	return settings;

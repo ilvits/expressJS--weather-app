@@ -1,5 +1,8 @@
 const languageStrings = {
 	ru: {
+		headers: {
+			legend: "Обозначения",
+		},
 		common: {
 			warning: "Внимание",
 			buttons: {
@@ -11,6 +14,7 @@ const languageStrings = {
 				locations: "Мои локации",
 				settings: "Настройки",
 				weather: "Погода",
+				addUserLocation: ["Найти мою геолокацию", "Ищем вас..."],
 			},
 		},
 		datetime: {
@@ -20,7 +24,7 @@ const languageStrings = {
 			today: "Сегодня",
 			tomorrow: "Завтра",
 			morning: "Утром",
-			noon: "В полдень",
+			noon: "Днем",
 			evening: "Вечером",
 			night: "Ночью",
 			sunrise: "Восход",
@@ -32,7 +36,8 @@ const languageStrings = {
 			feelslike: "Ощущается как",
 			tempmax: "t° максимум",
 			tempmin: "t° минимум",
-			precipprob: "Осадки",
+			precipitation: "Осадки",
+			precipprob: "Вероятность осадков",
 			pressure: "Давление",
 			wind: "Ветер",
 			windgust: "Порывы ветра до",
@@ -110,6 +115,9 @@ const languageStrings = {
 		},
 	},
 	en: {
+		headers: {
+			legend: "Abbreviations",
+		},
 		common: {
 			warning: "Warning",
 			buttons: {
@@ -121,6 +129,7 @@ const languageStrings = {
 				locations: "My locations",
 				settings: "Settings",
 				weather: "Weather",
+				addUserLocation: ["Add user location", "Searching..."],
 			},
 		},
 		datetime: {
@@ -142,6 +151,7 @@ const languageStrings = {
 			feelslike: "Feels like",
 			tempmax: "t° maximum",
 			tempmin: "t° minimum",
+			precipitation: "Precipprob",
 			precipprob: "Precipprob",
 			pressure: "Pressure",
 			wind: "Wind",

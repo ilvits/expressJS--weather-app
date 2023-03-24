@@ -1,8 +1,112 @@
-var splide2;
 document.body.style.webkitTouchCallout = "none";
 const locationCardsContainer = document.querySelector(
 	"#location-cards--container"
 );
+var splide;
+var splide2;
+function checkPagination() {
+	return splide.options.pagination;
+}
+const moonPhaseSVG = {
+	new: "img/assets/icons/moonphases/new.svg",
+	waxingcrescent: "img/assets/icons/moonphases/waxingcrescent.svg",
+	firstquarter: "img/assets/icons/moonphases/firstquarter.svg",
+	waxinggibbous: "img/assets/icons/moonphases/waxinggibbous.svg",
+	fullmoon: "img/assets/icons/moonphases/fullmoon.svg",
+	waninggibbous: "img/assets/icons/moonphases/waninggibbous.svg",
+	lastquarter: "img/assets/icons/moonphases/lastquarter.svg",
+	waningcrescent: "img/assets/icons/moonphases/waningcrescent.svg",
+};
+
+const weatherConditionsSVG = {
+	"clear-day": "img/assets/icons/weather-conditions/clear-day.svg",
+	"clear-night": "img/assets/icons/weather-conditions/clear-night.svg",
+	cloudy: "img/assets/icons/weather-conditions/cloudy.svg",
+	"cloudy-night": "img/assets/icons/weather-conditions/cloudy-night.svg",
+	fog: "img/assets/icons/weather-conditions/fog.svg",
+	"fog-night": "img/assets/icons/weather-conditions/fog-night.svg",
+	hail: "img/assets/icons/weather-conditions/hail.svg",
+	"hail-night": "img/assets/icons/weather-conditions/hail-night.svg",
+	"partly-cloudy-day":
+		"img/assets/icons/weather-conditions/partly-cloudy-day.svg",
+	"partly-cloudy-night":
+		"img/assets/icons/weather-conditions/partly-cloudy-night.svg",
+	rain: "img/assets/icons/weather-conditions/rain.svg",
+	"rain-night": "img/assets/icons/weather-conditions/rain-night.svg",
+	"rain-snow": "img/assets/icons/weather-conditions/rain-snow.svg",
+	"rain-snow-night":
+		"img/assets/icons/weather-conditions/rain-snow-night.svg",
+	"rain-snow-showers-day":
+		"img/assets/icons/weather-conditions/rain-snow-showers-day.svg",
+	"rain-snow-showers-night":
+		"img/assets/icons/weather-conditions/rain-snow-showers-night.svg",
+	"showers-day": "img/assets/icons/weather-conditions/showers-day.svg",
+	"showers-night": "img/assets/icons/weather-conditions/showers-night.svg",
+	sleet: "img/assets/icons/weather-conditions/sleet.svg",
+	"sleet-night": "img/assets/icons/weather-conditions/sleet-night.svg",
+	snow: "img/assets/icons/weather-conditions/snow.svg",
+	"snow-night": "img/assets/icons/weather-conditions/snow-night.svg",
+	"snow-showers-day":
+		"img/assets/icons/weather-conditions/snow-showers-day.svg",
+	"snow-showers-night":
+		"img/assets/icons/weather-conditions/snow-showers-night.svg",
+	thunder: "img/assets/icons/weather-conditions/thunder.svg",
+	"thunder-night": "img/assets/icons/weather-conditions/thunder-night.svg",
+	"thunder-rain": "img/assets/icons/weather-conditions/thunder-rain.svg",
+	"thunder-rain-night":
+		"img/assets/icons/weather-conditions/thunder-rain-night.svg",
+	"thunder-showers-day":
+		"img/assets/icons/weather-conditions/thunder-showers-day.svg",
+	"thunder-showers-night":
+		"img/assets/icons/weather-conditions/thunder-showers-night.svg",
+};
+
+const weatherConditionsSmallSVG = {
+	"clear-day": "img/assets/icons/weather-conditions/small/clear-day.svg",
+	"clear-night": "img/assets/icons/weather-conditions/small/clear-night.svg",
+	cloudy: "img/assets/icons/weather-conditions/small/cloudy.svg",
+	"cloudy-night":
+		"img/assets/icons/weather-conditions/small/cloudy-night.svg",
+	fog: "img/assets/icons/weather-conditions/small/fog.svg",
+	"fog-night": "img/assets/icons/weather-conditions/small/fog-night.svg",
+	hail: "img/assets/icons/weather-conditions/small/hail.svg",
+	"hail-night": "img/assets/icons/weather-conditions/small/hail-night.svg",
+	"partly-cloudy-day":
+		"img/assets/icons/weather-conditions/small/partly-cloudy-day.svg",
+	"partly-cloudy-night":
+		"img/assets/icons/weather-conditions/small/partly-cloudy-night.svg",
+	rain: "img/assets/icons/weather-conditions/small/rain.svg",
+	"rain-night": "img/assets/icons/weather-conditions/small/rain-night.svg",
+	"rain-snow": "img/assets/icons/weather-conditions/small/rain-snow.svg",
+	"rain-snow-night":
+		"img/assets/icons/weather-conditions/small/rain-snow-night.svg",
+	"rain-snow-showers-day":
+		"img/assets/icons/weather-conditions/small/rain-snow-showers-day.svg",
+	"rain-snow-showers-night":
+		"img/assets/icons/weather-conditions/small/rain-snow-showers-night.svg",
+	"showers-day": "img/assets/icons/weather-conditions/small/showers-day.svg",
+	"showers-night":
+		"img/assets/icons/weather-conditions/small/showers-night.svg",
+	sleet: "img/assets/icons/weather-conditions/small/sleet.svg",
+	"sleet-night": "img/assets/icons/weather-conditions/small/sleet-night.svg",
+	snow: "img/assets/icons/weather-conditions/small/snow.svg",
+	"snow-night": "img/assets/icons/weather-conditions/small/snow-night.svg",
+	"snow-showers-day":
+		"img/assets/icons/weather-conditions/small/snow-showers-day.svg",
+	"snow-showers-night":
+		"img/assets/icons/weather-conditions/small/snow-showers-night.svg",
+	thunder: "img/assets/icons/weather-conditions/small/thunder.svg",
+	"thunder-night":
+		"img/assets/icons/weather-conditions/small/thunder-night.svg",
+	"thunder-rain":
+		"img/assets/icons/weather-conditions/small/thunder-rain.svg",
+	"thunder-rain-night":
+		"img/assets/icons/weather-conditions/small/thunder-rain-night.svg",
+	"thunder-showers-day":
+		"img/assets/icons/weather-conditions/small/thunder-showers-day.svg",
+	"thunder-showers-night":
+		"img/assets/icons/weather-conditions/small/thunder-showers-night.svg",
+};
 
 const svgCheck =
 	'<svg class="stroke-primary-light dark:stroke-primary-dark" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.66675 8L6.66675 12L13.3334 4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>';
@@ -15,17 +119,27 @@ localStorage.setItem("lastPageUpdate", new Date());
 
 checkDarkMode = () => document.documentElement.classList.contains("dark");
 
+function checkIcon(iconName, sunrise, sunset, hour) {
+	sunrise = Number(sunrise.slice(0, 2));
+	sunset = Number(sunset.slice(0, 2));
+	console.log(hour, iconName);
+	if (
+		(hour <= sunrise || hour > sunset) &&
+		iconName.search("-night") === -1
+	) {
+		if (iconName.search("day") !== -1) {
+			iconName = iconName.replace(/day/g, "night");
+		} else {
+			iconName = iconName + "-night";
+		}
+	}
+	console.log(iconName);
+	return iconName;
+}
+
 addSlide = (data) => {
 	window.dispatchEvent(
 		new CustomEvent("addslide", {
-			detail: data,
-		})
-	);
-};
-
-addCard = (data) => {
-	window.dispatchEvent(
-		new CustomEvent("addcard", {
 			detail: data,
 		})
 	);
@@ -130,6 +244,7 @@ document.addEventListener("alpine:init", () => {
 		slides: [],
 		atTop: true,
 		isLoading: false,
+		userLocationLoading: false,
 		editedCard: "",
 		newLocation: null,
 		inputValue: "",
@@ -150,7 +265,7 @@ document.addEventListener("alpine:init", () => {
 		overflow: splide.options.pagination,
 		locationsLength: locations.length,
 		userLocation: false,
-		showUserLocationPlaceholder: true,
+		showUserLocationPlaceholder: settings.userGeo,
 		displaymode: displayMode(),
 		lang: languageStrings[language],
 		checkUserLocation() {
@@ -161,21 +276,6 @@ document.addEventListener("alpine:init", () => {
 			console.log(userLocation);
 			this.userLocation = userLocation;
 		},
-
-		// update(payloadOrEvent) {
-		// 	if (payloadOrEvent instanceof CustomEvent) {
-		// 		for (const key in payloadOrEvent.detail) {
-		// 			this[key] = payloadOrEvent.detail[key];
-		// 		}
-		// 	} else {
-		// 		window.dispatchEvent(
-		// 			new CustomEvent("update", {
-		// 				detail: payloadOrEvent,
-		// 			})
-		// 		);
-		// 	}
-		// },
-
 		info() {
 			console.table(JSON.parse(JSON.stringify(this.slides)));
 		},
@@ -183,6 +283,9 @@ document.addEventListener("alpine:init", () => {
 			event.detail.location.isUserLocation === "true"
 				? this.slides.unshift(event.detail)
 				: this.slides.push(event.detail);
+			setTimeout(() => {
+				splide.refresh();
+			}, 100);
 		},
 		update(event) {
 			const index = this.slides.findIndex(
@@ -276,7 +379,7 @@ document.addEventListener("alpine:init", () => {
 			console.log(JSON.parse(JSON.stringify(this.location)));
 		},
 		addpopup3(event) {
-			console.log(event.detail);
+			// console.log(event.detail);
 			this.popup3.push(event.detail);
 		},
 		removepopup3(popup) {
@@ -360,7 +463,7 @@ document.addEventListener("alpine:init", () => {
 					this.offset = 16 + splide2.index * 50;
 				});
 				splide2.mount();
-			}, 200);
+			}, 100);
 		},
 
 		removeday(event) {
@@ -428,12 +531,15 @@ document.addEventListener("alpine:init", () => {
 
 	Alpine.data("toasts", () => ({
 		toasts: [],
+		duration: 2500,
 		add(event) {
 			console.log(event.detail);
 			this.toasts.push({
 				id: Date.now() + Math.floor(Math.random() * 1000000),
+				type: event.detail.type || "success",
 				content: event.detail.content,
 			});
+			this.duration = event.detail.duration || 2500;
 		},
 		remove(toast) {
 			this.toasts = this.toasts.filter((i) => i.id !== toast.id);
@@ -444,8 +550,9 @@ document.addEventListener("alpine:init", () => {
 		show: false,
 		init() {
 			console.log("show toast");
+			console.log(this.duration);
 			this.$nextTick(() => (this.show = true));
-			setTimeout(() => this.transitionOut(), 2500);
+			setTimeout(() => this.transitionOut(), this.duration);
 		},
 		transitionOut() {
 			console.log("hide toast");
@@ -554,10 +661,8 @@ function updateInfo(force = false) {
 	} else if (force) {
 		console.log("*********** Force update *********** ");
 		// loadSettings();
-		locations.forEach((loc, i) => {
-			setTimeout(() => {
-				getWeather(loc, loc.latitude, loc.longitude);
-			}, 1000);
+		locations.forEach((loc) => {
+			getWeather(loc, loc.latitude, loc.longitude);
 		});
 		localStorage.setItem("lastPageUpdate", new Date());
 	} else {
@@ -673,7 +778,7 @@ function parseSuggestions(features, searchText, isUserLocation = false) {
 	});
 	console.table(f);
 	if (features.length === 0) {
-		console.log("Nothing found");
+		// console.log("Nothing found");
 		nothingFound.classList.remove("hidden");
 		setTimeout(() => {
 			nothingFound.classList.remove("opacity-0");
@@ -843,6 +948,14 @@ function changeColor(atTop = true) {
 }
 
 function moonphaseConverter(m) {
+	// 0 – new moon
+	// 0-0.25 – waxing crescent
+	// 0.25 – first quarter
+	// 0.25-0.5 – waxing gibbous
+	// 0.5 – full moon
+	// 0.5-0.75 – waning gibbous
+	// 0.75 – last quarter
+	// 0.75 -1 – waning crescent
 	switch (true) {
 		case m === 0:
 			return "new";
@@ -862,15 +975,6 @@ function moonphaseConverter(m) {
 			return "waningcrescent";
 	}
 }
-
-// 0 – new moon
-// 0-0.25 – waxing crescent
-// 0.25 – first quarter
-// 0.25-0.5 – waxing gibbous
-// 0.5 – full moon
-// 0.5-0.75 – waning gibbous
-// 0.75 – last quarter
-// 0.75 -1 – waning crescent
 
 function minMax(array, days) {
 	var i;
@@ -899,7 +1003,7 @@ function tempRangeLineStyles(obj, tempRange, currentTemperature) {
 	const left = Math.round(
 		(100 * (tempmin - tempRange.tempmin)) / weekTempdelta
 	);
-	const currentTempShift = currentTemperature - tempmin;
+	const currentTempShift = tempConverter(currentTemperature) - tempmin;
 	const styles = {
 		width: gradientWidth,
 		left: left,
@@ -921,19 +1025,13 @@ function classToggle(el, ...args) {
 	args.map((e) => el.classList.toggle(e));
 }
 
-function paginationState() {
-	if (splide.length) {
-		return true;
-	}
-}
-
 function getUserLocation() {
 	const options = {
-		// enableHighAccuracy: true,
+		enableHighAccuracy: true,
 		timeout: 10000,
 	};
 
-	console.log(navigator.geolocation);
+	// console.log(navigator.geolocation);
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(
 			resolveAdress,
@@ -945,20 +1043,96 @@ function getUserLocation() {
 	}
 }
 
+function windDegreeToString(degree) {
+	// Wind direction calc
+	let winddir = Math.round(Number(degree));
+	switch (true) {
+		case 0 < winddir && winddir <= 90:
+			dir = languageStrings[language].weather.units.winddir[0];
+			break;
+		case 90 < winddir && winddir < 180:
+			dir = languageStrings[language].weather.units.winddir[1];
+			break;
+		case 180 < winddir && winddir < 270:
+			dir = languageStrings[language].weather.units.winddir[2];
+			break;
+		case 270 < winddir && winddir < 360:
+			dir = languageStrings[language].weather.units.winddir[3];
+		case winddir == 0:
+			dir = languageStrings[language].weather.units.winddir[4];
+		case winddir == 90:
+			dir = languageStrings[language].weather.units.winddir[5];
+		case winddir == 180:
+			dir = languageStrings[language].weather.units.winddir[6];
+		case winddir == 270:
+			dir = languageStrings[language].weather.units.winddir[7];
+	}
+	return dir;
+}
+
+function sunPositionDegree(sunriseEpoch, sunsetEpoch, sunPositionEpoch) {
+	sunrise = moment.unix(sunriseEpoch);
+	sunPosition = moment.unix(sunPositionEpoch);
+	daylightInMinutes = moment
+		.duration(moment.unix(sunsetEpoch).diff(sunrise))
+		.as("minutes");
+	sunPositionInMinutes = moment
+		.duration(sunPosition.diff(sunrise))
+		.as("minutes");
+	deltaInPercentage = (sunPositionInMinutes * 100) / daylightInMinutes;
+	deltaInDegrees = Math.round(-180 + (180 * deltaInPercentage) / 100);
+	if (deltaInDegrees > 0 || deltaInDegrees < -180) {
+		deltaInDegrees = false;
+	}
+	return deltaInDegrees;
+}
+
 function showError(error) {
 	switch (error.code) {
 		case error.PERMISSION_DENIED:
 			console.log("User denied the request for Geolocation.");
-			localStorage.setItem("userGeoPosition", false);
+			window.dispatchEvent(
+				new CustomEvent("toast", {
+					detail: {
+						type: "error",
+						content: `<b>User denied the request for Geolocation.</b><br>
+						Please <a class='underline' href='App-Prefs://prefs:root'>enable</a> Safari location services to continue.`,
+						duration: 10000,
+					},
+				})
+			);
+			updateSettings("userGeo", false);
+			// localStorage.setItem("userGeoPosition", false);
+			window.dispatchEvent(new CustomEvent("cancelusergeosearch"));
 			break;
 		case error.POSITION_UNAVAILABLE:
 			console.log("Location information is unavailable.");
 			break;
 		case error.TIMEOUT:
 			console.log("The request to get user location timed out.");
+			window.dispatchEvent(
+				new CustomEvent("toast", {
+					detail: {
+						type: "error",
+						content: `<b>The request to get user location timed out.</b><br>Check your internet connection and try again.`,
+						duration: 10000,
+					},
+				})
+			);
+			window.dispatchEvent(new CustomEvent("cancelusergeosearch"));
 			break;
 		case error.UNKNOWN_ERROR:
 			console.log("An unknown error occurred.");
 			break;
 	}
 }
+
+// let loading = anime.timeline({ autoplay: false, loop: false }).add({
+// 	targets: ".spinner .path",
+// 	// scale: [1, 2],
+// 	translateX: [-50, 50],
+// 	// opacity: [1, 0],
+// 	// easing: "easeInOutExpo",
+// 	// rotateZ: 360,
+// 	duration: 1100,
+// });

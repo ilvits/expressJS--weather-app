@@ -570,5 +570,8 @@ function sunPositionDegree(sunriseEpoch, sunsetEpoch, sunPositionEpoch) {
 		.as("minutes");
 	deltaInPercentage = (sunPositionInMinutes * 100) / daylightInMinutes;
 	deltaInDegrees = Math.round(-180 + (180 * deltaInPercentage) / 100);
+	if (deltaInDegrees > 0 || deltaInDegrees < -180) {
+		deltaInDegrees = false;
+	}
 	return deltaInDegrees;
 }
