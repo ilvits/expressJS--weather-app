@@ -424,7 +424,7 @@ video {
 
   font-weight: 300;
 
-  src: url(/fonts/Nunito/Nunito-Light.woff2) format("woff");
+  src: url(../fonts/Nunito/Nunito-Light.woff2) format("woff");
 
   font-display: swap;
 }
@@ -434,7 +434,7 @@ video {
 
   font-weight: 400;
 
-  src: url(/fonts/Nunito/Nunito-Regular.woff2) format("woff");
+  src: url(../fonts/Nunito/Nunito-Regular.woff2) format("woff");
 
   font-display: swap;
 }
@@ -444,7 +444,7 @@ video {
 
   font-weight: 500;
 
-  src: url(/fonts/Nunito/Nunito-Medium.woff2) format("woff");
+  src: url(../fonts/Nunito/Nunito-Medium.woff2) format("woff");
 
   font-display: swap;
 }
@@ -454,7 +454,7 @@ video {
 
   font-weight: 600;
 
-  src: url(/fonts/Nunito/Nunito-SemiBold.woff2) format("woff");
+  src: url(../fonts/Nunito/Nunito-SemiBold.woff2) format("woff");
 
   font-display: swap;
 }
@@ -464,7 +464,7 @@ video {
 
   font-weight: 700;
 
-  src: url(/fonts/Nunito/Nunito-Bold.woff2) format("woff");
+  src: url(../fonts/Nunito/Nunito-Bold.woff2) format("woff");
 
   font-display: swap;
 }
@@ -916,10 +916,6 @@ li .card__wrapper {
   z-index: 50;
 }
 
-.z-\[1000000\] {
-  z-index: 1000000;
-}
-
 .z-\[100000\] {
   z-index: 100000;
 }
@@ -950,6 +946,10 @@ li .card__wrapper {
 
 .z-\[9999\] {
   z-index: 9999;
+}
+
+.z-\[999999\] {
+  z-index: 999999;
 }
 
 .row-span-2 {
@@ -1011,6 +1011,10 @@ li .card__wrapper {
 
 .-mt-7 {
   margin-top: -1.75rem;
+}
+
+.mb-1 {
+  margin-bottom: 0.25rem;
 }
 
 .mb-2 {
@@ -1089,10 +1093,6 @@ li .card__wrapper {
   margin-top: 1rem;
 }
 
-.mb-1 {
-  margin-bottom: 0.25rem;
-}
-
 .block {
   display: block;
 }
@@ -1159,6 +1159,10 @@ li .card__wrapper {
 
 .h-20 {
   height: 5rem;
+}
+
+.h-3 {
+  height: 0.75rem;
 }
 
 .h-4 {
@@ -1247,10 +1251,6 @@ li .card__wrapper {
 
 .h-screen {
   height: 100vh;
-}
-
-.h-3 {
-  height: 0.75rem;
 }
 
 .w-1 {
@@ -1547,6 +1547,21 @@ li .card__wrapper {
 
 .translate-y-full {
   --tw-translate-y: 100%;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.translate-y-\[\$el\.closest\(\'ol\'\)\.clientHeight\] {
+  --tw-translate-y: $el.closest('ol').clientHeight;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.translate-y-\[\`\$\[\$el\.closest\(\'ol\'\)\.clientHeight\]\`\] {
+  --tw-translate-y: `$[$el.closest('ol').clientHeight]`;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.translate-y-\[calc\(\$el\.closest\(\'ol\'\)\.clientHeight\)\] {
+  --tw-translate-y: calc($el.closest('ol').clientHeight);
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
@@ -2037,6 +2052,11 @@ li .card__wrapper {
   background-color: rgb(254 184 0 / var(--tw-bg-opacity));
 }
 
+.bg-\[\#424F69\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(66 79 105 / var(--tw-bg-opacity));
+}
+
 .bg-gradient-to-b {
   background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
 }
@@ -2113,6 +2133,10 @@ li .card__wrapper {
 
 .stroke-white {
   stroke: #fff;
+}
+
+.stroke-cosmic-500 {
+  stroke: #6892B9;
 }
 
 .stroke-1 {
@@ -3000,6 +3024,10 @@ input {
 
 .dark .dark\:fill-white {
   fill: #fff;
+}
+
+.dark .dark\:fill-yellow {
+  fill: #FEB800;
 }
 
 .dark .dark\:stroke-cosmic-300 {

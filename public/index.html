@@ -307,7 +307,7 @@
 										></div>
 										<img
 											class="w-6 h-6"
-											:src="weatherConditionsSmallSVG[slide.weatherData.currentConditions.icon]"
+											:src="weatherIconsSmallPath + weatherIcons[slide.weatherData.currentConditions.icon]"
 											alt=""
 										/>
 									</div>
@@ -404,7 +404,7 @@
 											>
 												<img
 													class="w-[120px] h-[120px] shrink-0"
-													:src="weatherConditionsSVG[slide.weatherData.currentConditions.icon]"
+													:src="weatherIconsPath + weatherIcons[slide.weatherData.currentConditions.icon]"
 													alt=""
 												/>
 											</div>
@@ -619,7 +619,7 @@
 											>
 												<img
 													x-init="console.log(icon);"
-													:src="weatherConditionsSmallSVG[icon]"
+													:src="weatherIconsSmallPath + weatherIcons[icon]"
 													class="w-6 h-6 no-drag"
 													:class="icon ? 'opacity-100' : 'opacity-0'"
 													alt=""
@@ -665,7 +665,7 @@
 											>
 												<img
 													class="w-[44px] h-[44px] mx-auto"
-													:src="weatherConditionsSVG[day.icon]"
+													:src="weatherIconsPath + weatherIcons[day.icon]"
 													alt=""
 												/>
 												<div
@@ -760,7 +760,6 @@
 											class="p-2 bg-white rounded-2xl dark:bg-cosmic-800"
 											src="img/assets/icons/calendar.svg"
 											alt=""
-											srcset=""
 										/>
 										<div
 											x-text="lang.slides.headers.monthlyForecast"
@@ -1008,7 +1007,7 @@
 							<div
 								id="search-user-location--not-found"
 								x-ref="notFound"
-								class="absolute flex flex-col items-center justify-center w-[calc(100%_-_32px)] gap-3 text-center opacity-0 transition-all-500"
+								class="absolute flex mt-20 flex-col items-center justify-center w-[calc(100%_-_32px)] gap-3 text-center opacity-0 transition-all-500"
 							>
 								<img
 									class="w-[70px] h-[70px]"
@@ -1213,7 +1212,7 @@
 									>
 										<img
 											class="w-12 h-12 shrink-0"
-											:src="weatherConditionsSVG[card.weatherData.currentConditions.icon]"
+											:src="weatherIconsPath + weatherIcons[card.weatherData.currentConditions.icon]"
 											alt=""
 										/>
 									</div>
@@ -1867,7 +1866,7 @@
 			<!-- *? TAP BAR ?* -->
 			<section
 				id="tapbar"
-				class="fixed bottom-0 left-0 z-50 w-full h-20 text-gray-300 bg-white/60 dark:bg-cosmic-900/80 backdrop-blur-lg dark:text-cosmic-400 transition-colors-500"
+				class="fixed bottom-0 left-0 w-full h-20 text-gray-300 bg-white/60 dark:bg-cosmic-900/80 backdrop-blur-lg dark:text-cosmic-400 transition-colors-500"
 			>
 				<div
 					class="relative flex items-center justify-between mx-8 mt-3 overflow-clip"
@@ -2054,7 +2053,7 @@
 						<div class="flex items-center w-full px-4">
 							<button type="button" @click="transitionOut()">
 								<svg
-									class="fill-primary-light dark:fill-[#FEB800]"
+									class="fill-primary-light dark:fill-yellow"
 									width="24"
 									height="24"
 									viewBox="0 0 24 24"
@@ -2199,9 +2198,8 @@
 														<div>
 															<img
 																class="w-14 h-14"
-																:src="weatherConditionsSVG[detailedDay.weatherData.hours[6].icon]"
+																:src="weatherIconsPath + weatherIcons[detailedDay.weatherData.hours[6].icon]"
 																alt=""
-																srcset=""
 															/>
 														</div>
 													</div>
@@ -2281,7 +2279,7 @@
 																class="flex items-center gap-4"
 															>
 																<div
-																	x-text="tempConverter(detailedDay.weatherData.hours[12].temp) + '°'"
+																	x-text="tempConverter(detailedDay.weatherData.hours[13].temp) + '°'"
 																	class="text-2xl font-semibold leading-7"
 																></div>
 																<div
@@ -2293,21 +2291,20 @@
 																		alt=""
 																	/>
 																	<div
-																		x-text="tempConverter(detailedDay.weatherData.hours[12].feelslike) + '°'"
+																		x-text="tempConverter(detailedDay.weatherData.hours[13].feelslike) + '°'"
 																	></div>
 																</div>
 															</div>
 															<div
-																x-text="detailedDay.weatherData.hours[12].conditions"
+																x-text="detailedDay.weatherData.hours[13].conditions"
 																class="text-sm"
 															></div>
 														</div>
 														<div>
 															<img
 																class="w-14 h-14"
-																:src="weatherConditionsSVG[detailedDay.weatherData.hours[12].icon]"
+																:src="weatherIconsPath + weatherIcons[detailedDay.weatherData.hours[13].icon]"
 																alt=""
-																srcset=""
 															/>
 														</div>
 													</div>
@@ -2317,12 +2314,12 @@
 														>
 															<img
 																class="w-4 h-4"
-																:style="`rotate: ${-detailedDay.weatherData.hours[12].winddir}deg`"
+																:style="`rotate: ${-detailedDay.weatherData.hours[13].winddir}deg`"
 																src="img/assets/icons/clarity_compass-line.svg"
 																alt=""
 															/>
 															<div
-																x-text="windConverter(detailedDay.weatherData.hours[12].windspeed) + ' ' + (settings.wind ? lang.weather.units.wind[1] : lang.weather.units.wind[0]) + ', ' + windDegreeToString(detailedDay.weatherData.hours[12].winddir)"
+																x-text="windConverter(detailedDay.weatherData.hours[13].windspeed) + ' ' + (settings.wind ? lang.weather.units.wind[1] : lang.weather.units.wind[0]) + ', ' + windDegreeToString(detailedDay.weatherData.hours[13].winddir)"
 																class="text-sm leading-4"
 															></div>
 														</div>
@@ -2335,7 +2332,7 @@
 																alt=""
 															/>
 															<div
-																x-text="pressureConverter(detailedDay.weatherData.hours[12].pressure) + ' ' + (settings.pressure ? lang.weather.units.pressure[1] : lang.weather.units.pressure[0])"
+																x-text="pressureConverter(detailedDay.weatherData.hours[13].pressure) + ' ' + (settings.pressure ? lang.weather.units.pressure[1] : lang.weather.units.pressure[0])"
 																class="text-sm leading-4"
 															></div>
 														</div>
@@ -2348,14 +2345,14 @@
 																alt=""
 															/>
 															<div
-																x-text="Math.round(detailedDay.weatherData.hours[12].humidity) + '%'"
+																x-text="Math.round(detailedDay.weatherData.hours[13].humidity) + '%'"
 																class="text-sm leading-4"
 															></div>
 														</div>
 													</div>
 												</div>
 												<div
-													x-show="detailedDay.weatherData.hours[12].precipprob > 30"
+													x-show="detailedDay.weatherData.hours[13].precipprob > 30"
 													class="flex gap-1.5 items-center"
 												>
 													<img
@@ -2364,7 +2361,7 @@
 														alt=""
 													/>
 													<div
-														x-text="lang.weather.precipprob + ' ' + Math.round(detailedDay.weatherData.hours[12].precipprob) + '%'"
+														x-text="lang.weather.precipprob + ' ' + Math.round(detailedDay.weatherData.hours[13].precipprob) + '%'"
 														class="text-sm leading-4"
 													></div>
 												</div>
@@ -2411,9 +2408,8 @@
 														<div>
 															<img
 																class="w-14 h-14"
-																:src="weatherConditionsSVG[detailedDay.weatherData.hours[18].icon]"
+																:src="weatherIconsPath + weatherIcons[detailedDay.weatherData.hours[18].icon]"
 																alt=""
-																srcset=""
 															/>
 														</div>
 													</div>
@@ -2517,9 +2513,8 @@
 														<div>
 															<img
 																class="w-14 h-14"
-																:src="weatherConditionsSVG[detailedDay.weatherData.hours[22].icon]"
+																:src="weatherIconsPath + weatherIcons[detailedDay.weatherData.hours[22].icon]"
 																alt=""
-																srcset=""
 															/>
 														</div>
 													</div>
@@ -2653,7 +2648,7 @@
 															class="row-span-2 mr-1.5 self-center"
 														>
 															<img
-																:src="moonPhaseSVG[moonphaseConverter(detailedDay.weatherData.moonphase)]"
+																:src="moonPhaseIconsPath + moonPhaseIcons[moonphaseConverter(detailedDay.weatherData.moonphase)]"
 																alt=""
 															/>
 														</div>
@@ -2790,7 +2785,7 @@
 								>
 									<img
 										class="w-[44px] h-[44px] mx-auto"
-										:src="weatherConditionsSVG[day.icon]"
+										:src="weatherIconsPath + weatherIcons[day.icon]"
 										alt=""
 									/>
 									<div
@@ -2987,7 +2982,7 @@
 											>
 												<img
 													class="w-[120px] h-[120px] shrink-0"
-													:src="weatherConditionsSVG[slide.weatherData.currentConditions.icon]"
+													:src="weatherIconsPath + weatherIcons[slide.weatherData.currentConditions.icon]"
 													alt=""
 												/>
 											</div>
@@ -3200,7 +3195,7 @@
 												class="no-drag icon w-11 h-11 bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645] rounded-xl flex justify-center items-center relative"
 											>
 												<img
-													:src="weatherConditionsSmallSVG[slide.weatherData.days[moment().isSame(moment().add(i - 1, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i - 1, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].icon]"
+													:src="weatherIconsSmallPath + weatherIcons[slide.weatherData.days[moment().isSame(moment().add(i - 1, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i - 1, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].icon]"
 													class="w-6 h-6 no-drag"
 													alt=""
 												/>
@@ -3245,7 +3240,7 @@
 											>
 												<img
 													class="w-[44px] h-[44px] mx-auto"
-													:src="weatherConditionsSVG[day.icon]"
+													:src="weatherIconsPath + weatherIcons[day.icon]"
 													alt=""
 												/>
 												<div
@@ -3340,7 +3335,6 @@
 											class="p-2 bg-white rounded-2xl dark:bg-cosmic-800"
 											src="img/assets/icons/calendar.svg"
 											alt=""
-											srcset=""
 										/>
 										<div
 											x-text="lang.slides.headers.monthlyForecast"
@@ -3373,48 +3367,46 @@
 		<ol
 			x-data="toasts"
 			@toast.window="add($event)"
-			class="fixed flex flex-col-reverse w-[calc(100%_-_32px)] left-1/2 -translate-x-1/2 bottom-24 transition-all-500"
+			class="fixed z-[99999] flex flex-col-reverse w-[calc(100%_-_32px)] left-1/2 -translate-x-1/2 bottom-24 transition-all-500"
 		>
 			<template x-for="toast in toasts" :key="toast.id">
 				<li
 					x-data="toast"
 					x-show="show"
 					x-transition:enter-start="translate-y-48 h-0 my-0 p-0"
-					x-transition:leave-end="translate-y-48 h-0 my-0 p-0"
-					class="toast--wrapper flex h-[52px] items-center p-4 my-1 transition-all-500 z-[99999] ease-[cubic-bezier(0.29,1.4,0.4,0.96)] text-white dark:text-cosmic-900 rounded-2xl"
-					:class="{ 
-						'bg-primary-light dark:bg-lemon' : toast.type === 'success',
-						'bg-primary-light dark:bg-red-500' : toast.type === 'error' 
-						}"
+					x-transition:leave-end="translate-y-48 h-0 my-0 p-0 opacity-0"
+					class="toast--wrapper bg-[#424F69] flex items-start p-4 my-1 transition-all-500 ease-[cubic-bezier(0.29,1.4,0.4,0.96)] text-white rounded-xl"
 				>
-					<div class="icon stroke-white dark:stroke-cosmic-900">
-						<svg
-							width="20"
-							height="20"
-							viewBox="0 0 20 20"
-							fill="none"
-							xmlns="http://www.w3.org/2000/svg"
-						>
-							<circle
-								cx="10"
-								cy="10"
-								r="8.75"
-								stroke-width="1.5"
-							/>
-							<path
-								d="M6.25 10.2344L9.29688 13.125L13.75 7.5"
-								stroke-width="1.5"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-							/>
-						</svg>
+					<div
+						class="icon stroke-white shrink-0 dark:stroke-cosmic-900"
+					>
+						<img
+							x-show="toast.type === 'success'"
+							src="img/assets/icons/noticeIcons/success.svg"
+							alt=""
+						/>
+						<img
+							x-show="toast.type === 'info'"
+							src="img/assets/icons/noticeIcons/info.svg"
+							alt=""
+						/>
+						<img
+							x-show="toast.type === 'warning'"
+							src="img/assets/icons/noticeIcons/warning.svg"
+							alt=""
+						/>
+						<img
+							x-show="toast.type === 'error'"
+							src="img/assets/icons/noticeIcons/error.svg"
+							alt=""
+						/>
 					</div>
 					<div
 						x-html="toast.content"
 						class="pl-2 text-sm font-medium leading-4 toast--text grow"
 					></div>
 					<button
-						class="toast--dismiss stroke-white dark:stroke-cosmic-900"
+						class="shrink-0 toast--dismiss stroke-cosmic-500"
 						@click="transitionOut()"
 					>
 						<svg
@@ -3472,8 +3464,6 @@
 
 		<script src="js/api.js"></script>
 		<script src="js/slip/slip.min.js"></script>
-		<!-- <script src="js/utils/domUtils.js"></script> -->
-		<!-- <script src="js/renderForecast.js"></script> -->
 		<script src="js/script.js"></script>
 		<!-- <script src="js/installPromo.js"></script> -->
 

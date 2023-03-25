@@ -2,110 +2,59 @@ document.body.style.webkitTouchCallout = "none";
 const locationCardsContainer = document.querySelector(
 	"#location-cards--container"
 );
-var splide;
+
 var splide2;
+
 function checkPagination() {
 	return splide.options.pagination;
 }
-const moonPhaseSVG = {
-	new: "img/assets/icons/moonphases/new.svg",
-	waxingcrescent: "img/assets/icons/moonphases/waxingcrescent.svg",
-	firstquarter: "img/assets/icons/moonphases/firstquarter.svg",
-	waxinggibbous: "img/assets/icons/moonphases/waxinggibbous.svg",
-	fullmoon: "img/assets/icons/moonphases/fullmoon.svg",
-	waninggibbous: "img/assets/icons/moonphases/waninggibbous.svg",
-	lastquarter: "img/assets/icons/moonphases/lastquarter.svg",
-	waningcrescent: "img/assets/icons/moonphases/waningcrescent.svg",
+
+const moonPhaseIconsPath = "img/assets/icons/moonphases/";
+const weatherIconsPath = "img/assets/icons/weather-conditions/";
+const weatherIconsSmallPath = "img/assets/icons/weather-conditions/small/";
+
+const moonPhaseIcons = {
+	new: "new.svg",
+	waxingcrescent: "waxingcrescent.svg",
+	firstquarter: "firstquarter.svg",
+	waxinggibbous: "waxinggibbous.svg",
+	fullmoon: "fullmoon.svg",
+	waninggibbous: "waninggibbous.svg",
+	lastquarter: "lastquarter.svg",
+	waningcrescent: "waningcrescent.svg",
 };
 
-const weatherConditionsSVG = {
-	"clear-day": "img/assets/icons/weather-conditions/clear-day.svg",
-	"clear-night": "img/assets/icons/weather-conditions/clear-night.svg",
-	cloudy: "img/assets/icons/weather-conditions/cloudy.svg",
-	"cloudy-night": "img/assets/icons/weather-conditions/cloudy-night.svg",
-	fog: "img/assets/icons/weather-conditions/fog.svg",
-	"fog-night": "img/assets/icons/weather-conditions/fog-night.svg",
-	hail: "img/assets/icons/weather-conditions/hail.svg",
-	"hail-night": "img/assets/icons/weather-conditions/hail-night.svg",
-	"partly-cloudy-day":
-		"img/assets/icons/weather-conditions/partly-cloudy-day.svg",
-	"partly-cloudy-night":
-		"img/assets/icons/weather-conditions/partly-cloudy-night.svg",
-	rain: "img/assets/icons/weather-conditions/rain.svg",
-	"rain-night": "img/assets/icons/weather-conditions/rain-night.svg",
-	"rain-snow": "img/assets/icons/weather-conditions/rain-snow.svg",
-	"rain-snow-night":
-		"img/assets/icons/weather-conditions/rain-snow-night.svg",
-	"rain-snow-showers-day":
-		"img/assets/icons/weather-conditions/rain-snow-showers-day.svg",
-	"rain-snow-showers-night":
-		"img/assets/icons/weather-conditions/rain-snow-showers-night.svg",
-	"showers-day": "img/assets/icons/weather-conditions/showers-day.svg",
-	"showers-night": "img/assets/icons/weather-conditions/showers-night.svg",
-	sleet: "img/assets/icons/weather-conditions/sleet.svg",
-	"sleet-night": "img/assets/icons/weather-conditions/sleet-night.svg",
-	snow: "img/assets/icons/weather-conditions/snow.svg",
-	"snow-night": "img/assets/icons/weather-conditions/snow-night.svg",
-	"snow-showers-day":
-		"img/assets/icons/weather-conditions/snow-showers-day.svg",
-	"snow-showers-night":
-		"img/assets/icons/weather-conditions/snow-showers-night.svg",
-	thunder: "img/assets/icons/weather-conditions/thunder.svg",
-	"thunder-night": "img/assets/icons/weather-conditions/thunder-night.svg",
-	"thunder-rain": "img/assets/icons/weather-conditions/thunder-rain.svg",
-	"thunder-rain-night":
-		"img/assets/icons/weather-conditions/thunder-rain-night.svg",
-	"thunder-showers-day":
-		"img/assets/icons/weather-conditions/thunder-showers-day.svg",
-	"thunder-showers-night":
-		"img/assets/icons/weather-conditions/thunder-showers-night.svg",
-};
-
-const weatherConditionsSmallSVG = {
-	"clear-day": "img/assets/icons/weather-conditions/small/clear-day.svg",
-	"clear-night": "img/assets/icons/weather-conditions/small/clear-night.svg",
-	cloudy: "img/assets/icons/weather-conditions/small/cloudy.svg",
-	"cloudy-night":
-		"img/assets/icons/weather-conditions/small/cloudy-night.svg",
-	fog: "img/assets/icons/weather-conditions/small/fog.svg",
-	"fog-night": "img/assets/icons/weather-conditions/small/fog-night.svg",
-	hail: "img/assets/icons/weather-conditions/small/hail.svg",
-	"hail-night": "img/assets/icons/weather-conditions/small/hail-night.svg",
-	"partly-cloudy-day":
-		"img/assets/icons/weather-conditions/small/partly-cloudy-day.svg",
-	"partly-cloudy-night":
-		"img/assets/icons/weather-conditions/small/partly-cloudy-night.svg",
-	rain: "img/assets/icons/weather-conditions/small/rain.svg",
-	"rain-night": "img/assets/icons/weather-conditions/small/rain-night.svg",
-	"rain-snow": "img/assets/icons/weather-conditions/small/rain-snow.svg",
-	"rain-snow-night":
-		"img/assets/icons/weather-conditions/small/rain-snow-night.svg",
-	"rain-snow-showers-day":
-		"img/assets/icons/weather-conditions/small/rain-snow-showers-day.svg",
-	"rain-snow-showers-night":
-		"img/assets/icons/weather-conditions/small/rain-snow-showers-night.svg",
-	"showers-day": "img/assets/icons/weather-conditions/small/showers-day.svg",
-	"showers-night":
-		"img/assets/icons/weather-conditions/small/showers-night.svg",
-	sleet: "img/assets/icons/weather-conditions/small/sleet.svg",
-	"sleet-night": "img/assets/icons/weather-conditions/small/sleet-night.svg",
-	snow: "img/assets/icons/weather-conditions/small/snow.svg",
-	"snow-night": "img/assets/icons/weather-conditions/small/snow-night.svg",
-	"snow-showers-day":
-		"img/assets/icons/weather-conditions/small/snow-showers-day.svg",
-	"snow-showers-night":
-		"img/assets/icons/weather-conditions/small/snow-showers-night.svg",
-	thunder: "img/assets/icons/weather-conditions/small/thunder.svg",
-	"thunder-night":
-		"img/assets/icons/weather-conditions/small/thunder-night.svg",
-	"thunder-rain":
-		"img/assets/icons/weather-conditions/small/thunder-rain.svg",
-	"thunder-rain-night":
-		"img/assets/icons/weather-conditions/small/thunder-rain-night.svg",
-	"thunder-showers-day":
-		"img/assets/icons/weather-conditions/small/thunder-showers-day.svg",
-	"thunder-showers-night":
-		"img/assets/icons/weather-conditions/small/thunder-showers-night.svg",
+const weatherIcons = {
+	"clear-day": "clear-day.svg",
+	"clear-night": "clear-night.svg",
+	cloudy: "cloudy.svg",
+	"cloudy-night": "cloudy-night.svg",
+	fog: "fog.svg",
+	"fog-night": "fog-night.svg",
+	hail: "hail.svg",
+	"hail-night": "hail-night.svg",
+	"partly-cloudy-day": "partly-cloudy-day.svg",
+	"partly-cloudy-night": "partly-cloudy-night.svg",
+	rain: "rain.svg",
+	"rain-night": "rain-night.svg",
+	"rain-snow": "rain-snow.svg",
+	"rain-snow-night": "rain-snow-night.svg",
+	"rain-snow-showers-day": "rain-snow-showers-day.svg",
+	"rain-snow-showers-night": "rain-snow-showers-night.svg",
+	"showers-day": "showers-day.svg",
+	"showers-night": "showers-night.svg",
+	sleet: "sleet.svg",
+	"sleet-night": "sleet-night.svg",
+	snow: "snow.svg",
+	"snow-night": "snow-night.svg",
+	"snow-showers-day": "snow-showers-day.svg",
+	"snow-showers-night": "snow-showers-night.svg",
+	thunder: "thunder.svg",
+	"thunder-night": "thunder-night.svg",
+	"thunder-rain": "thunder-rain.svg",
+	"thunder-rain-night": "thunder-rain-night.svg",
+	"thunder-showers-day": "thunder-showers-day.svg",
+	"thunder-showers-night": "thunder-showers-night.svg",
 };
 
 const svgCheck =
@@ -463,7 +412,7 @@ document.addEventListener("alpine:init", () => {
 					this.offset = 16 + splide2.index * 50;
 				});
 				splide2.mount();
-			}, 100);
+			}, 50);
 		},
 
 		removeday(event) {

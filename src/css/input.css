@@ -6,34 +6,34 @@
 	@font-face {
 		font-family: "Nunito";
 		font-weight: 300;
-		src: url(/fonts/Nunito/Nunito-Light.woff2) format("woff");
+		src: url(../fonts/Nunito/Nunito-Light.woff2) format("woff");
 		font-display: swap;
 	}
 
 	@font-face {
 		font-family: "Nunito";
 		font-weight: 400;
-		src: url(/fonts/Nunito/Nunito-Regular.woff2) format("woff");
+		src: url(../fonts/Nunito/Nunito-Regular.woff2) format("woff");
 		font-display: swap;
 	}
 
 	@font-face {
 		font-family: "Nunito";
 		font-weight: 500;
-		src: url(/fonts/Nunito/Nunito-Medium.woff2) format("woff");
+		src: url(../fonts/Nunito/Nunito-Medium.woff2) format("woff");
 		font-display: swap;
 	}
 
 	@font-face {
 		font-family: "Nunito";
 		font-weight: 600;
-		src: url(/fonts/Nunito/Nunito-SemiBold.woff2) format("woff");
+		src: url(../fonts/Nunito/Nunito-SemiBold.woff2) format("woff");
 		font-display: swap;
 	}
 	@font-face {
 		font-family: "Nunito";
 		font-weight: 700;
-		src: url(/fonts/Nunito/Nunito-Bold.woff2) format("woff");
+		src: url(../fonts/Nunito/Nunito-Bold.woff2) format("woff");
 		font-display: swap;
 	}
 }

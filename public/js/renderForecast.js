@@ -172,7 +172,7 @@ function renderHourlyForecast(id, weatherData) {
     <div class="icon w-11 h-11 bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645] rounded-xl flex justify-center items-center relative">
         <img class="w-6 h-6" src="img/assets/icons/weather-conditions/small/${
 			data.icon
-		}.svg" alt="" srcset="">
+		}.svg" alt="" >
         ${
 			Math.round(data.precipprob) > 20
 				? '<div class="absolute bg-gray-100 dark:bg-cosmic-900 p-[5px] -bottom-2 -right-2 text-xxs text-gray-300 dark:text-cosmic-300 rounded-3xl">' +
@@ -397,7 +397,7 @@ function renderTenDaysDetailedForecastWeather(el, weatherData, day = 0) {
                 <div>
                 <img class="w-14 h-14" src="img/assets/icons/weather-conditions/${
 					weather.icon
-				}.svg" alt="" srcset="">
+				}.svg" alt="" >
                 </div>
             </div>
             <div class="flex gap-4">

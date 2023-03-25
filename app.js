@@ -18,9 +18,9 @@ const apiResolveRouter = require("./routes/API/resolveadressAPI");
 
 const app = express();
 
-// View engine setup
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "ejs");
+// // View engine setup
+// app.set("views", path.join(__dirname, "views"));
+// app.set("view engine", "ejs");
 
 // app.use(cors());
 // App.use(helmet());
