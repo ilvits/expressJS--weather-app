@@ -671,7 +671,7 @@
 												class="pt-3 text-xs font-light text-gray-300 no-drag time dark:text-cosmic-400"
 											></div>
 											<div
-												x-text="tempConverter(i === 0 ? slide.weatherData.currentConditions.temp :slide.weatherData.days[moment().isSame(moment().add(i - 1, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i - 1, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].temp) + '°'"
+												x-text="tempConverter(i === 0 ? slide.weatherData.currentConditions.temp : slide.weatherData.days[moment().isSame(moment().add(i - 1, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i - 1, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].temp) + '°'"
 												class="pt-1 text-lg font-semibold leading-5 no-drag"
 											></div>
 										</li>
@@ -2127,12 +2127,6 @@
 								</button>
 							</div>
 						</div>
-						<!-- DayList -->
-						<!-- <section id="dayList" class="splide">
-								<div class="splide__track"> -->
-
-						<!-- </div>
-							</section> -->
 					</header>
 					<section id="daysDetailed" class="splide">
 						<div class="splide__track">
@@ -2161,7 +2155,7 @@
 											class="text-xs font-bold no-drag"
 										></div>
 										<div
-											x-text="moment.unix(day.datetimeEpoch).locale(language).format('DD')"
+											x-text="moment.unix(day.datetimeEpoch).locale(language).format('D')"
 											class="text-base font-semibold leading-5 no-drag"
 										></div>
 									</li>
@@ -3035,21 +3029,21 @@
 														class="absolute w-[150px] h-[75px] bottom-0"
 													>
 														<div
-															class="w-full h-full border border-b-0 border-dashed rounded-t-full border-[#6390F0]/60 dark:border-cyan/60"
+															class="w-full h-full border border-b-0 border-dashed rounded-t-full border-cyan/60"
 														></div>
 														<!-- ? SKY -->
 														<div
 															:style="slide.weatherData.currentConditions.sunposition ? `rotate: ${slide.weatherData.currentConditions.sunposition}deg` : 'display: none'"
-															class="sky absolute top-0 w-full h-full origin-bottom border border-b-0 border-solid rounded-t-full border-cosmic-400 dark:border-cyan bg-gradient-to-b from-[#EDF8FF] dark:from-[#0F3C5C] to-transparent"
+															class="sky absolute top-0 w-full h-full origin-bottom border border-b-0 border-solid rounded-t-full border-cyan bg-gradient-to-b from-[#EDF8FF] dark:from-[#0F3C5C] to-transparent"
 														></div>
 														<div
 															class="w-[150px] h-[75px] bg-white dark:bg-cosmic-800 absolute"
 														></div>
 														<div
-															class="w-2 h-2 rounded-full bg-cosmic-400 dark:bg-cyan -bottom-[4px] -left-[4px] absolute"
+															class="w-2 h-2 rounded-full bg-cyan -bottom-[4px] -left-[4px] absolute"
 														></div>
 														<div
-															class="w-2 h-2 rounded-full bg-cosmic-400 dark:bg-cyan -bottom-[4px] -right-[4px] absolute"
+															class="w-2 h-2 rounded-full bg-cyan -bottom-[4px] -right-[4px] absolute"
 														></div>
 														<!-- ! SUN -->
 														<div
@@ -3202,9 +3196,28 @@
 															class="text-xs text-gray-300 dark:text-cosmic-500"
 														></div>
 														<div
-															x-text="windConverter(slide.weatherData.currentConditions.windspeed) + ' ' + (settings.wind ? lang.weather.units.wind[1] : lang.weather.units.wind[0])"
-															class="windspeed"
-														></div>
+															class="flex items-center gap-0.5"
+														>
+															<svg
+																class="stroke-cosmic-900 dark:stroke-white"
+																:style="`rotate: ${-slide.weatherData.currentConditions.winddir}deg`"
+																width="14"
+																height="14"
+																viewBox="0 0 17 17"
+																fill="none"
+																xmlns="http://www.w3.org/2000/svg"
+															>
+																<path
+																	d="M2.95421 12.3037L5.13118 8.54727L2.95384 4.79089C2.44876 3.91953 3.34133 2.90583 4.26962 3.29657L14.4446 7.57948C15.3015 7.94015 15.3015 9.15431 14.4446 9.515L4.27004 13.7979C3.34179 14.1887 2.44921 13.1751 2.95421 12.3037Z"
+																	stroke-width="1.5"
+																/>
+															</svg>
+
+															<div
+																x-text="windConverter(slide.weatherData.currentConditions.windspeed) + ' ' + (settings.wind ? lang.weather.units.wind[1] : lang.weather.units.wind[0]) + ', ' + windDegreeToString(slide.weatherData.currentConditions.winddir)"
+																class="windspeed"
+															></div>
+														</div>
 													</div>
 												</div>
 											</div>
@@ -3217,6 +3230,7 @@
 								>
 									<template x-for="i in 24" :key="i">
 										<li
+											x-effect="i -= 1; icon = i === 0 ? slide.weatherData.currentConditions.icon : checkIcon(slide.weatherData.days[moment().isSame(moment().add(i - 1, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i - 1, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).add(i - 1, 'h').utcOffset(slide.weatherData.timezone).format('HH')))"
 											class="flex flex-col items-center justify-end px-2 no-drag scroll-ml-3 snap-start"
 										>
 											<div
@@ -3227,13 +3241,14 @@
 												class="no-drag icon w-11 h-11 bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645] rounded-xl flex justify-center items-center relative"
 											>
 												<img
-													:src="weatherIconsSmallPath + weatherIcons[slide.weatherData.days[moment().isSame(moment().add(i - 1, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i - 1, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].icon]"
+													:src="weatherIconsSmallPath + weatherIcons[icon]"
 													class="w-6 h-6 no-drag"
+													:class="icon ? 'opacity-100' : 'opacity-0'"
 													alt=""
 												/>
 												<div
-													x-show="slide.weatherData.days[moment().isSame(moment().add(i - 1, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i - 1, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].precipprob > 30"
-													x-text="Math.round(slide.weatherData.days[moment().isSame(moment().add(i - 1, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i - 1, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].precipprob) + '%'"
+													x-show="i === 0 ? slide.weatherData.currentConditions.precipprob > 30 : slide.weatherData.days[moment().isSame(moment().add(i - 1, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i - 1, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].precipprob > 30"
+													x-text="Math.round(i === 0 ? slide.weatherData.currentConditions.precipprob : slide.weatherData.days[moment().isSame(moment().add(i - 1, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i - 1, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].precipprob) + '%'"
 													class="no-drag absolute bg-gray-100 dark:bg-cosmic-900 p-[5px] -bottom-2 -right-2 text-xxs text-gray-300 dark:text-cosmic-300 rounded-3xl"
 												></div>
 											</div>
@@ -3242,8 +3257,8 @@
 												class="pt-3 text-xs font-light text-gray-300 no-drag time dark:text-cosmic-400"
 											></div>
 											<div
-												x-text="tempConverter(slide.weatherData.days[moment().isSame(moment().add(i - 1, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i - 1, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].temp) + '°'"
-												class="pt-1 text-lg font-semibold leading-5 no-drag temp"
+												x-text="tempConverter(i === 0 ? slide.weatherData.currentConditions.temp : slide.weatherData.days[moment().isSame(moment().add(i - 1, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i - 1, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].temp) + '°'"
+												class="pt-1 text-lg font-semibold leading-5 no-drag"
 											></div>
 										</li>
 									</template>
@@ -3264,7 +3279,7 @@
 													? lang.datetime.tomorrow 
 													: moment.unix(day.datetimeEpoch).locale(language).format('DD MMMM');"
 											class="w-full py-[2px] font-light flex flex-nowrap gap-5 items-center"
-											@click="console.log(id); $dispatch('addpopup2', slide); setTimeout(() => {$dispatch('detaileddaysadd', { dayid : id, days: slide.weatherData.days.slice(0, 10) })}, 150);"
+											@click="$dispatch('addpopup2', slide); setTimeout(() => {$dispatch('detaileddaysadd', { dayid : id, days: slide.weatherData.days.slice(0, 10) })}, 150);"
 										>
 											<div
 												x-show="day.icon"
