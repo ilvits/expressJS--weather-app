@@ -215,9 +215,27 @@
 		<link preload rel="stylesheet" href="css/splidejs/splide.min.css" />
 		<script>
 			if ("serviceWorker" in navigator) {
-				navigator.serviceWorker.register("service-worker.js");
+				window.addEventListener("load", () => {
+					navigator.serviceWorker.register("/service-worker.js").then(
+						(registration) => {
+							console.log(
+								`Service Worker registered! Scope: ${registration.scope}`
+							);
+						},
+						(error) => {
+							console.error(
+								`Service Worker registration failed: ${error}`
+							);
+						}
+					);
+				});
 			}
 		</script>
+		<!-- <script>
+			if ("serviceWorker" in navigator) {
+				navigator.serviceWorker.register("service-worker.js");
+			}
+		</script> -->
 		<script src="js/i18n.js"></script>
 		<script src="js/init.js"></script>
 		<script src="js/utils/theme.js"></script>
@@ -425,21 +443,21 @@
 														class="absolute w-[150px] h-[75px] bottom-0"
 													>
 														<div
-															class="w-full h-full border border-b-0 border-dashed rounded-t-full border-[#6390F0]/60 dark:border-cyan/60"
+															class="w-full h-full border border-b-0 border-dashed rounded-t-full border-cyan/60"
 														></div>
 														<!-- ? SKY -->
 														<div
 															:style="slide.weatherData.currentConditions.sunposition ? `rotate: ${slide.weatherData.currentConditions.sunposition}deg` : 'display: none'"
-															class="sky absolute top-0 w-full h-full origin-bottom border border-b-0 border-solid rounded-t-full border-cosmic-400 dark:border-cyan bg-gradient-to-b from-[#EDF8FF] dark:from-[#0F3C5C] to-transparent"
+															class="sky absolute top-0 w-full h-full origin-bottom border border-b-0 border-solid rounded-t-full border-cyan bg-gradient-to-b from-[#EDF8FF] dark:from-[#0F3C5C] to-transparent"
 														></div>
 														<div
 															class="w-[150px] h-[75px] bg-white dark:bg-cosmic-800 absolute"
 														></div>
 														<div
-															class="w-2 h-2 rounded-full bg-cosmic-400 dark:bg-cyan -bottom-[4px] -left-[4px] absolute"
+															class="w-2 h-2 rounded-full bg-cyan -bottom-[4px] -left-[4px] absolute"
 														></div>
 														<div
-															class="w-2 h-2 rounded-full bg-cosmic-400 dark:bg-cyan -bottom-[4px] -right-[4px] absolute"
+															class="w-2 h-2 rounded-full bg-cyan -bottom-[4px] -right-[4px] absolute"
 														></div>
 														<!-- ! SUN -->
 														<div
@@ -592,9 +610,28 @@
 															class="text-xs text-gray-300 dark:text-cosmic-500"
 														></div>
 														<div
-															x-text="windConverter(slide.weatherData.currentConditions.windspeed) + ' ' + (settings.wind ? lang.weather.units.wind[1] : lang.weather.units.wind[0])"
-															class="windspeed"
-														></div>
+															class="flex gap-1.5"
+														>
+															<svg
+																class="stroke-cosmic-900 dark:stroke-white"
+																:style="`rotate: ${-slide.weatherData.currentConditions.winddir}deg`"
+																width="17"
+																height="17"
+																viewBox="0 0 17 17"
+																fill="none"
+																xmlns="http://www.w3.org/2000/svg"
+															>
+																<path
+																	d="M2.95421 12.3037L5.13118 8.54727L2.95384 4.79089C2.44876 3.91953 3.34133 2.90583 4.26962 3.29657L14.4446 7.57948C15.3015 7.94015 15.3015 9.15431 14.4446 9.515L4.27004 13.7979C3.34179 14.1887 2.44921 13.1751 2.95421 12.3037Z"
+																	stroke-width="1.5"
+																/>
+															</svg>
+
+															<div
+																x-text="windConverter(slide.weatherData.currentConditions.windspeed) + ' ' + (settings.wind ? lang.weather.units.wind[1] : lang.weather.units.wind[0]) + ', ' + windDegreeToString(slide.weatherData.currentConditions.winddir)"
+																class="windspeed"
+															></div>
+														</div>
 													</div>
 												</div>
 											</div>
@@ -865,7 +902,7 @@
 								name="searchInput"
 								x-ref="searchInput"
 								:placeholder="lang.locations.searchPlaceholder"
-								class="shrink-0 px-9 mr-4 focus:outline-none rounded-lg truncate h-12 transition-width duration-500 ease-[cubic-bezier(.23,1,.32,1)] dark:bg-cosmic-800 caret-primary-light dark:caret-primary-dark placeholder-gray-300 dark:placeholder-cosmic-500"
+								class="shrink-0 px-9 mr-4 focus:outline-none rounded-lg truncate h-12 transition-width duration-500 ease-[cubic-bezier(.23,1,.32,1)] bg-white dark:bg-cosmic-800 caret-primary-light dark:caret-primary-dark placeholder-gray-300 dark:placeholder-cosmic-500"
 								:class="{ 'w-full': !inputFocus, 'w-[calc(100%_-_70px)]': inputFocus }"
 								@focus="inputFocus = true"
 								@input.debounce.500ms="inputProcessing($el); 
@@ -1880,7 +1917,7 @@
 					>
 						<svg
 							id="locations-btn-svg"
-							:class="{ 'dark:stroke-primary-dark': menuLocations === true }"
+							:class="{ 'stroke-primary-light dark:stroke-primary-dark': menuLocations === true }"
 							class="stroke-gray-300 dark:stroke-cosmic-400 transition-colors-500"
 							width="25"
 							height="24"
@@ -1901,7 +1938,7 @@
 						</svg>
 						<div
 							class="text-xs transition-colors-500"
-							:class="{ 'dark:text-primary-dark': menuLocations === true }"
+							:class="{ 'text-primary-light dark:text-primary-dark': menuLocations === true }"
 							x-text="lang.common.buttons.locations"
 						></div>
 					</button>
@@ -1987,7 +2024,7 @@
 						<span class="sr-only">Toggle settings menu</span>
 						<svg
 							id="settings_btn_svg"
-							:class="{ 'dark:stroke-primary-dark': menuSettings === true }"
+							:class="{ 'stroke-primary-light dark:stroke-primary-dark': menuSettings === true }"
 							class="stroke-gray-300 dark:stroke-cosmic-400 transition-colors-500"
 							width="25"
 							height="24"
@@ -2010,7 +2047,7 @@
 						</svg>
 						<div
 							class="text-xs transition-colors-500"
-							:class="{ 'dark:text-primary-dark': menuSettings === true }"
+							:class="{ 'text-primary-light dark:text-primary-dark': menuSettings === true }"
 							x-text="lang.common.buttons.settings"
 						></div>
 					</button>
