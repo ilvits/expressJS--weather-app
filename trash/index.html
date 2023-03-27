@@ -250,7 +250,7 @@
 		<div
 			id="main-page--placeholder"
 			x-cloak
-			x-show="!locationsLength"
+			x-show="!slides.lenght"
 			class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-[calc(100%_-_84px)] flex flex-col gap-6 text-center items-center transform-gpu transition-[opacity,translate] duration-300 ease-[cubic-bezier(.23,1,.32,1)]"
 		>
 			<img class="w-[195px] h-[197px]" src="img/assets/icons/globe.svg" />
@@ -795,7 +795,6 @@
 					$watch('inputFocus', (focus) => {
 						if (focus) {
 							menuLocationsBackdrop = true; 
-							locationsLength = checkLocations();
 							searchClearText = false; 
 							locationsEditMode = false; 
 							locationEditModal = false;
@@ -806,7 +805,6 @@
 							setTimeout(() => { $refs.searchInput.focus() }, 500);
 						} else {
 							menuLocationsBackdrop = false; 
-							locationsLength = checkLocations(); 
 							searchClearText= false;
 							$refs.searchInput.value = '';
 							$refs.suggestions.innerHTML = '';
@@ -848,7 +846,7 @@
 						></div>
 						<button
 							@click="locationsEditMode = !locationsEditMode; locationDeleteConfirm = false; userLocationLoading = false; isLoading = false;"
-							x-text="locationsLength === 0 ? '' : locationsEditMode ? lang.locations.edit[1] : lang.locations.edit[0]"
+							x-text="slides.length ? '' : locationsEditMode ? lang.locations.edit[1] : lang.locations.edit[0]"
 							type="button"
 							id="locations-header--edit-btn"
 							class="w-16 grow-0 shrink-0 text-primary-light dark:text-primary-dark"
@@ -1068,7 +1066,7 @@
 									<button
 										type="button"
 										x-show="locationsEditMode"
-										@click="$el.closest('li').classList.add('opacity-0', 'h-0', 'my-0', '-translate-x-[calc(100%_+_100px)]'); setTimeout(() => { $dispatch('removecard', card); slides.length ? false : locationsLength = 0 }, 500)"
+										@click="$el.closest('li').classList.add('opacity-0', 'h-0', 'my-0', '-translate-x-[calc(100%_+_100px)]'); setTimeout(() => { $dispatch('removecard', card); }, 500)"
 										class="trash absolute z-50 -right-[100px] no-reorder no-swipe"
 									>
 										<img src="img/assets/icons/trash.svg" />
@@ -1344,7 +1342,7 @@
 					<!-- Placeholders -->
 					<section
 						id="locations-placeholder"
-						x-show="!locationsLength"
+						x-show="!slides.lenght"
 						class="absolute w-full top-32 left-1/2 -translate-x-1/2 flex flex-col transform-gpu transition-all duration-300 ease-[cubic-bezier(.23,1,.32,1)]"
 					>
 						<div class="w-full">
@@ -1753,7 +1751,6 @@
 									setTimeout(() => {
 										splide.refresh();
 									}, 500);
-									locationsLength = 0;
 									$dispatch('toast', { content: 'Все добавленные локации удалены' })
 									"
 								x-text="lang.common.buttons.delete"
@@ -1916,7 +1913,7 @@
 						></div>
 						<div
 							id="weather-btn"
-							@click="menuLocations = false; menuSettings = false; modalAbout = false; locationsLength = checkLocations(); settingsChanged ? updateInfo(true) : false; settingsChanged = false;"
+							@click="menuLocations = false; menuSettings = false; modalAbout = false; settingsChanged ? updateInfo(true) : false; settingsChanged = false;"
 							class="flex flex-col items-center gap-[6px] grow-0 shrink-0"
 						>
 							<svg
@@ -2886,7 +2883,6 @@
 								})
 								inputFocus = false; 
 							menuLocationsBackdrop = false; 
-							locationsLength = checkLocations(); 
 							searchClearText= false;
 							$refs.searchInput.value = '';
 							$refs.suggestions.innerHTML = '';

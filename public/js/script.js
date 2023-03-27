@@ -71,7 +71,6 @@ checkDarkMode = () => document.documentElement.classList.contains("dark");
 function checkIcon(iconName, sunrise, sunset, hour) {
 	sunrise = Number(sunrise.slice(0, 2));
 	sunset = Number(sunset.slice(0, 2));
-	console.log(hour, iconName);
 	if (
 		(hour <= sunrise || hour > sunset) &&
 		iconName.search("-night") === -1
@@ -82,7 +81,6 @@ function checkIcon(iconName, sunrise, sunset, hour) {
 			iconName = iconName + "-night";
 		}
 	}
-	console.log(iconName);
 	return iconName;
 }
 
@@ -211,8 +209,6 @@ document.addEventListener("alpine:init", () => {
 		modalClearLocations: false,
 		settings: settings,
 		details: settings.details,
-		overflow: splide.options.pagination,
-		locationsLength: locations.length,
 		userLocation: false,
 		showUserLocationPlaceholder: settings.userGeo,
 		displaymode: displayMode(),
@@ -412,7 +408,7 @@ document.addEventListener("alpine:init", () => {
 					this.offset = 16 + splide2.index * 50;
 				});
 				splide2.mount();
-			}, 50);
+			}, 150);
 		},
 
 		removeday(event) {
