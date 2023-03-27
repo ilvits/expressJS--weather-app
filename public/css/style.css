@@ -1089,6 +1089,18 @@ li .card__wrapper {
   margin-top: 1rem;
 }
 
+.mr-0 {
+  margin-right: 0px;
+}
+
+.mr-0\.5 {
+  margin-right: 0.125rem;
+}
+
+.mr-\[1px\] {
+  margin-right: 1px;
+}
+
 .block {
   display: block;
 }
@@ -1247,6 +1259,10 @@ li .card__wrapper {
 
 .h-screen {
   height: 100vh;
+}
+
+.h-3\.5 {
+  height: 0.875rem;
 }
 
 .w-1 {
@@ -1974,6 +1990,10 @@ li .card__wrapper {
   border-color: rgb(51 119 255 / var(--tw-border-opacity));
 }
 
+.border-gray-200\/50 {
+  border-color: rgb(212 212 222 / 0.5);
+}
+
 .bg-\[\#424F69\] {
   --tw-bg-opacity: 1;
   background-color: rgb(66 79 105 / var(--tw-bg-opacity));
@@ -2311,6 +2331,14 @@ li .card__wrapper {
 
 .pt-4 {
   padding-top: 1rem;
+}
+
+.pb-24 {
+  padding-bottom: 6rem;
+}
+
+.pb-44 {
+  padding-bottom: 11rem;
 }
 
 .text-left {

@@ -190,6 +190,7 @@ document.addEventListener("alpine:init", () => {
 	Alpine.data("main", () => ({
 		slides: [],
 		atTop: true,
+		detailedAtTop: false,
 		isLoading: false,
 		userLocationLoading: false,
 		editedCard: "",

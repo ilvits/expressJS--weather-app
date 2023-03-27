@@ -1,8 +1,5 @@
 const languageStrings = {
 	ru: {
-		headers: {
-			legend: "Обозначения",
-		},
 		common: {
 			warning: "Внимание",
 			buttons: {
@@ -112,12 +109,18 @@ const languageStrings = {
 			resetSettings: {
 				text: "Вы уверены, что хотите сбросить все настройки приложения?",
 			},
+			legend: {
+				header: "Обозначения",
+				items: [
+					"Ощущается как",
+					"Скорость и направление ветра",
+					"Давление",
+					"Влаженость",
+				],
+			},
 		},
 	},
 	en: {
-		headers: {
-			legend: "Abbreviations",
-		},
 		common: {
 			warning: "Warning",
 			buttons: {
@@ -226,6 +229,15 @@ const languageStrings = {
 			},
 			resetSettings: {
 				text: "Are you sure you want to reset all app settings?",
+			},
+			legend: {
+				header: "Abbreviations",
+				items: [
+					"Feels Like",
+					"Wind gust and direction",
+					"Pressure",
+					"Humidity",
+				],
 			},
 		},
 	},
