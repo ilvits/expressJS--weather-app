@@ -4,11 +4,7 @@ const locationCardsContainer = document.querySelector(
 );
 
 var splide2;
-
-function checkPagination() {
-	return splide.options.pagination;
-}
-
+let updateInterval;
 const moonPhaseIconsPath = "img/assets/icons/moonphases/";
 const weatherIconsPath = "img/assets/icons/weather-conditions/";
 const weatherIconsSmallPath = "img/assets/icons/weather-conditions/small/";
@@ -71,6 +67,7 @@ checkDarkMode = () => document.documentElement.classList.contains("dark");
 function checkIcon(iconName, sunrise, sunset, hour) {
 	sunrise = Number(sunrise.slice(0, 2));
 	sunset = Number(sunset.slice(0, 2));
+	// console.log(sunset, sunrise, hour);
 	if (
 		(hour <= sunrise || hour > sunset) &&
 		iconName.search("-night") === -1
@@ -100,44 +97,35 @@ addPopup = (data) => {
 	);
 };
 
-document.addEventListener("DOMContentLoaded", () => {
-	if (
-		typeof locations === "undefined" ||
-		locations === null ||
-		Object.entries(locations).length == 0
-	) {
-		// locations_header__edit_btn.classList.add("invisible");
-		// mainPage_placeholder.classList.remove("hidden", "opacity-0");
-	} else {
-		locations.forEach((location) => {
-			if (location !== null) {
-				weatherData = JSON.parse(
-					localStorage.getItem(`weatherData-${location.id}`)
-				);
+function stopUpdateInterval() {
+	clearInterval(updateInterval);
+	// release our intervalID from the variable
+	updateInterval = null;
+}
 
-				addSlide({
-					id: Number(location.id),
-					location,
-					weatherData,
-				});
-			}
+function startUpdateInterval() {
+	if (!updateInterval) {
+		updateInterval = setInterval(() => {
+			updateInfo();
+		}, 5000);
+	}
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+	if (typeof locations !== "undefined" && locations.length > 0) {
+		locations.forEach((location) => {
+			weatherData = localStorage.getItem(`weatherData-${location.id}`)
+				? JSON.parse(localStorage.getItem(`weatherData-${location.id}`))
+				: JSON.parse(getWeather(location));
+			addSlide({
+				id: Number(location.id),
+				location,
+				weatherData,
+			});
 		});
-		locations.forEach((el, i) => {
-			if (el !== null && !localStorage.getItem("weatherData-" + el.id)) {
-				setTimeout(() => {
-					getWeather(el, el.latitude, el.longitude);
-				}, 1000 * i);
-			}
-		});
+
 		window.onfocus = () => updateInfo();
 
-		for (const loc of locations) {
-			if (loc !== null) {
-				weatherData = JSON.parse(
-					localStorage.getItem(`weatherData-${loc.id}`)
-				);
-			}
-		}
 		setupSlip(locationCardsContainer);
 	}
 });
@@ -158,7 +146,7 @@ window.addEventListener("weatherSaved", (event) => {
 
 	setTimeout(() => {
 		splide.refresh();
-	}, 100);
+	}, 150);
 });
 
 // updateAppData = (value) => window.appData.update(value);
@@ -272,6 +260,9 @@ document.addEventListener("alpine:init", () => {
 			locations = locations.filter((i) => i.id !== event.detail.id);
 			localStorage.setItem("locations", JSON.stringify(locations));
 			localStorage.removeItem(`weatherData-${event.detail.id}`);
+			if (locations.length === 0) {
+				stopUpdateInterval();
+			}
 		},
 	}));
 
@@ -599,37 +590,38 @@ function setupSlip(list) {
 
 // Update all data in Slides and Cards after timeout
 function updateInfo(force = false) {
-	// console.log("focus");
+	console.log("focus");
 	const date = new Date();
 	const lastPageUpdate = new Date(localStorage.getItem("lastPageUpdate"));
 	const delta = (date.getTime() - lastPageUpdate.getTime()) / 1000; // in sec
-	if (typeof locations === undefined || locations.length === 0) {
-	} else if (force) {
-		console.log("*********** Force update *********** ");
-		// loadSettings();
-		locations.forEach((loc) => {
-			getWeather(loc, loc.latitude, loc.longitude);
-		});
-		localStorage.setItem("lastPageUpdate", new Date());
-	} else {
-		console.warn(
-			"last update: ",
-			moment(new Date(localStorage.getItem("lastPageUpdate")))
-				.locale(language)
-				.format("HH:mm") + " || next update:",
-			moment(new Date(localStorage.getItem("lastPageUpdate")))
-				.add(5, "m")
-				.locale(language)
-				.format("HH:mm")
-		);
-		if (delta > 300) {
-			console.log("update from API:", delta);
-			locations.forEach((loc) => {
-				getWeather(loc, loc.latitude, loc.longitude);
+	if (typeof locations !== undefined || locations.length > 0) {
+		if (force) {
+			console.log("*********** Force update *********** ");
+			locations.forEach((location) => {
+				getWeather(location);
 			});
 			localStorage.setItem("lastPageUpdate", new Date());
+		} else {
+			console.log(
+				"last update: ",
+				moment(new Date(localStorage.getItem("lastPageUpdate")))
+					.locale(language)
+					.format("HH:mm") + " || next update:",
+				moment(new Date(localStorage.getItem("lastPageUpdate")))
+					.add(5, "m")
+					.locale(language)
+					.format("HH:mm")
+			);
+			if (delta > 300) {
+				console.log("update from API:", delta);
+				locations.forEach((location) => {
+					getWeather(location);
+				});
+				localStorage.setItem("lastPageUpdate", new Date());
+			}
 		}
 	}
+	return "Updating";
 }
 
 function displayMode() {
@@ -667,8 +659,6 @@ function deleteLocations() {
 	localStorage.removeItem("locations");
 	locations = [];
 }
-
-checkLocations = () => locations.length;
 
 requestUserCountry();
 // Request User Country code. User country hide in location search suggestions.

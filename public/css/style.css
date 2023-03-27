@@ -888,12 +888,12 @@ li .card__wrapper {
   top: 2.5rem;
 }
 
-.top-32 {
-  top: 8rem;
-}
-
 .top-4 {
   top: 1rem;
+}
+
+.top-40 {
+  top: 10rem;
 }
 
 .-z-10 {
@@ -1025,10 +1025,6 @@ li .card__wrapper {
   margin-bottom: 1.5rem;
 }
 
-.mb-8 {
-  margin-bottom: 2rem;
-}
-
 .mb-\[6px\] {
   margin-bottom: 6px;
 }
@@ -1087,18 +1083,6 @@ li .card__wrapper {
 
 .mt-4 {
   margin-top: 1rem;
-}
-
-.mr-0 {
-  margin-right: 0px;
-}
-
-.mr-0\.5 {
-  margin-right: 0.125rem;
-}
-
-.mr-\[1px\] {
-  margin-right: 1px;
 }
 
 .block {
@@ -1171,6 +1155,10 @@ li .card__wrapper {
 
 .h-3 {
   height: 0.75rem;
+}
+
+.h-3\.5 {
+  height: 0.875rem;
 }
 
 .h-4 {
@@ -1259,10 +1247,6 @@ li .card__wrapper {
 
 .h-screen {
   height: 100vh;
-}
-
-.h-3\.5 {
-  height: 0.875rem;
 }
 
 .w-1 {
@@ -1765,6 +1749,14 @@ li .card__wrapper {
   justify-items: center;
 }
 
+.gap-0 {
+  gap: 0px;
+}
+
+.gap-0\.5 {
+  gap: 0.125rem;
+}
+
 .gap-1 {
   gap: 0.25rem;
 }
@@ -1807,14 +1799,6 @@ li .card__wrapper {
 
 .gap-\[6px\] {
   gap: 6px;
-}
-
-.gap-0 {
-  gap: 0px;
-}
-
-.gap-0\.5 {
-  gap: 0.125rem;
 }
 
 .divide-y > :not([hidden]) ~ :not([hidden]) {
@@ -1970,9 +1954,8 @@ li .card__wrapper {
   border-color: rgb(243 244 247 / var(--tw-border-opacity));
 }
 
-.border-gray-200 {
-  --tw-border-opacity: 1;
-  border-color: rgb(212 212 222 / var(--tw-border-opacity));
+.border-gray-200\/50 {
+  border-color: rgb(212 212 222 / 0.5);
 }
 
 .border-gray-300 {
@@ -1988,10 +1971,6 @@ li .card__wrapper {
 .border-primary-light {
   --tw-border-opacity: 1;
   border-color: rgb(51 119 255 / var(--tw-border-opacity));
-}
-
-.border-gray-200\/50 {
-  border-color: rgb(212 212 222 / 0.5);
 }
 
 .bg-\[\#424F69\] {
@@ -2285,6 +2264,10 @@ li .card__wrapper {
   padding-bottom: 5rem;
 }
 
+.pb-24 {
+  padding-bottom: 6rem;
+}
+
 .pb-3 {
   padding-bottom: 0.75rem;
 }
@@ -2295,6 +2278,10 @@ li .card__wrapper {
 
 .pb-40 {
   padding-bottom: 10rem;
+}
+
+.pb-44 {
+  padding-bottom: 11rem;
 }
 
 .pb-\[2px\] {
@@ -2331,14 +2318,6 @@ li .card__wrapper {
 
 .pt-4 {
   padding-top: 1rem;
-}
-
-.pb-24 {
-  padding-bottom: 6rem;
-}
-
-.pb-44 {
-  padding-bottom: 11rem;
 }
 
 .text-left {

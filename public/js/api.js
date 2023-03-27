@@ -1,4 +1,6 @@
-async function getWeather(location, lat, lon, isPreview = false) {
+async function getWeather(location, isPreview = false) {
+	lat = location.latitude;
+	lon = location.longitude;
 	try {
 		axios({
 			url: "/api/weather",
@@ -8,26 +10,15 @@ async function getWeather(location, lat, lon, isPreview = false) {
 				lon,
 				lang: language,
 			},
-		}).then((response) => getKindex(location, response.data, isPreview));
-	} catch (err) {
-		console.warn({ message: err });
-	}
-}
-
-async function getKindex(location, weatherData, isPreview) {
-	try {
-		axios({
-			url: "https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json",
-			method: "get",
-		}).then((kIndexData) =>
-			parseWeatherData(location, weatherData, kIndexData.data, isPreview)
+		}).then((response) =>
+			parseWeatherData(location, response.data, isPreview)
 		);
 	} catch (err) {
 		console.warn({ message: err });
 	}
 }
 
-function parseWeatherData(location, data, kIndexData, isPreview) {
+function parseWeatherData(location, data, isPreview) {
 	id = Number(location.id);
 	const delta =
 		data.currentConditions.sunsetEpoch -
@@ -54,7 +45,6 @@ function parseWeatherData(location, data, kIndexData, isPreview) {
 	let weatherData = {
 		id: id,
 		raw: data,
-		kIndex: kIndexData,
 		coordinates: {
 			latitude: data.latitude,
 			longitude: data.longitude,
@@ -149,7 +139,6 @@ function parseWeatherData(location, data, kIndexData, isPreview) {
 
 function saveWeatherData(id, weatherData) {
 	localStorage.setItem("weatherData-" + id, JSON.stringify(weatherData));
-	console.log("SUN: ", weatherData.currentConditions.sunposition);
 	window.dispatchEvent(
 		new CustomEvent("weatherSaved", {
 			detail: {
@@ -158,6 +147,7 @@ function saveWeatherData(id, weatherData) {
 			},
 		})
 	);
+	return weatherData;
 }
 
 async function getSuggestions(query) {

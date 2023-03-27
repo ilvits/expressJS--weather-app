@@ -267,21 +267,21 @@
 		>
 			<img class="w-[195px] h-[197px]" src="img/assets/icons/globe.svg" />
 			<div>
-				<h3 class="pb-3">Плохой погоды не бывает</h3>
-				<div class="text-sm dark:text-cosmic-400">
-					Смотрите погоду по всему миру, сохраняйте избранные локации
-				</div>
+				<h3 x-text="lang.placeholders.main.header" class="pb-3"></h3>
+				<div
+					x-text="lang.placeholders.main.text"
+					class="text-sm dark:text-cosmic-400"
+				></div>
 			</div>
 			<button
+				x-text="lang.common.buttons.searchLocations"
 				id="mainpage--search-btn"
 				class="px-12 py-3 text-white rounded-md bg-primary-light dark:bg-primary-dark dark:text-cosmic-900"
 				@click="
 					menuLocations = true; 
 					setTimeout(() => { inputFocus = true }, 150);
 					"
-			>
-				Искать локации
-			</button>
+			></button>
 		</div>
 		<!-- <div
 			@click="$dispatch('addpopup3', { foo: 'bar' })"
@@ -422,7 +422,7 @@
 											>
 												<img
 													class="w-[120px] h-[120px] shrink-0"
-													:src="weatherIconsPath + weatherIcons[slide.weatherData.currentConditions.icon]"
+													:src="weatherIconsPath + weatherIcons[checkIcon(slide.weatherData.currentConditions.icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(slide.weatherData.timezone).format('HH')))]"
 													alt=""
 												/>
 											</div>
@@ -644,7 +644,8 @@
 								>
 									<template x-for="i in 24" :key="i">
 										<li
-											x-effect="i -= 1; icon = i === 0 ? slide.weatherData.currentConditions.icon : checkIcon(slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH')))"
+											x-init="i -= 1"
+											x-effect="icon = i === 0 ? checkIcon(slide.weatherData.currentConditions.icon,  slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(slide.weatherData.timezone).format('HH'))) : checkIcon(slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH')))"
 											class="flex flex-col items-center justify-end px-2 no-drag scroll-ml-3 snap-start"
 										>
 											<!-- Date -->
@@ -915,12 +916,11 @@
 									}"
 							/>
 							<button
+								x-text="lang.common.buttons.cancel"
 								id="location-search--cancel-button"
 								class="h-12 text-primary-light dark:text-primary-dark"
 								@click="inputFocus = false"
-							>
-								Отмена
-							</button>
+							></button>
 							<div
 								class="absolute pl-3 pointer-events-none top-4"
 							>
@@ -977,12 +977,13 @@
 									class="w-[70px] h-[70px]"
 									src="img/assets/icons/my-location.svg"
 								/>
-								<h3>Добавить Вашу геолокацию?</h3>
-								<div class="text-sm dark:text-cosmic-400">
-									Разрешите определить Ваше местоположение,
-									<br />
-									чтобы не тратить время на поиск.
-								</div>
+								<h3
+									x-text="lang.placeholders.addUserLocation.header"
+								></h3>
+								<div
+									x-text="lang.placeholders.addUserLocation.text"
+									class="text-sm dark:text-cosmic-400"
+								></div>
 
 								<button
 									type="button"
@@ -1102,7 +1103,9 @@
 									<button
 										type="button"
 										x-show="locationsEditMode"
-										@click="$el.closest('li').classList.add('opacity-0', 'h-0', 'my-0', '-translate-x-[calc(100%_+_100px)]'); setTimeout(() => { $dispatch('removecard', card) }, 500)"
+										@click="
+											$el.closest('li').classList.add('opacity-0', 'h-0', 'my-0', '-translate-x-[calc(100%_+_100px)]');
+											setTimeout(() => { $dispatch('removecard', card) }, 500)"
 										class="trash absolute z-50 -right-[100px] no-reorder no-swipe"
 									>
 										<img src="img/assets/icons/trash.svg" />
@@ -1381,7 +1384,7 @@
 					<section
 						id="locations-placeholder"
 						x-show="!slides.length"
-						class="absolute w-full top-32 left-1/2 -translate-x-1/2 flex flex-col transform-gpu transition-all duration-300 ease-[cubic-bezier(.23,1,.32,1)]"
+						class="absolute w-full top-40 left-1/2 -translate-x-1/2 flex flex-col transform-gpu transition-all duration-300 ease-[cubic-bezier(.23,1,.32,1)]"
 					>
 						<div class="w-full">
 							<svg
@@ -1422,11 +1425,13 @@
 								/>
 							</svg>
 
-							<h3>Здесь будут ваши локации</h3>
-							<div class="text-sm dark:text-cosmic-400">
-								Воспользуйтесь строкой поиска, чтобы найти, а
-								затем добавить нужную локацию.
-							</div>
+							<h3
+								x-text="lang.placeholders.locations.header"
+							></h3>
+							<div
+								x-text="lang.placeholders.locations.text"
+								class="text-sm dark:text-cosmic-400"
+							></div>
 						</div>
 					</section>
 				</section>
@@ -1789,6 +1794,7 @@
 									setTimeout(() => {
 										splide.refresh();
 									}, 500);
+									stopUpdateInterval();
 									$dispatch('toast', { content: 'Все добавленные локации удалены' })
 									"
 								x-text="lang.common.buttons.delete"
@@ -1943,7 +1949,7 @@
 					<div
 						id="menu-middle-btn"
 						:class="(!menuSettings && !menuLocations) && slides.length > 1 ? 'translate-y-[46px]': 'translate-y-0'"
-						class="absolute flex flex-col justify-end left-1/2 -translate-x-1/2 bottom-0 w-[50%] overflow-x-scroll delay-300 transition duration-300 ease-[cubic-bezier(.23,1,.32,1)]"
+						class="absolute flex flex-col justify-end left-1/2 -translate-x-1/2 bottom-0 w-[50%] overflow-x-scroll delay-300 transition-all-300"
 					>
 						<div
 							class="items-center splide__pagination h-10 my-2.5 flex justify-center gap-2 !relative z-10"
@@ -1954,7 +1960,7 @@
 							class="flex flex-col items-center gap-[6px] grow-0 shrink-0"
 						>
 							<svg
-								class="stroke-gray-300 dark:stroke-cosmic-400"
+								class="stroke-gray-300 dark:stroke-cosmic-400 transition-colors-500"
 								:class="(menuLocations || menuSettings) || 'stroke-primary-light dark:stroke-primary-dark'"
 								width="25"
 								height="24"
@@ -2006,7 +2012,7 @@
 								/>
 							</svg>
 							<div
-								class="text-xs"
+								class="text-xs transition-colors-500"
 								:class="(menuLocations || menuSettings) || 'text-primary-light dark:text-primary-dark'"
 								x-text="lang.common.buttons.weather"
 							></div>
@@ -2895,7 +2901,7 @@
 			<template x-for="newLocation in popup3">
 				<section
 					x-data="newLocation"
-					x-init="isLoading = true; getWeather(newLocation, newLocation.latitude, newLocation.longitude, true);"
+					x-init="isLoading = true; getWeather(newLocation, true);"
 					x-show="show"
 					x-transition:enter-start="translate-y-full"
 					x-transition:leave-end="translate-y-full"
@@ -2932,6 +2938,7 @@
 							inputFocus = false; 
 							menuLocationsBackdrop = false; 
 							searchClearText= false;
+							startUpdateInterval();
 							$dispatch('toast', { content: `Добавлена новая локация ${newLocation.name}` });
 							"
 					></div>

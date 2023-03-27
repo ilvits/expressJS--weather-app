@@ -10,6 +10,7 @@ const languageStrings = {
 				delete: "Удалить",
 				locations: "Мои локации",
 				settings: "Настройки",
+				searchLocations: "Искать локации",
 				weather: "Погода",
 				addUserLocation: ["Найти мою геолокацию", "Ищем вас..."],
 			},
@@ -119,6 +120,23 @@ const languageStrings = {
 				],
 			},
 		},
+		errors: {
+			timeout: "Время ожидания запроса истекло. Попробуйте позже.",
+		},
+		placeholders: {
+			main: {
+				header: "There’s no bad weather, only bad clothes ;)",
+				text: "Смотрите погоду по всему миру, сохраняйте избранные локации.",
+			},
+			locations: {
+				header: "Здесь будут ваши локации",
+				text: "Воспользуйтесь строкой поиска, чтобы найти, а затем добавить нужную локацию.",
+			},
+			addUserLocation: {
+				header: "Добавить вашу геолокацию?",
+				text: "Разрешите определить Ваше местоположение, чтобы не тратить время на поиск.",
+			},
+		},
 	},
 	en: {
 		common: {
@@ -131,8 +149,9 @@ const languageStrings = {
 				delete: "Delete",
 				locations: "My locations",
 				settings: "Settings",
+				searchLocations: "Search Locations",
 				weather: "Weather",
-				addUserLocation: ["Add user location", "Searching..."],
+				addUserLocation: ["Find me", "Searching..."],
 			},
 		},
 		datetime: {
@@ -238,6 +257,23 @@ const languageStrings = {
 					"Pressure",
 					"Humidity",
 				],
+			},
+		},
+		errors: {
+			timeout: "The request to get user location timed out.",
+		},
+		placeholders: {
+			main: {
+				header: "There’s no bad weather, only bad clothes ;)",
+				text: "See the weather around the world and save your favorite locations.",
+			},
+			locations: {
+				header: "Add your locations",
+				text: "Use the search bar to find and then add the location you need.",
+			},
+			addUserLocation: {
+				header: "Add your current location?",
+				text: "Let us determine your location so you don't waste time looking for it by yourself.",
 			},
 		},
 	},
