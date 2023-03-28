@@ -25,6 +25,8 @@ const weatherIcons = {
 	"clear-night": "clear-night.svg",
 	cloudy: "cloudy.svg",
 	"cloudy-night": "cloudy-night.svg",
+	wind: "wind.svg",
+	"wind-night": "wind-night.svg",
 	fog: "fog.svg",
 	"fog-night": "fog-night.svg",
 	hail: "hail.svg",
