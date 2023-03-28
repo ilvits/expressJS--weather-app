@@ -1973,6 +1973,10 @@ li .card__wrapper {
   border-color: rgb(51 119 255 / var(--tw-border-opacity));
 }
 
+.border-gray-200\/30 {
+  border-color: rgb(212 212 222 / 0.3);
+}
+
 .bg-\[\#424F69\] {
   --tw-bg-opacity: 1;
   background-color: rgb(66 79 105 / var(--tw-bg-opacity));
@@ -2057,6 +2061,18 @@ li .card__wrapper {
 .bg-yellow {
   --tw-bg-opacity: 1;
   background-color: rgb(254 184 0 / var(--tw-bg-opacity));
+}
+
+.bg-primary-light\/40 {
+  background-color: rgb(51 119 255 / 0.4);
+}
+
+.bg-primary-light\/20 {
+  background-color: rgb(51 119 255 / 0.2);
+}
+
+.bg-primary-light\/30 {
+  background-color: rgb(51 119 255 / 0.3);
 }
 
 .bg-gradient-to-b {

@@ -763,7 +763,7 @@
 								</ul>
 								<!-- ! 10-day forecast & Monthly Forecast Btns -->
 								<section
-									class="flex flex-col pt-4 mx-4 border-t border-gray-200/50 dark:border-cosmic-800"
+									class="flex flex-col pt-4 mx-4 border-t border-gray-200/30 dark:border-cosmic-800"
 								>
 									<div
 										@click="$dispatch('addpopup2', slide); setTimeout(() => {$dispatch('detaileddaysadd', { dayid : 0, days: slide.weatherData.days.slice(0,10) })}, 150);"
@@ -3558,7 +3558,7 @@
 				easing: "cubic-bezier(.23,1,.32,1)",
 				noDrag: "input, textarea, .no-drag",
 				classes: {
-					page: "bg-primary-light/60 dark:bg-primary-dark/60 h-1.5 w-1.5 [&.is-active]:bg-primary-light dark:[&.is-active]:bg-primary-dark rounded-full",
+					page: "bg-primary-light/30 dark:bg-primary-dark/60 h-1.5 w-1.5 [&.is-active]:bg-primary-light dark:[&.is-active]:bg-primary-dark rounded-full",
 				},
 			});
 
