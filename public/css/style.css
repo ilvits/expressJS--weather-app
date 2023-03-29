@@ -1854,6 +1854,14 @@ li .card__wrapper {
   white-space: nowrap;
 }
 
+.whitespace-nowrap {
+  white-space: nowrap;
+}
+
+.whitespace-pre {
+  white-space: pre;
+}
+
 .rounded-2xl {
   border-radius: 1rem;
 }
@@ -2963,17 +2971,13 @@ input {
   background-color: rgb(254 184 0 / var(--tw-bg-opacity));
 }
 
-.dark .dark\:bg-primary-dark\/40 {
-  background-color: rgb(254 184 0 / 0.4);
+.dark .dark\:bg-primary-dark\/60 {
+  background-color: rgb(254 184 0 / 0.6);
 }
 
 .dark .dark\:bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-}
-
-.dark .dark\:bg-primary-dark\/60 {
-  background-color: rgb(254 184 0 / 0.6);
 }
 
 .dark .dark\:bg-gradient-to-br {

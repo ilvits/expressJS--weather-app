@@ -246,7 +246,7 @@
 	</head>
 
 	<body
-		class="overflow-hidden bg-gray-100 dark:bg-cosmic-900 text-cosmic-900 dark:text-white"
+		class="overflow-hidden bg-gray-100 text-cosmic-900 dark:bg-cosmic-900 dark:text-white"
 		x-data="main"
 		@slidesinfo.window="info()"
 		@addslide.window="add($event)"
@@ -258,9 +258,9 @@
 			id="main-page--placeholder"
 			x-cloak
 			x-show="slides.length === 0"
-			class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-[calc(100%_-_84px)] flex flex-col gap-6 text-center items-center transform-gpu transition-[opacity,translate] duration-300 ease-[cubic-bezier(.23,1,.32,1)]"
+			class="absolute top-1/2 left-1/2 flex w-[calc(100%_-_84px)] -translate-y-1/2 -translate-x-1/2 transform-gpu flex-col items-center gap-6 text-center transition-[opacity,translate] duration-300 ease-[cubic-bezier(.23,1,.32,1)]"
 		>
-			<img class="w-[195px] h-[197px]" src="img/assets/icons/globe.svg" />
+			<img class="h-[197px] w-[195px]" src="img/assets/icons/globe.svg" />
 			<div>
 				<h3 x-text="lang.placeholders.main.header" class="pb-3"></h3>
 				<div
@@ -271,7 +271,7 @@
 			<button
 				x-text="lang.common.buttons.searchLocations"
 				id="mainpage--search-btn"
-				class="px-12 py-3 text-white rounded-md bg-primary-light dark:bg-primary-dark dark:text-cosmic-900"
+				class="rounded-md bg-primary-light px-12 py-3 text-white dark:bg-primary-dark dark:text-cosmic-900"
 				@click="
 					menuLocations = true; 
 					setTimeout(() => { inputFocus = true }, 150);
@@ -294,32 +294,32 @@
 				<ul class="splide__list">
 					<!-- ! Slide -->
 					<template x-for="slide in slides" :key="slide.id">
-						<li class="w-full splide__slide">
+						<li class="splide__slide w-full">
 							<section
-								class="h-screen pb-24 overflow-y-scroll bg-gray-100 dark:bg-cosmic-900"
+								class="h-screen overflow-y-scroll bg-gray-100 pb-24 dark:bg-cosmic-900"
 								:class="{'pb-44': displaymode !== 'standalone'}"
 								@scroll="atTop = $el.scrollTop < 180 ? true : false"
 							>
 								<!-- * HEADER * -->
 								<header
-									class="sticky top-0 z-50 flex gap-1 px-6 py-4 bg-gray-100 dark:bg-cosmic-900 transition-opacity-500"
+									class="transition-opacity-500 sticky top-0 z-50 flex gap-1 bg-gray-100 px-6 py-4 dark:bg-cosmic-900"
 								>
 									<label
 										x-text="slide.location.name"
-										class="w-4/5 text-xl font-semibold leading-5 truncate location-slide--header-title"
+										class="location-slide--header-title w-4/5 truncate text-xl font-semibold leading-5"
 									></label>
 
 									<div
 										x-show="!atTop"
 										x-transition:enter-start="opacity-0"
 										x-transition:leave-end="opacity-0"
-										class="absolute flex items-center gap-2 text-sm font-bold location-slide--header-temp right-6 transition-opacity-500"
+										class="location-slide--header-temp transition-opacity-500 absolute right-6 flex items-center gap-2 text-sm font-bold"
 									>
 										<div
 											x-text="tempConverter(slide.weatherData.currentConditions.temp) + '°'"
 										></div>
 										<img
-											class="w-6 h-6"
+											class="h-6 w-6"
 											:src="weatherIconsSmallPath + weatherIcons[slide.weatherData.currentConditions.icon]"
 											alt=""
 										/>
@@ -329,7 +329,7 @@
 										x-transition:enter-start="opacity-0"
 										x-transition:leave-end="opacity-0"
 										@click="details = !details"
-										class="flex items-end gap-1 text-sm text-gray-300 detail-weather-toggle dark:text-cosmic-400 hs-collapse-toggle transition-opacity-500"
+										class="detail-weather-toggle hs-collapse-toggle transition-opacity-500 flex items-end gap-1 text-sm text-gray-300 dark:text-cosmic-400"
 									>
 										<div
 											x-text="details ? lang.slides.header.details[1] : lang.slides.header.details[0]"
@@ -353,14 +353,14 @@
 								<!-- * MAIN INFO * -->
 								<section
 									id="general-weather-info"
-									class="px-4 mx-auto dark:bg-cosmic-900"
+									class="mx-auto px-4 dark:bg-cosmic-900"
 								>
 									<div
-										class="flex flex-col w-full p-5 rounded-2xl bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645] transition-all-500"
+										class="transition-all-500 flex w-full flex-col rounded-2xl bg-white p-5 dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645]"
 									>
 										<!-- * GENERAL * -->
 										<div
-											class="flex flex-row justify-between transition-all-500"
+											class="transition-all-500 flex flex-row justify-between"
 											@click="details = !details"
 										>
 											<div class="flex flex-col gap-2">
@@ -369,10 +369,10 @@
 													moment().locale(language).utcOffset(slide.weatherData.timezone).format(', DD MMMM, HH:mm')"
 													x-timeout:10000="$el.innerText=capitalize(moment().locale(language).utcOffset(slide.weatherData.timezone).format('ddd')) + 
 													moment().locale(language).utcOffset(slide.weatherData.timezone).format(', DD MMMM, HH:mm')"
-													class="text-xs text-gray-300 current-day dark:text-cosmic-500 transition-all-500"
+													class="current-day transition-all-500 text-xs text-gray-300 dark:text-cosmic-500"
 												></div>
 												<div
-													class="temperature flex text-6xl leading-[60px] font-semibold align-text-top relative"
+													class="temperature relative flex align-text-top text-6xl font-semibold leading-[60px]"
 												>
 													<div
 														x-text="tempConverter(slide.weatherData.currentConditions.temp)"
@@ -396,7 +396,7 @@
 														class="windgust"
 													></div>
 													<div
-														class="flex items-baseline gap-1 feelslike"
+														class="feelslike flex items-baseline gap-1"
 													>
 														<div
 															x-text="lang.weather.feelslike"
@@ -416,7 +416,7 @@
 												class="weather-icon"
 											>
 												<img
-													class="w-[120px] h-[120px] shrink-0"
+													class="h-[120px] w-[120px] shrink-0"
 													:src="weatherIconsPath + weatherIcons[checkIcon(slide.weatherData.currentConditions.icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(slide.weatherData.timezone).format('HH')))]"
 													alt=""
 												/>
@@ -424,46 +424,46 @@
 										</div>
 										<!-- * DETAILS * -->
 										<div
-											class="w-full overflow-hidden transition-all-500"
+											class="transition-all-500 w-full overflow-hidden"
 											:class="details ?' h-[232px] opacity-100' : 'h-[0px] opacity-0'"
 										>
 											<div
 												id="details-1"
-												class="relative h-[120px] w-full grid grid-flow-col justify-around items-end"
+												class="relative grid h-[120px] w-full grid-flow-col items-end justify-around"
 											>
 												<div
-													class="absolute flex justify-center w-full h-full -translate-x-1 -translate-y-5 detail-item transition-300"
+													class="detail-item transition-300 absolute flex h-full w-full -translate-x-1 -translate-y-5 justify-center"
 												>
 													<div
-														class="absolute w-[150px] h-[75px] bottom-0"
+														class="absolute bottom-0 h-[75px] w-[150px]"
 													>
 														<div
-															class="w-full h-full border border-b-0 border-dashed rounded-t-full border-cyan/60"
+															class="h-full w-full rounded-t-full border border-b-0 border-dashed border-cyan/60"
 														></div>
 														<!-- ? SKY -->
 														<div
 															:style="slide.weatherData.currentConditions.sunposition ? `rotate: ${slide.weatherData.currentConditions.sunposition}deg` : 'display: none'"
-															class="sky absolute top-0 w-full h-full origin-bottom border border-b-0 border-solid rounded-t-full border-cyan bg-gradient-to-b from-[#EDF8FF] dark:from-[#0F3C5C] to-transparent"
+															class="sky absolute top-0 h-full w-full origin-bottom rounded-t-full border border-b-0 border-solid border-cyan bg-gradient-to-b from-[#EDF8FF] to-transparent dark:from-[#0F3C5C]"
 														></div>
 														<div
-															class="w-[150px] h-[75px] bg-white dark:bg-cosmic-800 absolute"
+															class="absolute h-[75px] w-[150px] bg-white dark:bg-cosmic-800"
 														></div>
 														<div
-															class="w-2 h-2 rounded-full bg-cyan -bottom-[4px] -left-[4px] absolute"
+															class="absolute -bottom-[4px] -left-[4px] h-2 w-2 rounded-full bg-cyan"
 														></div>
 														<div
-															class="w-2 h-2 rounded-full bg-cyan -bottom-[4px] -right-[4px] absolute"
+															class="absolute -bottom-[4px] -right-[4px] h-2 w-2 rounded-full bg-cyan"
 														></div>
 														<!-- ! SUN -->
 														<div
 															:style="slide.weatherData.currentConditions.sunposition ? `rotate: ${slide.weatherData.currentConditions.sunposition}deg` : 'display: none'"
-															class="absolute w-1/2 origin-left sun left-1/2"
+															class="sun absolute left-1/2 w-1/2 origin-left"
 														>
 															<div
-																class="w-[7.5px] h-[7.5px] rounded-full bg-yellow outline-[5px] outline outline-white dark:outline-cosmic-800 outline-offset-0 -bottom-[4px] -right-[4px] absolute"
+																class="absolute -bottom-[4px] -right-[4px] h-[7.5px] w-[7.5px] rounded-full bg-yellow outline outline-[5px] outline-offset-0 outline-white dark:outline-cosmic-800"
 															></div>
 															<svg
-																class="w-[18px] h-[18px] rounded-full -bottom-[9px] -right-[9px] absolute"
+																class="absolute -bottom-[9px] -right-[9px] h-[18px] w-[18px] rounded-full"
 																width="18"
 																height="18"
 																viewBox="0 0 18 18"
@@ -479,7 +479,7 @@
 													</div>
 												</div>
 												<div
-													class="detail-item w-full text-center -translate-y-5 -translate-x-1 transition-300 grid grid-flow-row gap-[6px]"
+													class="detail-item transition-300 grid w-full -translate-y-5 -translate-x-1 grid-flow-row gap-[6px] text-center"
 												>
 													<div
 														x-text="lang.datetime.sunrise"
@@ -487,11 +487,11 @@
 													></div>
 													<div
 														x-text="slide.weatherData.currentConditions.sunrise"
-														class="font-semibold sunrise"
+														class="sunrise font-semibold"
 													></div>
 												</div>
 												<div
-													class="detail-item w-full text-center -translate-y-5 -translate-x-1 transition-300 grid grid-flow-row gap-[6px] justify-center z-10"
+													class="detail-item transition-300 z-10 grid w-full -translate-y-5 -translate-x-1 grid-flow-row justify-center gap-[6px] text-center"
 												>
 													<div
 														x-text="lang.datetime.daylight"
@@ -499,11 +499,11 @@
 													></div>
 													<div
 														x-text="slide.weatherData.currentConditions.daylight"
-														class="font-semibold daylight"
+														class="daylight font-semibold"
 													></div>
 												</div>
 												<div
-													class="detail-item w-full text-center -translate-y-5 -translate-x-1 transition-300 grid grid-flow-row gap-[6px]"
+													class="detail-item transition-300 grid w-full -translate-y-5 -translate-x-1 grid-flow-row gap-[6px] text-center"
 												>
 													<div
 														x-text="lang.datetime.sunset"
@@ -511,7 +511,7 @@
 													></div>
 													<div
 														x-text="slide.weatherData.currentConditions.sunset"
-														class="font-semibold sunset"
+														class="sunset font-semibold"
 													></div>
 												</div>
 											</div>
@@ -520,7 +520,7 @@
 												class="relative grid grid-cols-3"
 											>
 												<div
-													class="flex flex-col gap-5 text-center detail-item transition-300"
+													class="detail-item transition-300 flex flex-col gap-5 text-center"
 												>
 													<div
 														class="flex flex-col items-center gap-1.5 leading-[18px]"
@@ -548,7 +548,7 @@
 													</div>
 												</div>
 												<div
-													class="flex flex-col gap-5 text-center detail-item transition-300"
+													class="detail-item transition-300 flex flex-col gap-5 text-center"
 												>
 													<div
 														class="flex flex-col items-center gap-1.5 leading-[18px]"
@@ -576,7 +576,7 @@
 													</div>
 												</div>
 												<div
-													class="flex flex-col gap-5 text-center detail-item transition-300"
+													class="detail-item transition-300 flex flex-col gap-5 text-center"
 												>
 													<div
 														class="flex flex-col items-center gap-1.5 leading-[18px]"
@@ -635,25 +635,25 @@
 								</section>
 								<!-- * HOURLY * -->
 								<ul
-									class="relative flex gap-2 px-3 pt-4 overflow-hidden overflow-x-scroll hourlyToday hourly no-drag no-scrollbar scroll-smooth snap-x snap-mandatory"
+									class="hourlyToday hourly no-drag no-scrollbar relative flex snap-x snap-mandatory gap-2 overflow-hidden overflow-x-scroll scroll-smooth px-3 pt-4"
 								>
 									<template x-for="i in 24" :key="i">
 										<li
 											x-init="i -= 1"
 											x-effect="icon = i === 0 ? checkIcon(slide.weatherData.currentConditions.icon,  slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(slide.weatherData.timezone).format('HH'))) : checkIcon(slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH')))"
-											class="flex flex-col items-center justify-end px-2 no-drag scroll-ml-3 snap-start"
+											class="no-drag flex snap-start scroll-ml-3 flex-col items-center justify-end px-2"
 										>
 											<!-- Date -->
 											<div
 												x-text="moment().add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH') === '00' ? moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('D MMMM') : ''"
-												class="pb-1 text-xs text-gray-300 truncate no-drag date dark:text-cosmic-500"
+												class="no-drag date truncate pb-1 text-xs text-gray-300 dark:text-cosmic-500"
 											></div>
 											<div
-												class="no-drag icon w-11 h-11 bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645] rounded-xl flex justify-center items-center relative"
+												class="no-drag icon relative flex h-11 w-11 items-center justify-center rounded-xl bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645]"
 											>
 												<img
 													:src="weatherIconsSmallPath + weatherIcons[icon]"
-													class="w-6 h-6 no-drag"
+													class="no-drag h-6 w-6"
 													:class="icon ? 'opacity-100' : 'opacity-0'"
 													alt=""
 												/>
@@ -661,22 +661,22 @@
 												<div
 													x-show="i === 0 ? slide.weatherData.currentConditions.precipprob > 30 : slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].precipprob > 30"
 													x-text="Math.round(i === 0 ? slide.weatherData.currentConditions.precipprob : slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].precipprob) + '%'"
-													class="no-drag absolute bg-gray-100 dark:bg-cosmic-900 p-[5px] -bottom-2 -right-2 text-xxs text-gray-300 dark:text-cosmic-300 rounded-3xl"
+													class="no-drag absolute -bottom-2 -right-2 rounded-3xl bg-gray-100 p-[5px] text-xxs text-gray-300 dark:bg-cosmic-900 dark:text-cosmic-300"
 												></div>
 											</div>
 											<div
 												x-text="moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))]) ? lang.datetime.now : moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH:00')"
-												class="pt-3 text-xs font-light text-gray-300 no-drag time dark:text-cosmic-400"
+												class="no-drag time pt-3 text-xs font-light text-gray-300 dark:text-cosmic-400"
 											></div>
 											<div
 												x-text="tempConverter(i === 0 ? slide.weatherData.currentConditions.temp : slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].temp) + '°'"
-												class="pt-1 text-lg font-semibold leading-5 no-drag"
+												class="no-drag pt-1 text-lg font-semibold leading-5"
 											></div>
 										</li>
 									</template>
 								</ul>
 								<!-- * DAILY * -->
-								<ul class="grid grid-flow-row py-6 mx-4 daily">
+								<ul class="daily mx-4 grid grid-flow-row py-6">
 									<template
 										x-for="(day, id) in slide.weatherData.days.slice(0, 10)"
 										x-init="temprange = minMax(slide.weatherData.days.slice(0, 10), 10)"
@@ -690,26 +690,26 @@
 													: id === 1
 													? lang.datetime.tomorrow 
 													: moment.unix(day.datetimeEpoch).locale(language).format('DD MMMM');"
-											class="w-full py-[2px] font-light flex flex-nowrap gap-5 items-center"
+											class="flex w-full flex-nowrap items-center gap-5 py-[2px] font-light"
 											@click="$dispatch('addpopup2', slide); setTimeout(() => {$dispatch('detaileddaysadd', { dayid : id, days: slide.weatherData.days.slice(0, 10) })}, 150);"
 										>
 											<div
 												x-show="day.icon"
-												class="small-icon w-[52px] h-[52px] shrink-0 bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645] rounded-2xl py-1 relative"
+												class="small-icon relative h-[52px] w-[52px] shrink-0 rounded-2xl bg-white py-1 dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645]"
 											>
 												<img
-													class="w-[44px] h-[44px] mx-auto"
+													class="mx-auto h-[44px] w-[44px]"
 													:src="weatherIconsPath + weatherIcons[day.icon]"
 													alt=""
 												/>
 												<div
 													x-show="day.precipprob > 30"
 													x-text="Math.round(day.precipprob) + '%'"
-													class="absolute font-medium bg-gray-100 dark:bg-cosmic-900 p-[5px] -bottom-2 -right-2 text-xxs text-gray-300 dark:text-cosmic-300 rounded-3xl"
+													class="absolute -bottom-2 -right-2 rounded-3xl bg-gray-100 p-[5px] text-xxs font-medium text-gray-300 dark:bg-cosmic-900 dark:text-cosmic-300"
 												></div>
 											</div>
 											<div
-												class="flex flex-col justify-center gap-1 w-28 shrink-0"
+												class="flex w-28 shrink-0 flex-col justify-center gap-1"
 											>
 												<div
 													x-text="id === 0 
@@ -721,13 +721,13 @@
 												></div>
 												<div
 													x-text="day.conditions"
-													class="text-xs leading-[14px] text-gray-300 font-medium dark:text-cosmic-400"
+													class="text-xs font-medium leading-[14px] text-gray-300 dark:text-cosmic-400"
 												></div>
 											</div>
-											<div class="w-full my-4">
+											<div class="my-4 w-full">
 												<div
 													id="labels"
-													class="flex justify-between pb-2 mx-auto leading-5"
+													class="mx-auto flex justify-between pb-2 leading-5"
 												>
 													<div
 														x-text="tempConverter(day.tempmin) + '°'"
@@ -747,7 +747,7 @@
 													>
 														<div
 															x-show="id === 0"
-															class="absolute h-[8px] w-[8px] -top-[2px] rounded-full bg-[#6390F0] dark:bg-white border-[1.5px] border-gray-100 dark:border-cosmic-900"
+															class="absolute -top-[2px] h-[8px] w-[8px] rounded-full border-[1.5px] border-gray-100 bg-[#6390F0] dark:border-cosmic-900 dark:bg-white"
 															:style="{left:`${lineStyles.dotShift}%`}"
 														></div>
 													</div>
@@ -758,23 +758,23 @@
 								</ul>
 								<!-- ! 10-day forecast & Monthly Forecast Btns -->
 								<section
-									class="flex flex-col pt-4 mx-4 border-t border-gray-200/30 dark:border-cosmic-800"
+									class="mx-4 flex flex-col border-t border-gray-200/30 pt-4 dark:border-cosmic-800"
 								>
 									<div
 										@click="$dispatch('addpopup2', slide); setTimeout(() => {$dispatch('detaileddaysadd', { dayid : 0, days: slide.weatherData.days.slice(0,10) })}, 150);"
 										class="flex items-center justify-between py-2"
 									>
 										<img
-											class="p-2 bg-white rounded-2xl dark:bg-cosmic-800"
+											class="rounded-2xl bg-white p-2 dark:bg-cosmic-800"
 											src="img/assets/icons/10days.svg"
 											alt=""
 										/>
 										<div
 											x-text="lang.slides.headers.tenDaysForecast"
-											class="pl-5 text-base font-medium leading-5 grow"
+											class="grow pl-5 text-base font-medium leading-5"
 										></div>
 										<svg
-											class="-rotate-90 detail-weather-toggle--img fill-gray-300 dark:fill-cosmic-400"
+											class="detail-weather-toggle--img -rotate-90 fill-gray-300 dark:fill-cosmic-400"
 											width="16"
 											height="17"
 											viewBox="0 0 16 17"
@@ -791,16 +791,16 @@
 										class="flex items-center justify-between py-2"
 									>
 										<img
-											class="p-2 bg-white rounded-2xl dark:bg-cosmic-800"
+											class="rounded-2xl bg-white p-2 dark:bg-cosmic-800"
 											src="img/assets/icons/calendar.svg"
 											alt=""
 										/>
 										<div
 											x-text="lang.slides.headers.monthlyForecast"
-											class="pl-5 text-base font-medium leading-5 grow"
+											class="grow pl-5 text-base font-medium leading-5"
 										></div>
 										<svg
-											class="-rotate-90 detail-weather-toggle--img fill-gray-300 dark:fill-cosmic-400"
+											class="detail-weather-toggle--img -rotate-90 fill-gray-300 dark:fill-cosmic-400"
 											width="16"
 											height="17"
 											viewBox="0 0 16 17"
@@ -851,7 +851,7 @@
 						
 					})"
 				x-data="{ locationsEditMode: false, locationEditModal: false }"
-				class="fixed top-0 left-0 w-full h-full pb-20 overflow-y-scroll bg-gray-100 dark:bg-cosmic-900 transition-all-500 overflow-x-clip"
+				class="transition-all-500 fixed top-0 left-0 h-full w-full overflow-x-clip overflow-y-scroll bg-gray-100 pb-20 dark:bg-cosmic-900"
 			>
 				<!-- Backdrop -->
 				<div
@@ -859,21 +859,21 @@
 					x-show="menuLocationsBackdrop"
 					x-transition:enter-start="opacity-0"
 					x-transition:leave-end="opacity-0"
-					class="fixed top-0 left-0 z-10 w-full h-full dark:bg-cosmic-900/80 backdrop-blur-lg transition-all-500"
+					class="transition-all-500 fixed top-0 left-0 z-10 h-full w-full backdrop-blur-lg dark:bg-cosmic-900/80"
 				></div>
 
 				<section
 					id="container-settings"
-					class="relative flex flex-col h-full gap-6 overflow-y-scroll overflow-x-clip"
+					class="relative flex h-full flex-col gap-6 overflow-x-clip overflow-y-scroll"
 				>
 					<!-- HEADER -->
 					<header
-						class="sticky top-0 flex items-center justify-center w-full h-12 px-4 pt-4 pb-1 bg-gray-100 dark:bg-cosmic-900"
+						class="sticky top-0 flex h-12 w-full items-center justify-center bg-gray-100 px-4 pt-4 pb-1 dark:bg-cosmic-900"
 					>
-						<div class="w-16 grow-0 shrink-0"></div>
+						<div class="w-16 shrink-0 grow-0"></div>
 						<div
 							x-text="lang.locations.header"
-							class="text-lg font-semibold leading-8 text-center grow shrink-0 transition-opacity-500"
+							class="transition-opacity-500 shrink-0 grow text-center text-lg font-semibold leading-8"
 							:class="inputFocus && 'opacity-0'"
 						></div>
 						<button
@@ -881,12 +881,12 @@
 							x-text="slides.length === 0 ? '' : locationsEditMode ? lang.locations.edit[1] : lang.locations.edit[0]"
 							type="button"
 							id="locations-header--edit-btn"
-							class="w-16 grow-0 shrink-0 text-primary-light dark:text-primary-dark"
+							class="w-16 shrink-0 grow-0 text-primary-light dark:text-primary-dark"
 						></button>
 					</header>
 					<!-- Search section -->
 					<section
-						class="relative z-10 w-full h-12 px-4 transition-all-500"
+						class="transition-all-500 relative z-10 h-12 w-full px-4"
 						:class="inputFocus && '-translate-y-14'"
 					>
 						<div class="relative flex h-12 flex-nowrap">
@@ -897,7 +897,7 @@
 								name="searchInput"
 								x-ref="searchInput"
 								:placeholder="lang.locations.searchPlaceholder"
-								class="shrink-0 px-9 mr-4 focus:outline-none rounded-lg truncate h-12 transition-width duration-500 ease-[cubic-bezier(.23,1,.32,1)] bg-white dark:bg-cosmic-800 caret-primary-light dark:caret-primary-dark placeholder-gray-300 dark:placeholder-cosmic-500"
+								class="mr-4 h-12 shrink-0 truncate rounded-lg bg-white px-9 placeholder-gray-300 caret-primary-light transition-width duration-500 ease-[cubic-bezier(.23,1,.32,1)] focus:outline-none dark:bg-cosmic-800 dark:placeholder-cosmic-500 dark:caret-primary-dark"
 								:class="{ 'w-full': !inputFocus, 'w-[calc(100%_-_70px)]': inputFocus }"
 								@focus="inputFocus = true"
 								@input.debounce.500ms="inputProcessing($el); 
@@ -917,7 +917,7 @@
 								@click="inputFocus = false"
 							></button>
 							<div
-								class="absolute pl-3 pointer-events-none top-4"
+								class="pointer-events-none absolute top-4 pl-3"
 							>
 								<svg
 									class="stroke-gray-300 dark:stroke-cosmic-500"
@@ -935,7 +935,7 @@
 								</svg>
 							</div>
 							<button
-								class="absolute -translate-y-1/2 clear-text-cross right-20 top-1/2 transition-opacity-500"
+								class="clear-text-cross transition-opacity-500 absolute right-20 top-1/2 -translate-y-1/2"
 								x-show="searchClearText"
 								@click="
 									searchClearText = false,
@@ -951,25 +951,25 @@
 							</button>
 						</div>
 						<section
-							class="absolute w-full h-screen overflow-y-scroll transition-all-500 overflow-x-clip"
+							class="transition-all-500 absolute h-screen w-full overflow-x-clip overflow-y-scroll"
 							x-show="inputFocus"
 							x-transition:enter-start="opacity-0"
 							x-transition:leave-end="opacity-0"
 						>
 							<ol
 								x-ref="suggestions"
-								class="suggestions-list w-[calc(100%_-_40px)] overflow-y-scroll mt-4 mr-12 flex flex-col gap-5 text-base leading-5 transition-all-500"
+								class="suggestions-list transition-all-500 mt-4 mr-12 flex w-[calc(100%_-_40px)] flex-col gap-5 overflow-y-scroll text-base leading-5"
 							></ol>
 							<div
 								id="search-user-location--placeholder"
-								class="flex flex-col items-center justify-center w-[calc(100%_-_32px)] mt-20 gap-3 text-center transition-all-500"
+								class="transition-all-500 mt-20 flex w-[calc(100%_-_32px)] flex-col items-center justify-center gap-3 text-center"
 								x-ref="userGeo"
 								x-show="!userLocation && showUserLocationPlaceholder"
 								x-transition:enter-start="opacity-0"
 								x-transition:leave-end="opacity-0"
 							>
 								<img
-									class="w-[70px] h-[70px]"
+									class="h-[70px] w-[70px]"
 									src="img/assets/icons/my-location.svg"
 								/>
 								<h3
@@ -992,27 +992,27 @@
 												}
 											})"
 									@click="userLocationLoading = true; getUserLocation(); "
-									class="relative transition-all-500 loading-btn w-[260px] h-11 mt-3 bg-primary-light disabled:bg-primary-light/60 dark:disabled:bg-primary-dark/60 disabled:w-[200px] dark:bg-primary-dark rounded-[10px] text-white dark:text-cosmic-900"
+									class="transition-all-500 loading-btn relative mt-3 h-11 w-[260px] rounded-[10px] bg-primary-light text-white disabled:w-[200px] disabled:bg-primary-light/60 dark:bg-primary-dark dark:text-cosmic-900 dark:disabled:bg-primary-dark/60"
 								>
 									<div
 										x-show="!userLocationLoading"
 										x-transition:enter-start="opacity-0"
 										x-transition:leave-end="opacity-0"
 										x-text="lang.common.buttons.addUserLocation[0]"
-										class="absolute top-0 w-full mt-2.5 -translate-x-1/2 left-1/2 h-11 transition-500"
+										class="transition-500 absolute top-0 left-1/2 mt-2.5 h-11 w-full -translate-x-1/2"
 									></div>
 									<div
 										x-show="userLocationLoading"
 										x-transition:enter-start="opacity-0"
 										x-transition:leave-end="opacity-0"
 										x-text="lang.common.buttons.addUserLocation[1]"
-										class="absolute top-0 mt-2.5 -translate-x-1/2 left-[calc(50%_+_14px)] h-11 transition-500"
+										class="transition-500 absolute top-0 left-[calc(50%_+_14px)] mt-2.5 h-11 -translate-x-1/2"
 									></div>
 									<svg
 										x-show="userLocationLoading"
 										x-transition:enter-start="opacity-0"
 										x-transition:leave-end="opacity-0"
-										class="absolute top-0 w-6 h-6 mt-2.5 left-10 spinner transition-500"
+										class="spinner transition-500 absolute top-0 left-10 mt-2.5 h-6 w-6"
 										viewBox="0 0 48 48"
 										fill="none"
 										xmlns="http://www.w3.org/2000/svg"
@@ -1039,10 +1039,10 @@
 							<div
 								id="search-user-location--not-found"
 								x-ref="notFound"
-								class="absolute flex mt-20 flex-col items-center justify-center w-[calc(100%_-_32px)] gap-3 text-center opacity-0 transition-all-500"
+								class="transition-all-500 absolute mt-20 flex w-[calc(100%_-_32px)] flex-col items-center justify-center gap-3 text-center opacity-0"
 							>
 								<img
-									class="w-[70px] h-[70px]"
+									class="h-[70px] w-[70px]"
 									src="img/assets/icons/ufo.svg"
 								/>
 								<div class="text-lg font-bold">
@@ -1057,7 +1057,7 @@
 					<!-- ! Location Cards List -->
 					<ol
 						id="location-cards--container"
-						class="flex flex-col w-full h-full px-4 slip-swiping-container transition-all-500"
+						class="slip-swiping-container transition-all-500 flex h-full w-full flex-col px-4"
 						:class="{'pb-20': displaymode !== 'standalone'}"
 						tabindex="0"
 						role="listbox"
@@ -1068,7 +1068,7 @@
 								@click="locationsEditMode ? false : splide.go(slides.findIndex((item) => item.id === card.id)); locationsEditMode ? false : menuLocations = false"
 								x-ref="cardItem"
 								x-transition:leave-end="opacity-0 h-0 my-0 -translate-x-full"
-								class="flex h-[85px] my-2 items-center no-reorder no-swipe transition-all-500"
+								class="no-reorder no-swipe transition-all-500 my-2 flex h-[85px] items-center"
 								:isuserlocation="card.location.isUserLocation"
 							>
 								<!-- *** edit buttons *** -->
@@ -1079,7 +1079,7 @@
 									x-transition:leave-start="w-full"
 									x-transition:leave-end="w-[calc(100%_-_100px)]"
 									:class="locationsEditMode ? 'w-full z-0' : 'w-[calc(100%_-_100px)] -z-10'"
-									class="location-card--edit-buttons-container absolute left-1/2 -translate-x-1/2 h-[80px] justify-between flex transition-all-500 no-reorder no-swipe"
+									class="location-card--edit-buttons-container transition-all-500 no-reorder no-swipe absolute left-1/2 flex h-[80px] -translate-x-1/2 justify-between"
 								>
 									<button
 										type="button"
@@ -1101,18 +1101,18 @@
 										@click="
 											$el.closest('li').classList.add('opacity-0', 'h-0', 'my-0', '-translate-x-[calc(100%_+_100px)]');
 											setTimeout(() => { $dispatch('removecard', card) }, 500)"
-										class="trash absolute z-50 -right-[100px] no-reorder no-swipe"
+										class="trash no-reorder no-swipe absolute -right-[100px] z-50"
 									>
 										<img src="img/assets/icons/trash.svg" />
 									</button>
-									<div class="grow no-reorder no-swipe"></div>
+									<div class="no-reorder no-swipe grow"></div>
 									<button
 										type="button"
-										class="w-10 no-swipe"
+										class="no-swipe w-10"
 										:class="card.location.isUserLocation === 'true' ? 'opacity-50 no-reorder' : 'opacity-100 instant'"
 									>
 										<svg
-											class="fill-gray-300 dark:fill-cosmic-400 no-swipe"
+											class="no-swipe fill-gray-300 dark:fill-cosmic-400"
 											:class="card.location.isUserLocation === 'true' ? 'no-reorder' : 'instant'"
 											width="40"
 											height="40"
@@ -1142,28 +1142,28 @@
 								</section>
 								<!-- *** card *** -->
 								<section
-									class="items-center pointer-events-none card__wrapper no-reorder no-swipe"
+									class="card__wrapper no-reorder no-swipe pointer-events-none items-center"
 									:class="locationsEditMode ? 'h-[80px] w-[calc(100%_-_100px)]' : 'h-[85px] w-full'"
 								>
 									<div
-										class="absolute flex flex-col flex-auto card__location-info"
+										class="card__location-info absolute flex flex-auto flex-col"
 										:class="locationsEditMode ? 'w-[calc(100%_-_64px)] ' : 'w-[calc(100%_-_160px)]'"
 									>
 										<small
 											x-text="moment().locale(language).utcOffset(card.weatherData.timezone).format('HH:mm')"
 											x-timeout:5000="$el.innerText=moment().locale(language).utcOffset(card.weatherData.timezone).format('HH:mm')"
-											class="mb-1 card__current-time text-cosmic-500"
+											class="card__current-time mb-1 text-cosmic-500"
 										></small>
-										<div class="relative flex mb-2">
+										<div class="relative mb-2 flex">
 											<div
 												x-text="card.location.name"
-												class="text-lg font-semibold leading-5 truncate card__location-name transition-all-500"
+												class="card__location-name transition-all-500 truncate text-lg font-semibold leading-5"
 											></div>
 											<div
 												x-show="card.location.isUserLocation === 'true' && !locationsEditMode"
 												x-transition:enter-start="opacity-0 scale-50"
 												x-transition:leave-end="opacity-0 scale-50"
-												class="ml-2 card__location-pin transition-all-500"
+												class="card__location-pin transition-all-500 ml-2"
 											>
 												<svg
 													class="fill-cosmic-900 dark:fill-white"
@@ -1184,21 +1184,21 @@
 											x-transition:enter-start="opacity-0 translate-y-1 h-0"
 											x-transition:leave-end="opacity-0 translate-y-1 h-0"
 											x-text="card.weatherData.currentConditions.conditions"
-											class="h-3.5 truncate card__current-condition transition-all-300"
+											class="card__current-condition transition-all-300 h-3.5 truncate"
 										></span>
 									</div>
 									<div
 										x-show="!locationsEditMode"
 										x-transition:enter-start="opacity-0 scale-50 translate-x-20"
 										x-transition:leave-end="opacity-0 scale-50 translate-x-20"
-										class="absolute flex flex-col items-center w-20 right-16 shrink-0 card__weather-info transition-500"
+										class="card__weather-info transition-500 absolute right-16 flex w-20 shrink-0 flex-col items-center"
 									>
 										<div
 											x-text="tempConverter(card.weatherData.currentConditions.temp) + '°'"
-											class="text-3xl font-medium text-center card__current-temp transition-500"
+											class="card__current-temp transition-500 text-center text-3xl font-medium"
 										></div>
 										<small
-											class="card__temp-range flex gap-[2px] items-center text-gray-300 dark:text-cosmic-300"
+											class="card__temp-range flex items-center gap-[2px] text-gray-300 dark:text-cosmic-300"
 										>
 											<svg
 												class="stroke-gray-300 dark:stroke-cosmic-300"
@@ -1242,10 +1242,10 @@
 										x-show="!locationsEditMode"
 										x-transition:enter-start="opacity-0 scale-50"
 										x-transition:leave-end="opacity-0 scale-50"
-										class="absolute w-12 h-12 right-4 card__weather-icon shrink-0 transition-all-500"
+										class="card__weather-icon transition-all-500 absolute right-4 h-12 w-12 shrink-0"
 									>
 										<img
-											class="w-12 h-12 shrink-0"
+											class="h-12 w-12 shrink-0"
 											:src="weatherIconsPath + weatherIcons[card.weatherData.currentConditions.icon]"
 											alt=""
 										/>
@@ -1264,10 +1264,10 @@
 										$refs.editLocationConfirmBtn.removeAttribute('disabled');
 										setTimeout(() => $refs.editLocationInput.focus(), 500)
 										"
-									class="absolute card__edit-btn right-14 transition-all-500 no-reorder no-swipe"
+									class="card__edit-btn transition-all-500 no-reorder no-swipe absolute right-14"
 								>
 									<svg
-										class="fill-cosmic-900 dark:fill-white no-reorder no-swipe"
+										class="no-reorder no-swipe fill-cosmic-900 dark:fill-white"
 										width="48"
 										height="48"
 										viewBox="0 0 48 48"
@@ -1291,13 +1291,13 @@
 						x-show="locationEditModal"
 						x-transition:enter-start="opacity-0 scale-95"
 						x-transition:leave-end="opacity-0 scale-95"
-						class="absolute transition-500 z-[100] p-6 min-w-[343px] bg-white rounded-2xl dark:bg-cosmic-900 -mt-4 border border-gray-100 dark:border-cosmic-800 top-10 left-1/2 -translate-x-1/2"
+						class="transition-500 absolute top-10 left-1/2 z-[100] -mt-4 min-w-[343px] -translate-x-1/2 rounded-2xl border border-gray-100 bg-white p-6 dark:border-cosmic-800 dark:bg-cosmic-900"
 					>
 						<h3 class="mb-4 text-center">Переименовать локацию</h3>
 						<div class="relative mb-6">
 							<input
 								x-ref="editLocationInput"
-								class="bg-gray-100 dark:bg-cosmic-800 py-[14px] px-4 pr-10 truncate w-full rounded-md outline-none focus:outline-none caret-primary-light dark:caret-primary-dark placeholder-gray-300 dark:placeholder-cosmic-500"
+								class="w-full truncate rounded-md bg-gray-100 py-[14px] px-4 pr-10 placeholder-gray-300 caret-primary-light outline-none focus:outline-none dark:bg-cosmic-800 dark:placeholder-cosmic-500 dark:caret-primary-dark"
 								type="text"
 								name="location-name"
 								id="location-modal-input"
@@ -1320,10 +1320,10 @@
 									$refs.editLocationInput.focus(); 
 									$refs.editLocationConfirmBtn.setAttribute('disabled', '')
 									"
-								class="absolute clear-text-cross right-3 top-4 transition-opacity duration-500 ease-[cubic-bezier(.23,1,.32,1)]"
+								class="clear-text-cross absolute right-3 top-4 transition-opacity duration-500 ease-[cubic-bezier(.23,1,.32,1)]"
 							>
 								<svg
-									class="stroke-gray-300 dark:stroke-cosmic-500 stroke-1.5"
+									class="stroke-gray-300 stroke-1.5 dark:stroke-cosmic-500"
 									width="20"
 									height="20"
 									viewBox="0 0 20 20"
@@ -1349,19 +1349,19 @@
 									updateLocation({ detail: { id: editedCard.id, name: editedCard.originalName }})
 									$dispatch('toast', { content: `Название локации изменено на ${editedCard.originalName}` })
 								"
-								class="pt-4 text-sm text-left text-primary-light dark:text-primary-dark"
+								class="pt-4 text-left text-sm text-primary-light dark:text-primary-dark"
 							></button>
 						</div>
 						<div class="flex justify-around">
 							<button
-								class="w-1/2 p-2 mr-2 text-sm font-semibold border rounded-lg settings--modal--cancel-btn border-primary-light dark:border-primary-dark text-primary-light dark:text-primary-dark"
+								class="settings--modal--cancel-btn mr-2 w-1/2 rounded-lg border border-primary-light p-2 text-sm font-semibold text-primary-light dark:border-primary-dark dark:text-primary-dark"
 								type="button"
 								@click="locationEditModal = false; menuLocationsBackdrop = false"
 								x-text="lang.common.buttons.cancel"
 							></button>
 							<button
 								x-ref="editLocationConfirmBtn"
-								class="w-1/2 p-2 ml-2 text-sm font-semibold text-white rounded-lg settings--modal--ok-btn bg-primary-light dark:bg-primary-dark disabled:bg-primary-light/50 disabled:dark:bg-primary-dark/50 disabled:dark:text-cosmic-900 dark:text-cosmic-900"
+								class="settings--modal--ok-btn ml-2 w-1/2 rounded-lg bg-primary-light p-2 text-sm font-semibold text-white disabled:bg-primary-light/50 dark:bg-primary-dark dark:text-cosmic-900 disabled:dark:bg-primary-dark/50 disabled:dark:text-cosmic-900"
 								type="button"
 								@click="
 									console.log(editedCard);
@@ -1379,11 +1379,11 @@
 					<section
 						id="locations-placeholder"
 						x-show="!slides.length"
-						class="absolute w-full top-40 left-1/2 -translate-x-1/2 flex flex-col transform-gpu transition-all duration-300 ease-[cubic-bezier(.23,1,.32,1)]"
+						class="absolute top-40 left-1/2 flex w-full -translate-x-1/2 transform-gpu flex-col transition-all duration-300 ease-[cubic-bezier(.23,1,.32,1)]"
 					>
 						<div class="w-full">
 							<svg
-								class="fill-[#6892B9] ml-[12%]"
+								class="ml-[12%] fill-[#6892B9]"
 								width="105"
 								height="180"
 								viewBox="0 0 105 180"
@@ -1435,7 +1435,7 @@
 			<!-- *? Settings ?* -->
 			<section
 				x-cloak
-				class="fixed top-0 left-0 w-full h-full pb-20 overflow-y-scroll bg-gray-100 dark:bg-cosmic-900 transition-all-500 overflow-x-clip"
+				class="transition-all-500 fixed top-0 left-0 h-full w-full overflow-x-clip overflow-y-scroll bg-gray-100 pb-20 dark:bg-cosmic-900"
 				x-show="menuSettings"
 				x-data="{ themeDropdown: false }"
 			>
@@ -1444,7 +1444,7 @@
 					x-cloak
 					x-transition:enter-start="opacity-0"
 					x-transition:leave-end="opacity-0"
-					class="fixed top-0 left-0 z-20 w-full h-full bg-primary-backdrop/60 dark:bg-primary-backdrop/50 backdrop-blur-lg transition-all-500"
+					class="transition-all-500 fixed top-0 left-0 z-20 h-full w-full bg-primary-backdrop/60 backdrop-blur-lg dark:bg-primary-backdrop/50"
 				></div>
 				<section
 					id="container-settings"
@@ -1453,7 +1453,7 @@
 					<!-- HEADER -->
 					<header
 						@click="settingsChanged ? updateInfo(true) : ''; settingsChanged = false;"
-						class="sticky top-0 flex flex-col items-center justify-center w-full h-12 px-4 pt-4 pb-1 bg-gray-100 dark:bg-cosmic-900 transition-500"
+						class="transition-500 sticky top-0 flex h-12 w-full flex-col items-center justify-center bg-gray-100 px-4 pt-4 pb-1 dark:bg-cosmic-900"
 					>
 						<div
 							x-text="lang.settings.header"
@@ -1482,7 +1482,7 @@
 					</header>
 					<!--  -->
 					<div
-						class="flex flex-col gap-[20px] w-full leading-7 bg-white dark:bg-cosmic-800 text-sm transition-colors-500 p-6"
+						class="transition-colors-500 flex w-full flex-col gap-[20px] bg-white p-6 text-sm leading-7 dark:bg-cosmic-800"
 					>
 						<section
 							id="set_temp"
@@ -1494,14 +1494,14 @@
 								x-text="lang.settings.temperature"
 							></div>
 							<div
-								class="relative w-32 border rounded-md h-7 border-primary-light dark:border-primary-dark"
+								class="relative h-7 w-32 rounded-md border border-primary-light dark:border-primary-dark"
 							>
 								<div
-									class="absolute -left-[1px] -top-[1px] bg-primary-light dark:bg-primary-dark h-7 w-16 rounded-l-md transition-all-500"
+									class="transition-all-500 absolute -left-[1px] -top-[1px] h-7 w-16 rounded-l-md bg-primary-light dark:bg-primary-dark"
 									:class="{'translate-x-16 rounded-r-md rounded-l-none' : settings.temp === true }"
 								></div>
 								<div
-									class="absolute w-16 text-center transition-colors-500"
+									class="transition-colors-500 absolute w-16 text-center"
 									:class="{ 
 										'text-primary-light dark:text-primary-dark': settings.temp === true,
 										'text-white dark:text-cosmic-900': settings.temp === false,
@@ -1510,7 +1510,7 @@
 									°C
 								</div>
 								<div
-									class="absolute w-16 text-center left-16 transition-colors-500"
+									class="transition-colors-500 absolute left-16 w-16 text-center"
 									:class="{ 
 										'text-primary-light dark:text-primary-dark': settings.temp === false, 
 										'text-white dark:text-cosmic-900': settings.temp === true,
@@ -1530,14 +1530,14 @@
 							></div>
 							<div
 								@click="settingsChanged = true; settings.wind = !settings.wind; updateSettings('wind', settings.wind);"
-								class="relative w-32 border rounded-md h-7 border-primary-light dark:border-primary-dark"
+								class="relative h-7 w-32 rounded-md border border-primary-light dark:border-primary-dark"
 							>
 								<div
-									class="absolute -left-[1px] -top-[1px] bg-primary-light dark:bg-primary-dark h-7 w-16 rounded-l-md transition-all-500"
+									class="transition-all-500 absolute -left-[1px] -top-[1px] h-7 w-16 rounded-l-md bg-primary-light dark:bg-primary-dark"
 									:class="{'translate-x-16 rounded-r-md rounded-l-none' : settings.wind === true }"
 								></div>
 								<div
-									class="absolute w-16 text-center transition-colors-500"
+									class="transition-colors-500 absolute w-16 text-center"
 									x-text="lang.weather.units.wind[0]"
 									:class="{ 
 										'text-primary-light dark:text-primary-dark': settings.wind === true,
@@ -1545,7 +1545,7 @@
 										}"
 								></div>
 								<div
-									class="absolute w-16 text-center left-16 transition-colors-500"
+									class="transition-colors-500 absolute left-16 w-16 text-center"
 									x-text="lang.weather.units.wind[1]"
 									:class="{ 
 										'text-primary-light dark:text-primary-dark': settings.wind === false, 
@@ -1564,14 +1564,14 @@
 								x-text="lang.settings.pressure.label"
 							></div>
 							<div
-								class="relative w-32 border rounded-md h-7 border-primary-light dark:border-primary-dark"
+								class="relative h-7 w-32 rounded-md border border-primary-light dark:border-primary-dark"
 							>
 								<div
-									class="absolute -left-[1px] -top-[1px] bg-primary-light dark:bg-primary-dark h-7 w-16 rounded-l-md transition-all-500"
+									class="transition-all-500 absolute -left-[1px] -top-[1px] h-7 w-16 rounded-l-md bg-primary-light dark:bg-primary-dark"
 									:class="{'translate-x-16 rounded-r-md rounded-l-none' : settings.pressure === true }"
 								></div>
 								<div
-									class="absolute w-16 text-center text-primary-light dark:text-primary-dark transition-colors-500"
+									class="transition-colors-500 absolute w-16 text-center text-primary-light dark:text-primary-dark"
 									x-text="lang.weather.units.pressure[0]"
 									:class="{ 
 										'text-white dark:text-cosmic-900': settings.pressure === false,
@@ -1579,7 +1579,7 @@
 										}"
 								></div>
 								<div
-									class="absolute w-16 text-center left-16 text-primary-light dark:text-primary-dark transition-colors-500"
+									class="transition-colors-500 absolute left-16 w-16 text-center text-primary-light dark:text-primary-dark"
 									x-text="lang.weather.units.pressure[1]"
 									:class="{ 
 										'text-white dark:text-cosmic-900': settings.pressure === true,
@@ -1590,7 +1590,7 @@
 						</section>
 					</div>
 					<div
-						class="flex flex-col w-full gap-4 p-6 text-sm leading-7 bg-white dark:bg-cosmic-800 transition-colors-500"
+						class="transition-colors-500 flex w-full flex-col gap-4 bg-white p-6 text-sm leading-7 dark:bg-cosmic-800"
 					>
 						<section
 							id="set_lang"
@@ -1605,14 +1605,14 @@
 								x-text="lang.settings.lang.label"
 							></div>
 							<div
-								class="relative w-32 border rounded-md h-7 border-primary-light dark:border-primary-dark"
+								class="relative h-7 w-32 rounded-md border border-primary-light dark:border-primary-dark"
 							>
 								<div
-									class="absolute -left-[1px] -top-[1px] bg-primary-light dark:bg-primary-dark h-7 w-16 rounded-l-md transition-all-500"
+									class="transition-all-500 absolute -left-[1px] -top-[1px] h-7 w-16 rounded-l-md bg-primary-light dark:bg-primary-dark"
 									:class="{'translate-x-16 rounded-r-md rounded-l-none' : settings.lang === true }"
 								></div>
 								<div
-									class="absolute w-16 text-center transition-colors-500"
+									class="transition-colors-500 absolute w-16 text-center"
 									x-text="lang.settings.lang.switchOff"
 									:class="{ 
 										'text-white dark:text-cosmic-900': settings.lang === false,
@@ -1620,7 +1620,7 @@
 										}"
 								></div>
 								<div
-									class="absolute w-16 text-center left-16 transition-colors-500"
+									class="transition-colors-500 absolute left-16 w-16 text-center"
 									x-text="lang.settings.lang.switchOn"
 									:class="{ 
 										'text-primary-light dark:text-primary-dark': settings.lang === false, 
@@ -1644,7 +1644,7 @@
 								class="items-center text-base font-medium leading-5 text-primary-light dark:text-primary-dark"
 							></button>
 							<div
-								class="fixed left-0 z-20 w-full h-screen bg-primary-backdrop/30 dark:bg-primary-backdrop/50 transition-500"
+								class="transition-500 fixed left-0 z-20 h-screen w-full bg-primary-backdrop/30 dark:bg-primary-backdrop/50"
 								x-show="themeDropdown"
 								x-transition:enter-start="opacity-0"
 								x-transition:leave-end="opacity-0"
@@ -1655,11 +1655,11 @@
 								@click.outside="themeDropdown = false"
 								x-transition:enter-start="scale-0"
 								x-transition:leave-end="scale-0"
-								class="absolute w-[227px] right-0 top-10 z-20 divide-y py-2.5 px-4 shadow-lg rounded-xl border border-gray-100 dark:border-cosmic-800 bg-white dark:bg-cosmic-900 divide-gray-100 dark:divide-cosmic-800 text-base -mt-10 origin-top-right transition-transform-300"
+								class="transition-transform-300 absolute right-0 top-10 z-20 -mt-10 w-[227px] origin-top-right divide-y divide-gray-100 rounded-xl border border-gray-100 bg-white py-2.5 px-4 text-base shadow-lg dark:divide-cosmic-800 dark:border-cosmic-800 dark:bg-cosmic-900"
 							>
 								<li
 									@click="themeDropdown = false; settings.theme = 0; activateTheme(0);"
-									class="relative grow flex items-center py-2.5"
+									class="relative flex grow items-center py-2.5"
 								>
 									<div class="w-4">
 										<div
@@ -1678,7 +1678,7 @@
 								</li>
 								<li
 									@click="themeDropdown = false; settings.theme = 1; activateTheme(1);"
-									class="grow flex items-center py-2.5"
+									class="flex grow items-center py-2.5"
 								>
 									<div class="w-4">
 										<div
@@ -1697,7 +1697,7 @@
 								</li>
 								<li
 									@click="themeDropdown = false; settings.theme = 2; activateTheme(2);"
-									class="grow flex items-center py-2.5"
+									class="flex grow items-center py-2.5"
 								>
 									<div class="w-4">
 										<div
@@ -1722,18 +1722,18 @@
 								x-text="lang.settings.details"
 							></div>
 							<div
-								class="relative flex items-center h-[28px] w-[50px] border border-gray-300 dark:border-cosmic-500 rounded-full text-center ease-[cubic-bezier(.23,1,.32,1)] transform-gpu duration-500"
+								class="relative flex h-[28px] w-[50px] transform-gpu items-center rounded-full border border-gray-300 text-center duration-500 ease-[cubic-bezier(.23,1,.32,1)] dark:border-cosmic-500"
 								:class="{' border-primary-light dark:border-primary-dark': settings.details === true }"
 							>
 								<div
-									class="absolute left-[2px] bg-gray-300 dark:bg-cosmic-500 rounded-full ease-[cubic-bezier(.23,1,.32,1)] transform-gpu duration-500 w-[22px] h-[22px] cursor-pointer'"
+									class="cursor-pointer' absolute left-[2px] h-[22px] w-[22px] transform-gpu rounded-full bg-gray-300 duration-500 ease-[cubic-bezier(.23,1,.32,1)] dark:bg-cosmic-500"
 									:class="{' translate-x-[22px] bg-primary-light dark:bg-primary-dark': settings.details === true }"
 								></div>
 							</div>
 						</section>
 					</div>
 					<div
-						class="flex flex-col items-start w-full gap-2 text-base font-medium leading-5 truncate"
+						class="flex w-full flex-col items-start gap-2 truncate text-base font-medium leading-5"
 					>
 						<button
 							class="px-6 py-2.5"
@@ -1761,7 +1761,7 @@
 						x-cloak
 						x-transition:enter-start="opacity-0 scale-95"
 						x-transition:leave-end="opacity-0 scale-95"
-						class="absolute z-50 p-6 min-w-[343px] bg-white rounded-2xl dark:bg-cosmic-900 -mt-4 top-1/2 left-1/2 -translate-x-1/2 text-center transition-all-500 border border-gray-100 dark:border-cosmic-800"
+						class="transition-all-500 absolute top-1/2 left-1/2 z-50 -mt-4 min-w-[343px] -translate-x-1/2 rounded-2xl border border-gray-100 bg-white p-6 text-center dark:border-cosmic-800 dark:bg-cosmic-900"
 					>
 						<h3 class="mb-4" x-text="lang.common.warning"></h3>
 						<div class="relative mb-6">
@@ -1773,13 +1773,13 @@
 						</div>
 						<div class="flex justify-around">
 							<button
-								class="w-1/2 p-2 mr-2 text-sm font-semibold border rounded-lg settings--modal--cancel-btn border-primary-light dark:border-primary-dark text-primary-light dark:text-primary-dark"
+								class="settings--modal--cancel-btn mr-2 w-1/2 rounded-lg border border-primary-light p-2 text-sm font-semibold text-primary-light dark:border-primary-dark dark:text-primary-dark"
 								type="button"
 								@click="modalClearLocations = false; menuSettingsBackdrop = false"
 								x-text="lang.common.buttons.cancel"
 							></button>
 							<button
-								class="w-1/2 p-2 ml-2 text-sm font-semibold text-white rounded-lg settings--modal--ok-btn bg-primary-light dark:bg-primary-dark disabled:bg-primary-light/50 disabled:dark:bg-primary-dark/50 disabled:dark:text-cosmic-900 dark:text-cosmic-900"
+								class="settings--modal--ok-btn ml-2 w-1/2 rounded-lg bg-primary-light p-2 text-sm font-semibold text-white disabled:bg-primary-light/50 dark:bg-primary-dark dark:text-cosmic-900 disabled:dark:bg-primary-dark/50 disabled:dark:text-cosmic-900"
 								type="button"
 								@click="
 									modalClearLocations = false; 
@@ -1802,7 +1802,7 @@
 						x-cloak
 						x-transition:enter-start="opacity-0 scale-95"
 						x-transition:leave-end="opacity-0 scale-95"
-						class="absolute z-50 p-6 min-w-[343px] bg-white rounded-2xl dark:bg-cosmic-900 -mt-4 top-1/2 left-1/2 -translate-x-1/2 text-center transition-all-500 border border-gray-100 dark:border-cosmic-800"
+						class="transition-all-500 absolute top-1/2 left-1/2 z-50 -mt-4 min-w-[343px] -translate-x-1/2 rounded-2xl border border-gray-100 bg-white p-6 text-center dark:border-cosmic-800 dark:bg-cosmic-900"
 					>
 						<h3 class="mb-4" x-text="lang.common.warning"></h3>
 						<div class="relative mb-6">
@@ -1814,13 +1814,13 @@
 						</div>
 						<div class="flex justify-around">
 							<button
-								class="w-1/2 p-2 mr-2 text-sm font-semibold border rounded-lg settings--modal--cancel-btn border-primary-light dark:border-primary-dark text-primary-light dark:text-primary-dark"
+								class="settings--modal--cancel-btn mr-2 w-1/2 rounded-lg border border-primary-light p-2 text-sm font-semibold text-primary-light dark:border-primary-dark dark:text-primary-dark"
 								type="button"
 								@click="modalResetSettings = false; menuSettingsBackdrop = false;"
 								x-text="lang.common.buttons.cancel"
 							></button>
 							<button
-								class="w-1/2 p-2 ml-2 text-sm font-semibold text-white rounded-lg settings--modal--ok-btn bg-primary-light dark:bg-primary-dark disabled:bg-primary-light/50 disabled:dark:bg-primary-dark/50 disabled:dark:text-cosmic-900 dark:text-cosmic-900"
+								class="settings--modal--ok-btn ml-2 w-1/2 rounded-lg bg-primary-light p-2 text-sm font-semibold text-white disabled:bg-primary-light/50 dark:bg-primary-dark dark:text-cosmic-900 disabled:dark:bg-primary-dark/50 disabled:dark:text-cosmic-900"
 								type="button"
 								@click="
 									resetSettings();
@@ -1837,7 +1837,7 @@
 				</section>
 				<!-- About -->
 				<section
-					class="backdrop-blur-xl bg-gray-100/80 dark:bg-cosmic-900/80 fixed h-full pb-20 w-full top-0 left-0 transition-all-500 overflow-x-clip overflow-y-scroll z-[100]"
+					class="transition-all-500 fixed top-0 left-0 z-[100] h-full w-full overflow-x-clip overflow-y-scroll bg-gray-100/80 pb-20 backdrop-blur-xl dark:bg-cosmic-900/80"
 					x-cloak
 					x-show="modalAbout"
 					x-transition:enter-start="opacity-0 scale-95"
@@ -1847,12 +1847,12 @@
 				>
 					<div class="relative flex flex-col gap-6">
 						<header
-							class="sticky top-0 z-10 flex items-center justify-between w-full h-12 px-4 pt-4 pb-1 bg-gray-100/50 dark:bg-cosmic-900/80 backdrop-blur-md"
+							class="sticky top-0 z-10 flex h-12 w-full items-center justify-between bg-gray-100/50 px-4 pt-4 pb-1 backdrop-blur-md dark:bg-cosmic-900/80"
 						>
 							<div class="w-6"></div>
 							<div
 								x-text="lang.settings.about.header"
-								class="text-base font-semibold leading-8 text-center grow"
+								class="grow text-center text-base font-semibold leading-8"
 							></div>
 							<div
 								class="w-6 stroke-primary-light dark:stroke-primary-dark"
@@ -1876,10 +1876,10 @@
 						</header>
 						<section
 							x-html="lang.settings.about.text"
-							class="flex flex-col w-full gap-4 p-6 text-sm leading-4 bg-white dark:bg-cosmic-800"
+							class="flex w-full flex-col gap-4 bg-white p-6 text-sm leading-4 dark:bg-cosmic-800"
 						></section>
 						<section
-							class="flex flex-col items-start w-full gap-2 text-base font-medium leading-5 truncate"
+							class="flex w-full flex-col items-start gap-2 truncate text-base font-medium leading-5"
 						>
 							<button
 								class="px-6 py-2.5"
@@ -1902,22 +1902,22 @@
 			<!-- *? TAP BAR ?* -->
 			<section
 				id="tapbar"
-				class="fixed bottom-0 left-0 w-full h-20 text-gray-300 bg-white/60 dark:bg-cosmic-900/80 backdrop-blur-lg dark:text-cosmic-400 transition-colors-500"
+				class="transition-colors-500 fixed bottom-0 left-0 h-20 w-full bg-white/60 text-gray-300 backdrop-blur-lg dark:bg-cosmic-900/80 dark:text-cosmic-400"
 			>
 				<div
-					class="relative flex items-center justify-between mx-8 mt-3 overflow-clip"
+					class="relative mx-8 mt-3 flex items-center justify-between overflow-clip"
 				>
 					<button
 						id="mainpage--tapbar--locations-btn"
 						@click="menuLocations = true; menuSettings = false; settingsChanged ? updateInfo(true) : false; settingsChanged = false;"
-						class="flex flex-col items-center gap-[6px] grow-0 shrink-0 w-20"
+						class="flex w-20 shrink-0 grow-0 flex-col items-center gap-[6px]"
 						aria-controls="sidebarLeft"
 						aria-label="Toggle locations menu"
 					>
 						<svg
 							id="locations-btn-svg"
 							:class="{ 'stroke-primary-light dark:stroke-primary-dark': menuLocations === true }"
-							class="stroke-gray-300 dark:stroke-cosmic-400 transition-colors-500"
+							class="transition-colors-500 stroke-gray-300 dark:stroke-cosmic-400"
 							width="25"
 							height="24"
 							viewBox="0 0 25 24"
@@ -1936,7 +1936,7 @@
 							/>
 						</svg>
 						<div
-							class="text-xs transition-colors-500"
+							class="transition-colors-500 text-xs"
 							:class="{ 'text-primary-light dark:text-primary-dark': menuLocations === true }"
 							x-text="lang.common.buttons.locations"
 						></div>
@@ -1944,18 +1944,18 @@
 					<div
 						id="menu-middle-btn"
 						:class="(!menuSettings && !menuLocations) && slides.length > 1 ? 'translate-y-[46px]': 'translate-y-0'"
-						class="absolute flex flex-col justify-end left-1/2 -translate-x-1/2 bottom-0 w-[50%] overflow-x-scroll delay-300 transition-all-300"
+						class="transition-all-300 absolute left-1/2 bottom-0 flex w-[50%] -translate-x-1/2 flex-col justify-end overflow-x-scroll delay-300"
 					>
 						<div
-							class="items-center splide__pagination h-10 my-2.5 flex justify-center gap-2 !relative z-10"
+							class="splide__pagination !relative z-10 my-2.5 flex h-10 items-center justify-center gap-2"
 						></div>
 						<button
 							id="weather-btn"
 							@click="menuLocations = false; menuSettings = false; modalAbout = false; settingsChanged ? updateInfo(true) : false; settingsChanged = false;"
-							class="flex flex-col items-center gap-[6px] grow-0 shrink-0"
+							class="flex shrink-0 grow-0 flex-col items-center gap-[6px]"
 						>
 							<svg
-								class="stroke-gray-300 dark:stroke-cosmic-400 transition-colors-500"
+								class="transition-colors-500 stroke-gray-300 dark:stroke-cosmic-400"
 								:class="(menuLocations || menuSettings) || 'stroke-primary-light dark:stroke-primary-dark'"
 								width="25"
 								height="24"
@@ -2007,7 +2007,7 @@
 								/>
 							</svg>
 							<div
-								class="text-xs transition-colors-500"
+								class="transition-colors-500 text-xs"
 								:class="(menuLocations || menuSettings) || 'text-primary-light dark:text-primary-dark'"
 								x-text="lang.common.buttons.weather"
 							></div>
@@ -2016,7 +2016,7 @@
 					<button
 						id="mainpage--tapbar--settings-btn"
 						@click="menuSettings = true; menuLocations = false; settingsChanged ? updateInfo(true) : false; settingsChanged = false;"
-						class="flex flex-col items-center gap-[6px] grow-0 shrink-0 w-20"
+						class="flex w-20 shrink-0 grow-0 flex-col items-center gap-[6px]"
 						aria-controls="sidebarRight"
 						aria-label="Toggle settings menu"
 					>
@@ -2024,7 +2024,7 @@
 						<svg
 							id="settings_btn_svg"
 							:class="{ 'stroke-primary-light dark:stroke-primary-dark': menuSettings === true }"
-							class="stroke-gray-300 dark:stroke-cosmic-400 transition-colors-500"
+							class="transition-colors-500 stroke-gray-300 dark:stroke-cosmic-400"
 							width="25"
 							height="24"
 							viewBox="0 0 25 24"
@@ -2045,7 +2045,7 @@
 							/>
 						</svg>
 						<div
-							class="text-xs transition-colors-500"
+							class="transition-colors-500 text-xs"
 							:class="{ 'text-primary-light dark:text-primary-dark': menuSettings === true }"
 							x-text="lang.common.buttons.settings"
 						></div>
@@ -2059,7 +2059,7 @@
 				x-show="mainBackdrop"
 				x-transition:enter-start="opacity-0"
 				x-transition:leave-end="opacity-0"
-				class="fixed top-0 left-0 z-10 w-full h-full dark:bg-cosmic-900/80 backdrop-blur-lg transition-all-500"
+				class="transition-all-500 fixed top-0 left-0 z-10 h-full w-full backdrop-blur-lg dark:bg-cosmic-900/80"
 			></div>
 		</main>
 		<!-- ! PopUps -->
@@ -2080,13 +2080,13 @@
 					x-transition:enter-start="translate-x-full"
 					x-transition:leave-end="translate-x-full"
 					@scroll="detailedAtTop = $el.scrollTop < 44 ? true : false; legend = false; detailedAtTop ? changeColor(false) : changeColor(true)"
-					class="fixed top-0 left-0 w-full h-full z-[10000] overflow-y-scroll overflow-x-clip bg-white transition-all-500 dark:bg-cosmic-900"
+					class="transition-all-500 fixed top-0 left-0 z-[10000] h-full w-full overflow-x-clip overflow-y-scroll bg-white dark:bg-cosmic-900"
 				>
 					<header
 						:class="detailedAtTop ? 'bg-white dark:bg-cosmic-900' : 'bg-gray-100 dark:bg-cosmic-800'"
-						class="top-0 flex flex-col gap-4 pt-3 duration-1000 transition-500"
+						class="transition-500 top-0 flex flex-col gap-4 pt-3 duration-1000"
 					>
-						<div class="flex items-center w-full px-4">
+						<div class="flex w-full items-center px-4">
 							<button type="button" @click="transitionOut()">
 								<svg
 									class="fill-primary-light dark:fill-yellow"
@@ -2105,7 +2105,7 @@
 							</button>
 							<div
 								x-text="lang.slides.headers.tenDaysForecast"
-								class="text-base font-semibold leading-5 text-center grow shrink-0 transition-all-500"
+								class="transition-all-500 shrink-0 grow text-center text-base font-semibold leading-5"
 							></div>
 							<div x-data="{ show: false }" x-ref="legend">
 								<button
@@ -2137,10 +2137,10 @@
 							<ul
 								x-ref="daylist"
 								:class="detailedAtTop ? 'bg-white dark:bg-cosmic-900' : 'bg-gray-100 dark:bg-cosmic-800'"
-								class="sticky top-0 z-10 transition-500 duration-1000 no-drag ten-days-forecast-detailed--dates py-4 scroll-smooth grid grid-flow-col gap-2.5 snap-mandatory snap-x scroll-pl-4 px-4 overflow-x-scroll"
+								class="transition-500 no-drag ten-days-forecast-detailed--dates sticky top-0 z-10 grid snap-x snap-mandatory scroll-pl-4 grid-flow-col gap-2.5 overflow-x-scroll scroll-smooth py-4 px-4 duration-1000"
 							>
 								<div
-									class="absolute z-0 w-10 mt-4 rounded-lg no-drag bg-primary-light dark:bg-primary-dark h-14 transition-all-500"
+									class="no-drag transition-all-500 absolute z-0 mt-4 h-14 w-10 rounded-lg bg-primary-light dark:bg-primary-dark"
 									:style="'transform: translateX(' + offset + 'px)'"
 								></div>
 								<template
@@ -2149,17 +2149,17 @@
 								>
 									<li
 										x-effect="$refs.daylist.scrollLeft = offset - 150"
-										class="flex flex-col gap-1 no-drag items-center text-white dark:text-cosmic-900 snap-start w-10 h-14 rounded-lg px-2.5 py-2 transition-500"
+										class="no-drag transition-500 flex h-14 w-10 snap-start flex-col items-center gap-1 rounded-lg px-2.5 py-2 text-white dark:text-cosmic-900"
 										@click="offset = $el.offsetLeft; splide2.go(id)"
 										:class="{ 'text-white dark:text-cosmic-900': offset === $el.offsetLeft }"
 									>
 										<div
 											x-text="moment.unix(day.datetimeEpoch).locale(language).format('dd')"
-											class="text-xs font-bold no-drag"
+											class="no-drag text-xs font-bold"
 										></div>
 										<div
 											x-text="moment.unix(day.datetimeEpoch).locale(language).format('D')"
-											class="text-base font-semibold leading-5 no-drag"
+											class="no-drag text-base font-semibold leading-5"
 										></div>
 									</li>
 								</template>
@@ -2181,10 +2181,10 @@
 										x-show="show"
 										x-transition:enter-start="opacity-0"
 										@detaileddayclose.window="closeday($event);"
-										class="flex flex-col w-full gap-4 duration-1000 bg-white splide__slide transition-opacity-500 dark:bg-cosmic-900"
+										class="splide__slide transition-opacity-500 flex w-full flex-col gap-4 bg-white duration-1000 dark:bg-cosmic-900"
 									>
 										<ul
-											class="flex flex-col mt-2 divide-y divide-gray-100 dark:divide-cosmic-800"
+											class="mt-2 flex flex-col divide-y divide-gray-100 dark:divide-cosmic-800"
 										>
 											<li class="px-6 pb-4">
 												<header
@@ -2192,10 +2192,10 @@
 													class="h-6 text-sm text-gray-300 dark:text-cosmic-500"
 												></header>
 												<div
-													class="flex flex-col w-full gap-4 pb-4 bg-white dark:bg-cosmic-900"
+													class="flex w-full flex-col gap-4 bg-white pb-4 dark:bg-cosmic-900"
 												>
 													<div
-														class="flex gap-2.5 justify-between pt-4"
+														class="flex justify-between gap-2.5 pt-4"
 													>
 														<div
 															class="flex flex-col gap-2"
@@ -2211,7 +2211,7 @@
 																	class="flex items-end gap-1 text-base font-semibold leading-5"
 																>
 																	<img
-																		class="w-5 h-5"
+																		class="h-5 w-5"
 																		src="img/assets/icons/feels-like.svg"
 																		alt=""
 																	/>
@@ -2227,7 +2227,7 @@
 														</div>
 														<div>
 															<img
-																class="w-14 h-14"
+																class="h-14 w-14"
 																:src="weatherIconsPath + weatherIcons[detailedDay.weatherData.hours[6].icon]"
 																alt=""
 															/>
@@ -2235,10 +2235,10 @@
 													</div>
 													<div class="flex gap-4">
 														<div
-															class="flex gap-1.5 items-center"
+															class="flex items-center gap-1.5"
 														>
 															<img
-																class="w-4 h-4"
+																class="h-4 w-4"
 																:style="`rotate: ${-detailedDay.weatherData.hours[6].winddir}deg`"
 																src="img/assets/icons/clarity_compass-line.svg"
 																alt=""
@@ -2249,10 +2249,10 @@
 															></div>
 														</div>
 														<div
-															class="flex gap-1.5 items-center"
+															class="flex items-center gap-1.5"
 														>
 															<img
-																class="w-4 h-4"
+																class="h-4 w-4"
 																src="img/assets/icons/wi_barometer.svg"
 																alt=""
 															/>
@@ -2262,10 +2262,10 @@
 															></div>
 														</div>
 														<div
-															class="flex gap-1.5 items-center"
+															class="flex items-center gap-1.5"
 														>
 															<img
-																class="w-4 h-4"
+																class="h-4 w-4"
 																src="img/assets/icons/ion_water-outline.svg"
 																alt=""
 															/>
@@ -2278,10 +2278,10 @@
 												</div>
 												<div
 													x-show="detailedDay.weatherData.hours[6].precipprob > 30"
-													class="flex gap-1.5 items-center"
+													class="flex items-center gap-1.5"
 												>
 													<img
-														class="w-4 h-4"
+														class="h-4 w-4"
 														src="img/assets/icons/rain-percent.svg"
 														alt=""
 													/>
@@ -2297,10 +2297,10 @@
 													class="h-6 text-sm text-gray-300 dark:text-cosmic-500"
 												></header>
 												<div
-													class="flex flex-col w-full gap-4 pb-4 bg-white dark:bg-cosmic-900"
+													class="flex w-full flex-col gap-4 bg-white pb-4 dark:bg-cosmic-900"
 												>
 													<div
-														class="flex gap-2.5 justify-between pt-4"
+														class="flex justify-between gap-2.5 pt-4"
 													>
 														<div
 															class="flex flex-col gap-2"
@@ -2316,7 +2316,7 @@
 																	class="flex items-end gap-1 text-base font-semibold leading-5"
 																>
 																	<img
-																		class="w-5 h-5"
+																		class="h-5 w-5"
 																		src="img/assets/icons/feels-like.svg"
 																		alt=""
 																	/>
@@ -2332,7 +2332,7 @@
 														</div>
 														<div>
 															<img
-																class="w-14 h-14"
+																class="h-14 w-14"
 																:src="weatherIconsPath + weatherIcons[detailedDay.weatherData.hours[13].icon]"
 																alt=""
 															/>
@@ -2340,10 +2340,10 @@
 													</div>
 													<div class="flex gap-4">
 														<div
-															class="flex gap-1.5 items-center"
+															class="flex items-center gap-1.5"
 														>
 															<img
-																class="w-4 h-4"
+																class="h-4 w-4"
 																:style="`rotate: ${-detailedDay.weatherData.hours[13].winddir}deg`"
 																src="img/assets/icons/clarity_compass-line.svg"
 																alt=""
@@ -2354,10 +2354,10 @@
 															></div>
 														</div>
 														<div
-															class="flex gap-1.5 items-center"
+															class="flex items-center gap-1.5"
 														>
 															<img
-																class="w-4 h-4"
+																class="h-4 w-4"
 																src="img/assets/icons/wi_barometer.svg"
 																alt=""
 															/>
@@ -2367,10 +2367,10 @@
 															></div>
 														</div>
 														<div
-															class="flex gap-1.5 items-center"
+															class="flex items-center gap-1.5"
 														>
 															<img
-																class="w-4 h-4"
+																class="h-4 w-4"
 																src="img/assets/icons/ion_water-outline.svg"
 																alt=""
 															/>
@@ -2383,10 +2383,10 @@
 												</div>
 												<div
 													x-show="detailedDay.weatherData.hours[13].precipprob > 30"
-													class="flex gap-1.5 items-center"
+													class="flex items-center gap-1.5"
 												>
 													<img
-														class="w-4 h-4"
+														class="h-4 w-4"
 														src="img/assets/icons/rain-percent.svg"
 														alt=""
 													/>
@@ -2402,10 +2402,10 @@
 													class="h-6 text-sm text-gray-300 dark:text-cosmic-500"
 												></header>
 												<div
-													class="flex flex-col w-full gap-4 pb-4 bg-white dark:bg-cosmic-900"
+													class="flex w-full flex-col gap-4 bg-white pb-4 dark:bg-cosmic-900"
 												>
 													<div
-														class="flex gap-2.5 justify-between pt-4"
+														class="flex justify-between gap-2.5 pt-4"
 													>
 														<div
 															class="flex flex-col gap-2"
@@ -2421,7 +2421,7 @@
 																	class="flex items-end gap-1 text-base font-semibold leading-5"
 																>
 																	<img
-																		class="w-5 h-5"
+																		class="h-5 w-5"
 																		src="img/assets/icons/feels-like.svg"
 																		alt=""
 																	/>
@@ -2437,7 +2437,7 @@
 														</div>
 														<div>
 															<img
-																class="w-14 h-14"
+																class="h-14 w-14"
 																:src="weatherIconsPath + weatherIcons[detailedDay.weatherData.hours[18].icon]"
 																alt=""
 															/>
@@ -2445,10 +2445,10 @@
 													</div>
 													<div class="flex gap-4">
 														<div
-															class="flex gap-1.5 items-center"
+															class="flex items-center gap-1.5"
 														>
 															<img
-																class="w-4 h-4"
+																class="h-4 w-4"
 																:style="`rotate: ${-detailedDay.weatherData.hours[18].winddir}deg`"
 																src="img/assets/icons/clarity_compass-line.svg"
 																alt=""
@@ -2459,10 +2459,10 @@
 															></div>
 														</div>
 														<div
-															class="flex gap-1.5 items-center"
+															class="flex items-center gap-1.5"
 														>
 															<img
-																class="w-4 h-4"
+																class="h-4 w-4"
 																src="img/assets/icons/wi_barometer.svg"
 																alt=""
 															/>
@@ -2472,10 +2472,10 @@
 															></div>
 														</div>
 														<div
-															class="flex gap-1.5 items-center"
+															class="flex items-center gap-1.5"
 														>
 															<img
-																class="w-4 h-4"
+																class="h-4 w-4"
 																src="img/assets/icons/ion_water-outline.svg"
 																alt=""
 															/>
@@ -2488,10 +2488,10 @@
 												</div>
 												<div
 													x-show="detailedDay.weatherData.hours[18].precipprob > 30"
-													class="flex gap-1.5 items-center"
+													class="flex items-center gap-1.5"
 												>
 													<img
-														class="w-4 h-4"
+														class="h-4 w-4"
 														src="img/assets/icons/rain-percent.svg"
 														alt=""
 													/>
@@ -2507,10 +2507,10 @@
 													class="h-6 text-sm text-gray-300 dark:text-cosmic-500"
 												></header>
 												<div
-													class="flex flex-col w-full gap-4 pb-4 bg-white dark:bg-cosmic-900"
+													class="flex w-full flex-col gap-4 bg-white pb-4 dark:bg-cosmic-900"
 												>
 													<div
-														class="flex gap-2.5 justify-between pt-4"
+														class="flex justify-between gap-2.5 pt-4"
 													>
 														<div
 															class="flex flex-col gap-2"
@@ -2526,7 +2526,7 @@
 																	class="flex items-end gap-1 text-base font-semibold leading-5"
 																>
 																	<img
-																		class="w-5 h-5"
+																		class="h-5 w-5"
 																		src="img/assets/icons/feels-like.svg"
 																		alt=""
 																	/>
@@ -2542,7 +2542,7 @@
 														</div>
 														<div>
 															<img
-																class="w-14 h-14"
+																class="h-14 w-14"
 																:src="weatherIconsPath + weatherIcons[detailedDay.weatherData.hours[22].icon]"
 																alt=""
 															/>
@@ -2550,10 +2550,10 @@
 													</div>
 													<div class="flex gap-4">
 														<div
-															class="flex gap-1.5 items-center"
+															class="flex items-center gap-1.5"
 														>
 															<img
-																class="w-4 h-4"
+																class="h-4 w-4"
 																:style="`rotate: ${-detailedDay.weatherData.hours[22].winddir}deg`"
 																src="img/assets/icons/clarity_compass-line.svg"
 																alt=""
@@ -2564,10 +2564,10 @@
 															></div>
 														</div>
 														<div
-															class="flex gap-1.5 items-center"
+															class="flex items-center gap-1.5"
 														>
 															<img
-																class="w-4 h-4"
+																class="h-4 w-4"
 																src="img/assets/icons/wi_barometer.svg"
 																alt=""
 															/>
@@ -2577,10 +2577,10 @@
 															></div>
 														</div>
 														<div
-															class="flex gap-1.5 items-center"
+															class="flex items-center gap-1.5"
 														>
 															<img
-																class="w-4 h-4"
+																class="h-4 w-4"
 																src="img/assets/icons/ion_water-outline.svg"
 																alt=""
 															/>
@@ -2593,10 +2593,10 @@
 												</div>
 												<div
 													x-show="detailedDay.weatherData.hours[22].precipprob > 30"
-													class="flex gap-1.5 items-center"
+													class="flex items-center gap-1.5"
 												>
 													<img
-														class="w-4 h-4"
+														class="h-4 w-4"
 														src="img/assets/icons/rain-percent.svg"
 														alt=""
 													/>
@@ -2612,7 +2612,7 @@
 													class="grid grid-cols-2 gap-1 px-6 py-4"
 												>
 													<div
-														class="grid grid-flow-col grid-rows-2 gap-1.5 justify-start justify-items-center"
+														class="grid grid-flow-col grid-rows-2 justify-start justify-items-center gap-1.5"
 													>
 														<div
 															class="row-span-2 mr-1.5 self-center"
@@ -2624,7 +2624,7 @@
 														</div>
 														<div
 															x-text="lang.datetime.sunrise"
-															class="text-gray-300 dark:text-cosmic-400 font-light text-xs leading-[14px] self-end place-self-start"
+															class="place-self-start self-end text-xs font-light leading-[14px] text-gray-300 dark:text-cosmic-400"
 														></div>
 														<div
 															x-text="detailedDay.weatherData.sunrise"
@@ -2632,7 +2632,7 @@
 														></div>
 													</div>
 													<div
-														class="grid grid-flow-col grid-rows-2 gap-1.5 justify-start justify-items-center"
+														class="grid grid-flow-col grid-rows-2 justify-start justify-items-center gap-1.5"
 													>
 														<div
 															class="row-span-2 mr-1.5 self-center"
@@ -2644,7 +2644,7 @@
 														</div>
 														<div
 															x-text="lang.datetime.sunset"
-															class="text-gray-300 dark:text-cosmic-400 font-light text-xs leading-[14px] self-end place-self-start"
+															class="place-self-start self-end text-xs font-light leading-[14px] text-gray-300 dark:text-cosmic-400"
 														></div>
 														<div
 															x-text="detailedDay.weatherData.sunset"
@@ -2652,7 +2652,7 @@
 														></div>
 													</div>
 													<div
-														class="grid grid-flow-col grid-rows-2 gap-1.5 justify-start justify-items-center"
+														class="grid grid-flow-col grid-rows-2 justify-start justify-items-center gap-1.5"
 													>
 														<div
 															class="row-span-2 mr-1.5 self-center"
@@ -2664,7 +2664,7 @@
 														</div>
 														<div
 															x-text="lang.datetime.daylight"
-															class="text-gray-300 dark:text-cosmic-400 font-light text-xs leading-[14px] self-end place-self-start"
+															class="place-self-start self-end text-xs font-light leading-[14px] text-gray-300 dark:text-cosmic-400"
 														></div>
 														<div
 															x-text="detailedDay.weatherData.daylight"
@@ -2672,7 +2672,7 @@
 														></div>
 													</div>
 													<div
-														class="grid grid-flow-col grid-rows-2 gap-1.5 justify-start"
+														class="grid grid-flow-col grid-rows-2 justify-start gap-1.5"
 													>
 														<div
 															class="row-span-2 mr-1.5 self-center"
@@ -2684,7 +2684,7 @@
 														</div>
 														<div
 															x-text="lang.datetime.moon"
-															class="text-gray-300 dark:text-cosmic-400 font-light text-xs leading-[14px] self-end place-self-start"
+															class="place-self-start self-end text-xs font-light leading-[14px] text-gray-300 dark:text-cosmic-400"
 														></div>
 														<div
 															x-text="lang.weather.moonphase[moonphaseConverter(detailedDay.weatherData.moonphase)]"
@@ -2702,12 +2702,12 @@
 								</template>
 							</ul>
 							<div
-								class="sticky bottom-0 left-0 w-full h-20 bg-gradient-to-t from-gray-100 dark:from-cosmic-900 to-transparent"
+								class="sticky bottom-0 left-0 h-20 w-full bg-gradient-to-t from-gray-100 to-transparent dark:from-cosmic-900"
 							></div>
 						</div>
 						<div
 							id="main-backdrop"
-							class="fixed top-0 left-0 z-50 w-full h-screen bg-primary-backdrop/30 dark:bg-primary-backdrop/50 transition-500"
+							class="transition-500 fixed top-0 left-0 z-50 h-screen w-full bg-primary-backdrop/30 dark:bg-primary-backdrop/50"
 							x-show="legend"
 							x-transition:enter-start="opacity-0"
 							x-transition:leave-end="opacity-0"
@@ -2716,19 +2716,19 @@
 						<div
 							id="ten_days_detailed--modal-legend"
 							@click.away="legend = false"
-							class="transition-300 origin-top-right absolute top-0 right-4 w-72 rounded-2xl p-6 bg-white dark:bg-cosmic-900 border border-gray-100 dark:border-cosmic-800 shadow-md z-[1000]"
+							class="transition-300 absolute top-0 right-4 z-[1000] w-72 origin-top-right rounded-2xl border border-gray-100 bg-white p-6 shadow-md dark:border-cosmic-800 dark:bg-cosmic-900"
 							x-show="legend"
 							x-transition:enter-start="scale-50 opacity-0"
 							x-transition:leave-end="scale-50 opacity-0"
 						>
 							<header
 								x-text="lang.modal.legend.header"
-								class="mb-4 text-lg font-bold leading-5 text-left"
+								class="mb-4 text-left text-lg font-bold leading-5"
 							></header>
 							<ol class="flex flex-col gap-4">
 								<li class="flex gap-2">
 									<img
-										class="w-5 h-5"
+										class="h-5 w-5"
 										src="img/assets/icons/feels-like.svg"
 									/>
 									<div
@@ -2738,7 +2738,7 @@
 								</li>
 								<li class="flex gap-2">
 									<img
-										class="w-5 h-5"
+										class="h-5 w-5"
 										src="img/assets/icons/clarity_compass-line.svg"
 									/>
 									<div
@@ -2748,7 +2748,7 @@
 								</li>
 								<li class="flex gap-2">
 									<img
-										class="w-5 h-5"
+										class="h-5 w-5"
 										src="img/assets/icons/wi_barometer.svg"
 									/>
 									<div
@@ -2758,7 +2758,7 @@
 								</li>
 								<li class="flex gap-2">
 									<img
-										class="w-5 h-5"
+										class="h-5 w-5"
 										src="img/assets/icons/ion_water-outline.svg"
 									/>
 									<div
@@ -2778,12 +2778,12 @@
 					x-show="show"
 					x-transition:enter-start="translate-x-full"
 					x-transition:leave-end="translate-x-full"
-					class="fixed top-0 left-0 w-full h-full z-[10000] overflow-y-scroll bg-gray-100 transition-all-500 text-cosmic-900 dark:text-white dark:bg-cosmic-900"
+					class="transition-all-500 fixed top-0 left-0 z-[10000] h-full w-full overflow-y-scroll bg-gray-100 text-cosmic-900 dark:bg-cosmic-900 dark:text-white"
 				>
 					<header
-						class="sticky top-0 z-50 flex flex-col gap-4 pt-3 pb-2 duration-1000 bg-gray-100 dark:bg-cosmic-900 transition-500"
+						class="transition-500 sticky top-0 z-50 flex flex-col gap-4 bg-gray-100 pt-3 pb-2 duration-1000 dark:bg-cosmic-900"
 					>
-						<div class="flex items-center w-full px-4">
+						<div class="flex w-full items-center px-4">
 							<button type="button" @click="transitionOut()">
 								<svg
 									class="fill-primary-light dark:fill-[#FEB800]"
@@ -2802,12 +2802,12 @@
 							</button>
 							<div
 								x-text="lang.slides.headers.monthlyForecast"
-								class="text-base font-semibold leading-5 text-center grow shrink-0 transition-all-500"
+								class="transition-all-500 shrink-0 grow text-center text-base font-semibold leading-5"
 							></div>
-							<div class="w-6 h-6"></div>
+							<div class="h-6 w-6"></div>
 						</div>
 					</header>
-					<ul class="grid grid-flow-row mx-4 daily">
+					<ul class="daily mx-4 grid grid-flow-row">
 						<template
 							x-for="(day, id) in monthlyForecast.weatherData.days"
 							x-init="temprange = minMax(monthlyForecast.weatherData.days, monthlyForecast.weatherData.days.length)"
@@ -2821,26 +2821,26 @@
 								: id === 1
 								? lang.datetime.tomorrow 
 								: moment.unix(day.datetimeEpoch).locale(language).format('DD MMMM');"
-								class="w-full py-[2px] font-light flex flex-nowrap gap-5 items-center"
+								class="flex w-full flex-nowrap items-center gap-5 py-[2px] font-light"
 								@click="$dispatch('addpopup2', monthlyForecast); setTimeout(() => {$dispatch('detaileddaysadd', { dayid : id, days: monthlyForecast.weatherData.days.slice(0, 10) })}, 150);"
 							>
 								<div
 									x-show="day.icon"
-									class="small-icon w-[52px] h-[52px] shrink-0 bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645] rounded-2xl py-1 relative"
+									class="small-icon relative h-[52px] w-[52px] shrink-0 rounded-2xl bg-white py-1 dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645]"
 								>
 									<img
-										class="w-[44px] h-[44px] mx-auto"
+										class="mx-auto h-[44px] w-[44px]"
 										:src="weatherIconsPath + weatherIcons[day.icon]"
 										alt=""
 									/>
 									<div
 										x-show="day.precipprob > 30"
 										x-text="Math.round(day.precipprob) + '%'"
-										class="absolute font-medium bg-gray-100 dark:bg-cosmic-900 p-[5px] -bottom-2 -right-2 text-xxs text-gray-300 dark:text-cosmic-300 rounded-3xl"
+										class="absolute -bottom-2 -right-2 rounded-3xl bg-gray-100 p-[5px] text-xxs font-medium text-gray-300 dark:bg-cosmic-900 dark:text-cosmic-300"
 									></div>
 								</div>
 								<div
-									class="flex flex-col justify-center gap-1 w-28 shrink-0"
+									class="flex w-28 shrink-0 flex-col justify-center gap-1"
 								>
 									<div
 										x-text="id === 0 
@@ -2852,13 +2852,13 @@
 									></div>
 									<div
 										x-text="day.conditions"
-										class="text-xs leading-[14px] text-gray-300 font-medium dark:text-cosmic-400"
+										class="text-xs font-medium leading-[14px] text-gray-300 dark:text-cosmic-400"
 									></div>
 								</div>
-								<div class="w-full my-4">
+								<div class="my-4 w-full">
 									<div
 										id="labels"
-										class="flex justify-between pb-2 mx-auto leading-5"
+										class="mx-auto flex justify-between pb-2 leading-5"
 									>
 										<div
 											x-text="tempConverter(day.tempmin) + '°'"
@@ -2878,7 +2878,7 @@
 										>
 											<div
 												x-show="id === 0"
-												class="absolute h-[8px] w-[8px] -top-[2px] rounded-full bg-[#6390F0] dark:bg-white border-[1.5px] border-gray-100 dark:border-cosmic-900"
+												class="absolute -top-[2px] h-[8px] w-[8px] rounded-full border-[1.5px] border-gray-100 bg-[#6390F0] dark:border-cosmic-900 dark:bg-white"
 												:style="{left:`${lineStyles.dotShift}%`}"
 											></div>
 										</div>
@@ -2888,7 +2888,7 @@
 						</template>
 					</ul>
 					<div
-						class="sticky bottom-0 left-0 w-full h-20 bg-gradient-to-t from-gray-100 dark:from-cosmic-900 to-transparent"
+						class="sticky bottom-0 left-0 h-20 w-full bg-gradient-to-t from-gray-100 to-transparent dark:from-cosmic-900"
 					></div>
 				</div>
 			</template>
@@ -2900,7 +2900,7 @@
 					x-show="show"
 					x-transition:enter-start="translate-y-full"
 					x-transition:leave-end="translate-y-full"
-					class="fixed top-0 left-0 w-full h-full z-[9999] rounded-t-xl overflow-y-scroll bg-gray-100/60 transition-all-500 text-cosmic-900 dark:text-white dark:bg-cosmic-900/60 backdrop-blur-md"
+					class="transition-all-500 fixed top-0 left-0 z-[9999] h-full w-full overflow-y-scroll rounded-t-xl bg-gray-100/60 text-cosmic-900 backdrop-blur-md dark:bg-cosmic-900/60 dark:text-white"
 				>
 					<div
 						x-text="lang.common.buttons.cancel"
@@ -2943,20 +2943,20 @@
 							x-transition:enter-start="opacity-0"
 							x-transition:leave-end="opacity-0"
 							x-data="slide"
-							class="w-full splide__slide transition-500"
+							class="splide__slide transition-500 w-full"
 						>
 							<section
-								class="h-screen pb-20 overflow-y-scroll bg-gray-100 dark:bg-cosmic-900"
+								class="h-screen overflow-y-scroll bg-gray-100 pb-20 dark:bg-cosmic-900"
 								:class="{'pb-40': displaymode !== 'standalone'}"
 							>
 								<!-- * HEADER * -->
 								<header
-									class="sticky top-0 z-50 flex gap-1 px-6 py-4 bg-gray-100 dark:bg-cosmic-900 transition-opacity-500"
+									class="transition-opacity-500 sticky top-0 z-50 flex gap-1 bg-gray-100 px-6 py-4 dark:bg-cosmic-900"
 								>
 									<div class="w-1/5"></div>
 									<label
 										x-text="slide.location.name"
-										class="w-4/5 text-lg font-bold leading-5 text-center truncate"
+										class="w-4/5 truncate text-center text-lg font-bold leading-5"
 									></label>
 
 									<div class="w-1/5"></div>
@@ -2964,14 +2964,14 @@
 								<!-- * MAIN INFO * -->
 								<section
 									id="general-weather-info"
-									class="px-4 mx-auto dark:bg-cosmic-900"
+									class="mx-auto px-4 dark:bg-cosmic-900"
 								>
 									<div
-										class="flex flex-col w-full p-5 rounded-2xl bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645] transition-all-500"
+										class="transition-all-500 flex w-full flex-col rounded-2xl bg-white p-5 dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645]"
 									>
 										<!-- * GENERAL * -->
 										<div
-											class="flex flex-row justify-between transition-all-500"
+											class="transition-all-500 flex flex-row justify-between"
 											@click="details = !details"
 										>
 											<div class="flex flex-col gap-2">
@@ -2980,10 +2980,10 @@
 													moment().locale(language).utcOffset(slide.weatherData.timezone).format(', DD MMMM, HH:mm')"
 													x-timeout:10000="$el.innerText=capitalize(moment().locale(language).utcOffset(slide.weatherData.timezone).format('ddd')) + 
 													moment().locale(language).utcOffset(slide.weatherData.timezone).format(', DD MMMM, HH:mm')"
-													class="text-xs text-gray-300 current-day dark:text-cosmic-500 transition-all-500"
+													class="current-day transition-all-500 text-xs text-gray-300 dark:text-cosmic-500"
 												></div>
 												<div
-													class="temperature flex text-6xl leading-[60px] font-semibold align-text-top relative"
+													class="temperature relative flex align-text-top text-6xl font-semibold leading-[60px]"
 												>
 													<div
 														x-text="tempConverter(slide.weatherData.currentConditions.temp)"
@@ -3007,7 +3007,7 @@
 														class="windgust"
 													></div>
 													<div
-														class="flex items-baseline gap-1 feelslike"
+														class="feelslike flex items-baseline gap-1"
 													>
 														<div
 															x-text="lang.weather.feelslike"
@@ -3027,7 +3027,7 @@
 												class="weather-icon"
 											>
 												<img
-													class="w-[120px] h-[120px] shrink-0"
+													class="h-[120px] w-[120px] shrink-0"
 													:src="weatherIconsPath + weatherIcons[checkIcon(slide.weatherData.currentConditions.icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(slide.weatherData.timezone).format('HH')))]"
 													alt=""
 												/>
@@ -3035,46 +3035,46 @@
 										</div>
 										<!-- * DETAILS * -->
 										<div
-											class="w-full overflow-hidden transition-all-500"
+											class="transition-all-500 w-full overflow-hidden"
 											:class="details ?' h-[232px] opacity-100' : 'h-[0px] opacity-0'"
 										>
 											<div
 												id="details-1"
-												class="relative h-[120px] w-full grid grid-flow-col justify-around items-end"
+												class="relative grid h-[120px] w-full grid-flow-col items-end justify-around"
 											>
 												<div
-													class="absolute flex justify-center w-full h-full -translate-x-1 -translate-y-5 detail-item transition-300"
+													class="detail-item transition-300 absolute flex h-full w-full -translate-x-1 -translate-y-5 justify-center"
 												>
 													<div
-														class="absolute w-[150px] h-[75px] bottom-0"
+														class="absolute bottom-0 h-[75px] w-[150px]"
 													>
 														<div
-															class="w-full h-full border border-b-0 border-dashed rounded-t-full border-cyan/60"
+															class="h-full w-full rounded-t-full border border-b-0 border-dashed border-cyan/60"
 														></div>
 														<!-- ? SKY -->
 														<div
 															:style="slide.weatherData.currentConditions.sunposition ? `rotate: ${slide.weatherData.currentConditions.sunposition}deg` : 'display: none'"
-															class="sky absolute top-0 w-full h-full origin-bottom border border-b-0 border-solid rounded-t-full border-cyan bg-gradient-to-b from-[#EDF8FF] dark:from-[#0F3C5C] to-transparent"
+															class="sky absolute top-0 h-full w-full origin-bottom rounded-t-full border border-b-0 border-solid border-cyan bg-gradient-to-b from-[#EDF8FF] to-transparent dark:from-[#0F3C5C]"
 														></div>
 														<div
-															class="w-[150px] h-[75px] bg-white dark:bg-cosmic-800 absolute"
+															class="absolute h-[75px] w-[150px] bg-white dark:bg-cosmic-800"
 														></div>
 														<div
-															class="w-2 h-2 rounded-full bg-cyan -bottom-[4px] -left-[4px] absolute"
+															class="absolute -bottom-[4px] -left-[4px] h-2 w-2 rounded-full bg-cyan"
 														></div>
 														<div
-															class="w-2 h-2 rounded-full bg-cyan -bottom-[4px] -right-[4px] absolute"
+															class="absolute -bottom-[4px] -right-[4px] h-2 w-2 rounded-full bg-cyan"
 														></div>
 														<!-- ! SUN -->
 														<div
 															:style="slide.weatherData.currentConditions.sunposition ? `rotate: ${slide.weatherData.currentConditions.sunposition}deg` : 'display: none'"
-															class="absolute w-1/2 origin-left sun left-1/2"
+															class="sun absolute left-1/2 w-1/2 origin-left"
 														>
 															<div
-																class="w-[7.5px] h-[7.5px] rounded-full bg-yellow outline-[5px] outline outline-white dark:outline-cosmic-800 outline-offset-0 -bottom-[4px] -right-[4px] absolute"
+																class="absolute -bottom-[4px] -right-[4px] h-[7.5px] w-[7.5px] rounded-full bg-yellow outline outline-[5px] outline-offset-0 outline-white dark:outline-cosmic-800"
 															></div>
 															<svg
-																class="w-[18px] h-[18px] rounded-full -bottom-[9px] -right-[9px] absolute"
+																class="absolute -bottom-[9px] -right-[9px] h-[18px] w-[18px] rounded-full"
 																width="18"
 																height="18"
 																viewBox="0 0 18 18"
@@ -3090,7 +3090,7 @@
 													</div>
 												</div>
 												<div
-													class="detail-item w-full text-center -translate-y-5 -translate-x-1 transition-300 grid grid-flow-row gap-[6px]"
+													class="detail-item transition-300 grid w-full -translate-y-5 -translate-x-1 grid-flow-row gap-[6px] text-center"
 												>
 													<div
 														x-text="lang.datetime.sunrise"
@@ -3098,11 +3098,11 @@
 													></div>
 													<div
 														x-text="slide.weatherData.currentConditions.sunrise"
-														class="font-semibold sunrise"
+														class="sunrise font-semibold"
 													></div>
 												</div>
 												<div
-													class="detail-item w-full text-center -translate-y-5 -translate-x-1 transition-300 grid grid-flow-row gap-[6px] justify-center z-10"
+													class="detail-item transition-300 z-10 grid w-full -translate-y-5 -translate-x-1 grid-flow-row justify-center gap-[6px] text-center"
 												>
 													<div
 														x-text="lang.datetime.daylight"
@@ -3110,11 +3110,11 @@
 													></div>
 													<div
 														x-text="slide.weatherData.currentConditions.daylight"
-														class="font-semibold daylight"
+														class="daylight font-semibold"
 													></div>
 												</div>
 												<div
-													class="detail-item w-full text-center -translate-y-5 -translate-x-1 transition-300 grid grid-flow-row gap-[6px]"
+													class="detail-item transition-300 grid w-full -translate-y-5 -translate-x-1 grid-flow-row gap-[6px] text-center"
 												>
 													<div
 														x-text="lang.datetime.sunset"
@@ -3122,7 +3122,7 @@
 													></div>
 													<div
 														x-text="slide.weatherData.currentConditions.sunset"
-														class="font-semibold sunset"
+														class="sunset font-semibold"
 													></div>
 												</div>
 											</div>
@@ -3131,7 +3131,7 @@
 												class="relative grid grid-cols-3"
 											>
 												<div
-													class="flex flex-col gap-5 text-center detail-item transition-300"
+													class="detail-item transition-300 flex flex-col gap-5 text-center"
 												>
 													<div
 														class="flex flex-col items-center gap-1.5 leading-[18px]"
@@ -3159,7 +3159,7 @@
 													</div>
 												</div>
 												<div
-													class="flex flex-col gap-5 text-center detail-item transition-300"
+													class="detail-item transition-300 flex flex-col gap-5 text-center"
 												>
 													<div
 														class="flex flex-col items-center gap-1.5 leading-[18px]"
@@ -3187,7 +3187,7 @@
 													</div>
 												</div>
 												<div
-													class="flex flex-col gap-5 text-center detail-item transition-300"
+													class="detail-item transition-300 flex flex-col gap-5 text-center"
 												>
 													<div
 														class="flex flex-col items-center gap-1.5 leading-[18px]"
@@ -3246,25 +3246,25 @@
 								</section>
 								<!-- * HOURLY * -->
 								<ul
-									class="relative flex gap-2 px-3 pt-4 overflow-hidden overflow-x-scroll hourlyToday hourly no-drag no-scrollbar scroll-smooth snap-x snap-mandatory"
+									class="hourlyToday hourly no-drag no-scrollbar relative flex snap-x snap-mandatory gap-2 overflow-hidden overflow-x-scroll scroll-smooth px-3 pt-4"
 								>
 									<template x-for="i in 24" :key="i">
 										<li
 											x-init="i -= 1"
 											x-effect="icon = i === 0 ? checkIcon(slide.weatherData.currentConditions.icon,  slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(slide.weatherData.timezone).format('HH'))) : checkIcon(slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH')))"
-											class="flex flex-col items-center justify-end px-2 no-drag scroll-ml-3 snap-start"
+											class="no-drag flex snap-start scroll-ml-3 flex-col items-center justify-end px-2"
 										>
 											<!-- Date -->
 											<div
 												x-text="moment().add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH') === '00' ? moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('D MMMM') : ''"
-												class="pb-1 text-xs text-gray-300 truncate no-drag date dark:text-cosmic-500"
+												class="no-drag date truncate pb-1 text-xs text-gray-300 dark:text-cosmic-500"
 											></div>
 											<div
-												class="no-drag icon w-11 h-11 bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645] rounded-xl flex justify-center items-center relative"
+												class="no-drag icon relative flex h-11 w-11 items-center justify-center rounded-xl bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645]"
 											>
 												<img
 													:src="weatherIconsSmallPath + weatherIcons[icon]"
-													class="w-6 h-6 no-drag"
+													class="no-drag h-6 w-6"
 													:class="icon ? 'opacity-100' : 'opacity-0'"
 													alt=""
 												/>
@@ -3272,22 +3272,22 @@
 												<div
 													x-show="i === 0 ? slide.weatherData.currentConditions.precipprob > 30 : slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].precipprob > 30"
 													x-text="Math.round(i === 0 ? slide.weatherData.currentConditions.precipprob : slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].precipprob) + '%'"
-													class="no-drag absolute bg-gray-100 dark:bg-cosmic-900 p-[5px] -bottom-2 -right-2 text-xxs text-gray-300 dark:text-cosmic-300 rounded-3xl"
+													class="no-drag absolute -bottom-2 -right-2 rounded-3xl bg-gray-100 p-[5px] text-xxs text-gray-300 dark:bg-cosmic-900 dark:text-cosmic-300"
 												></div>
 											</div>
 											<div
 												x-text="moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))]) ? lang.datetime.now : moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH:00')"
-												class="pt-3 text-xs font-light text-gray-300 no-drag time dark:text-cosmic-400"
+												class="no-drag time pt-3 text-xs font-light text-gray-300 dark:text-cosmic-400"
 											></div>
 											<div
 												x-text="tempConverter(i === 0 ? slide.weatherData.currentConditions.temp : slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].temp) + '°'"
-												class="pt-1 text-lg font-semibold leading-5 no-drag"
+												class="no-drag pt-1 text-lg font-semibold leading-5"
 											></div>
 										</li>
 									</template>
 								</ul>
 								<!-- * DAILY * -->
-								<ul class="grid grid-flow-row py-6 mx-4 daily">
+								<ul class="daily mx-4 grid grid-flow-row py-6">
 									<template
 										x-for="(day, id) in slide.weatherData.days.slice(0, 10)"
 										x-init="temprange = minMax(slide.weatherData.days.slice(0, 10), 10)"
@@ -3301,26 +3301,26 @@
 													: id === 1
 													? lang.datetime.tomorrow 
 													: moment.unix(day.datetimeEpoch).locale(language).format('DD MMMM');"
-											class="w-full py-[2px] font-light flex flex-nowrap gap-5 items-center"
+											class="flex w-full flex-nowrap items-center gap-5 py-[2px] font-light"
 											@click="$dispatch('addpopup2', slide); setTimeout(() => {$dispatch('detaileddaysadd', { dayid : id, days: slide.weatherData.days.slice(0, 10) })}, 150);"
 										>
 											<div
 												x-show="day.icon"
-												class="small-icon w-[52px] h-[52px] shrink-0 bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645] rounded-2xl py-1 relative"
+												class="small-icon relative h-[52px] w-[52px] shrink-0 rounded-2xl bg-white py-1 dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645]"
 											>
 												<img
-													class="w-[44px] h-[44px] mx-auto"
+													class="mx-auto h-[44px] w-[44px]"
 													:src="weatherIconsPath + weatherIcons[day.icon]"
 													alt=""
 												/>
 												<div
 													x-show="day.precipprob > 30"
 													x-text="Math.round(day.precipprob) + '%'"
-													class="absolute font-medium bg-gray-100 dark:bg-cosmic-900 p-[5px] -bottom-2 -right-2 text-xxs text-gray-300 dark:text-cosmic-300 rounded-3xl"
+													class="absolute -bottom-2 -right-2 rounded-3xl bg-gray-100 p-[5px] text-xxs font-medium text-gray-300 dark:bg-cosmic-900 dark:text-cosmic-300"
 												></div>
 											</div>
 											<div
-												class="flex flex-col justify-center gap-1 w-28 shrink-0"
+												class="flex w-28 shrink-0 flex-col justify-center gap-1"
 											>
 												<div
 													x-text="id === 0 
@@ -3332,13 +3332,13 @@
 												></div>
 												<div
 													x-text="day.conditions"
-													class="text-xs leading-[14px] text-gray-300 font-medium dark:text-cosmic-400"
+													class="text-xs font-medium leading-[14px] text-gray-300 dark:text-cosmic-400"
 												></div>
 											</div>
-											<div class="w-full my-4">
+											<div class="my-4 w-full">
 												<div
 													id="labels"
-													class="flex justify-between pb-2 mx-auto leading-5"
+													class="mx-auto flex justify-between pb-2 leading-5"
 												>
 													<div
 														x-text="tempConverter(day.tempmin) + '°'"
@@ -3358,7 +3358,7 @@
 													>
 														<div
 															x-show="id === 0"
-															class="absolute h-[8px] w-[8px] -top-[2px] rounded-full bg-[#6390F0] dark:bg-white border-[1.5px] border-gray-100 dark:border-cosmic-900"
+															class="absolute -top-[2px] h-[8px] w-[8px] rounded-full border-[1.5px] border-gray-100 bg-[#6390F0] dark:border-cosmic-900 dark:bg-white"
 															:style="{left:`${lineStyles.dotShift}%`}"
 														></div>
 													</div>
@@ -3369,23 +3369,23 @@
 								</ul>
 								<!-- ! 10-day forecast & Monthly Forecast Btns -->
 								<section
-									class="flex flex-col pt-4 mx-4 border-t border-gray-200/50 dark:border-cosmic-800"
+									class="mx-4 flex flex-col border-t border-gray-200/50 pt-4 dark:border-cosmic-800"
 								>
 									<div
 										@click="$dispatch('addpopup2', slide); setTimeout(() => {$dispatch('detaileddaysadd', { dayid : 0, days: slide.weatherData.days.slice(0,10) })}, 150);"
 										class="flex items-center justify-between py-2"
 									>
 										<img
-											class="p-2 bg-white rounded-2xl dark:bg-cosmic-800"
+											class="rounded-2xl bg-white p-2 dark:bg-cosmic-800"
 											src="img/assets/icons/10days.svg"
 											alt=""
 										/>
 										<div
 											x-text="lang.slides.headers.tenDaysForecast"
-											class="pl-5 text-base font-medium leading-5 grow"
+											class="grow pl-5 text-base font-medium leading-5"
 										></div>
 										<svg
-											class="-rotate-90 detail-weather-toggle--img fill-gray-300 dark:fill-cosmic-400"
+											class="detail-weather-toggle--img -rotate-90 fill-gray-300 dark:fill-cosmic-400"
 											width="16"
 											height="17"
 											viewBox="0 0 16 17"
@@ -3402,16 +3402,16 @@
 										class="flex items-center justify-between py-2"
 									>
 										<img
-											class="p-2 bg-white rounded-2xl dark:bg-cosmic-800"
+											class="rounded-2xl bg-white p-2 dark:bg-cosmic-800"
 											src="img/assets/icons/calendar.svg"
 											alt=""
 										/>
 										<div
 											x-text="lang.slides.headers.monthlyForecast"
-											class="pl-5 text-base font-medium leading-5 grow"
+											class="grow pl-5 text-base font-medium leading-5"
 										></div>
 										<svg
-											class="-rotate-90 detail-weather-toggle--img fill-gray-300 dark:fill-cosmic-400"
+											class="detail-weather-toggle--img -rotate-90 fill-gray-300 dark:fill-cosmic-400"
 											width="16"
 											height="17"
 											viewBox="0 0 16 17"
@@ -3437,7 +3437,7 @@
 		<ol
 			x-data="toasts"
 			@toast.window="add($event)"
-			class="fixed z-[99999] flex flex-col-reverse w-[calc(100%_-_32px)] left-1/2 -translate-x-1/2 bottom-24 transition-all-500"
+			class="transition-all-500 fixed left-1/2 bottom-24 z-[99999] flex w-[calc(100%_-_32px)] -translate-x-1/2 flex-col-reverse"
 		>
 			<template x-for="toast in toasts" :key="toast.id">
 				<li
@@ -3445,10 +3445,10 @@
 					x-show="show"
 					x-transition:enter-start="translate-y-48 h-0 my-0 p-0"
 					x-transition:leave-end="translate-y-48 h-0 my-0 p-0 opacity-0"
-					class="toast--wrapper bg-[#424F69] flex items-start p-4 my-1 transition-all-500 ease-[cubic-bezier(0.29,1.4,0.4,0.96)] text-white rounded-xl"
+					class="toast--wrapper transition-all-500 my-1 flex items-start rounded-xl bg-[#424F69] p-4 text-white ease-[cubic-bezier(0.29,1.4,0.4,0.96)]"
 				>
 					<div
-						class="icon stroke-white shrink-0 dark:stroke-cosmic-900"
+						class="icon shrink-0 stroke-white dark:stroke-cosmic-900"
 					>
 						<img
 							x-show="toast.type === 'success'"
@@ -3473,10 +3473,10 @@
 					</div>
 					<div
 						x-html="toast.content"
-						class="pl-2 text-sm font-medium leading-4 toast--text grow"
+						class="toast--text grow pl-2 text-sm font-medium leading-4"
 					></div>
 					<button
-						class="shrink-0 toast--dismiss stroke-cosmic-500"
+						class="toast--dismiss shrink-0 stroke-cosmic-500"
 						@click="transitionOut()"
 					>
 						<svg
@@ -3506,25 +3506,25 @@
 			x-transition:enter-start="scale-0 opacity-0"
 			x-transition:leave-end="scale-0 opacity-0"
 			id="loading-animation"
-			class="fixed z-[10060] top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-14 ease-[cubic-bezier(.18,.89,.32,1)] duration-500"
+			class="fixed top-1/3 left-1/2 z-[10060] h-14 w-16 -translate-x-1/2 -translate-y-1/2 duration-500 ease-[cubic-bezier(.18,.89,.32,1)]"
 		>
 			<img
-				class="absolute w-16 h-16 -translate-x-2 -translate-y-4 animate-fly"
+				class="absolute h-16 w-16 -translate-x-2 -translate-y-4 animate-fly"
 				src="img/assets/icons/dark_cloud.svg"
 				alt=""
 			/>
 			<img
-				class="absolute w-16 h-16 animate-spin-slow"
+				class="absolute h-16 w-16 animate-spin-slow"
 				src="img/assets/icons/clear-day_sun.svg"
 				alt=""
 			/>
 			<img
-				class="absolute w-16 h-16 animate-wiggle-6"
+				class="absolute h-16 w-16 animate-wiggle-6"
 				src="img/assets/icons/face_sun.svg"
 				alt=""
 			/>
 			<img
-				class="absolute w-16 h-16 scale-90 translate-x-6 translate-y-2 animate-fly-reverse"
+				class="absolute h-16 w-16 translate-x-6 translate-y-2 scale-90 animate-fly-reverse"
 				src="img/assets/icons/cyan_cloud.svg"
 				alt=""
 			/>

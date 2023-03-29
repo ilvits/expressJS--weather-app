@@ -682,12 +682,13 @@ async function requestUserCountry() {
 
 function inputProcessing(el) {
 	const suggestionList = document.querySelector(".suggestions-list");
-	const string = el.value.trim();
+
 	const re = /^[a-zA-ZАА-Яа-яёЁ.,\d\-_\s]+$/i;
 	suggestionList.innerHTML = "";
-	if (re.test(string)) {
-		if (string.length > 0) {
-			getSuggestions(string);
+	const value = el.value.trim();
+	if (re.test(value)) {
+		if (value.length > 0) {
+			getSuggestions(value);
 		} else {
 			// console.log("недостаточно символов");
 			suggestionList.innerHTML = "";
@@ -775,8 +776,8 @@ function parseSuggestions(features, searchText, isUserLocation = false) {
 					})
 				);
 			} else {
-				const capText =
-					searchText[0].toUpperCase() + searchText.slice(1);
+				searchText = capitalize(searchText);
+				// console.log(searchText);
 				const locationLi = document.createElement("li");
 				locationLi.onclick = () =>
 					window.dispatchEvent(
@@ -797,23 +798,11 @@ function parseSuggestions(features, searchText, isUserLocation = false) {
 					typeof locations !== "undefined" &&
 					locations.findIndex((item) => item.id === id) === -1
 				) {
-					locationLi.classList.add("flex", "pr-2", "truncate");
-					// locationLi.setAttribute(
-					// 	"@click",
-					// 	"$dispatch('addpopup3', this)"
-					// );
-					// locationLi.setAttribute(
-					// 	"data-latitude",
-					// 	position.coords.latitude
-					// );
-					// locationLi.setAttribute(
-					// 	"data-longitude",
-					// 	position.coords.longitude
-					// );
+					locationLi.classList.add("flex", "pr-2", "whitespace-pre");
 					text = `${name.replace(
-						capText,
-						`<div class="text-primary-light dark:text-primary-dark">${capText}</div>`
-					)}<div class="text-gray-300 dark:text-cosmic-500">${
+						searchText,
+						`<div class="text-primary-light dark:text-primary-dark">${searchText}</div>`
+					)}<div class="text-gray-300 dark:text-cosmic-500 truncate">${
 						region ? ", " + region : ""
 					}${
 						countryCode === userCountry ? "" : ", " + country
