@@ -155,7 +155,7 @@
 				class="rounded-md bg-primary-light px-12 py-3 text-white dark:bg-primary-dark dark:text-cosmic-900"
 				@click="
 					menuLocations = true; 
-					setTimeout(() => { inputFocus = true }, 150);
+					setTimeout(() => { inputFocus = true }, 1000);
 					"
 			></button>
 		</div>
@@ -644,7 +644,7 @@
 										class="flex items-center justify-between py-2"
 									>
 										<img
-											class="rounded-2xl bg-white p-2 dark:bg-cosmic-800"
+											class="h-11 w-11 rounded-2xl bg-white p-2 dark:bg-cosmic-800"
 											src="img/assets/icons/10days.svg"
 											alt=""
 										/>
@@ -670,7 +670,7 @@
 										class="flex items-center justify-between py-2"
 									>
 										<img
-											class="rounded-2xl bg-white p-2 dark:bg-cosmic-800"
+											class="h-11 w-11 rounded-2xl bg-white p-2 dark:bg-cosmic-800"
 											src="img/assets/icons/calendar.svg"
 											alt=""
 										/>
@@ -1163,7 +1163,7 @@
 							</li>
 						</template>
 					</ol>
-					<!-- TODO Modal section -->
+					<!-- ! Modal section -->
 					<div
 						x-cloak
 						id="location-edit-modal"
@@ -1254,11 +1254,12 @@
 						</div>
 					</div>
 
-					<!-- Placeholders -->
+					<!-- ! Placeholder -->
 					<section
 						id="locations-placeholder"
-						x-show="!slides.length"
-						class="absolute top-40 left-1/2 flex w-full -translate-x-1/2 transform-gpu flex-col transition-all duration-300 ease-[cubic-bezier(.23,1,.32,1)]"
+						x-show="!slides.length && menuLocations"
+						x-transition:enter-start="opacity-0"
+						class="transition-all-500 absolute top-40 left-1/2 flex w-full -translate-x-1/2 transform-gpu flex-col duration-1000"
 					>
 						<div class="w-full">
 							<svg
@@ -2779,7 +2780,7 @@
 					x-show="show"
 					x-transition:enter-start="translate-y-full"
 					x-transition:leave-end="translate-y-full"
-					class="transition-all-500 fixed top-0 left-0 z-[9999] h-full w-full overflow-y-scroll rounded-t-xl bg-gray-100/60 text-cosmic-900 backdrop-blur-md dark:bg-cosmic-900/60 dark:text-white"
+					class="transition-all-500 fixed top-0 left-0 z-[9999] h-full w-full overflow-x-clip overflow-y-scroll rounded-t-xl bg-gray-100/60 text-cosmic-900 backdrop-blur-md dark:bg-cosmic-900/60 dark:text-white"
 				>
 					<div
 						x-text="lang.common.buttons.cancel"
@@ -3255,7 +3256,7 @@
 										class="flex items-center justify-between py-2"
 									>
 										<img
-											class="rounded-2xl bg-white p-2 dark:bg-cosmic-800"
+											class="h-11 w-11 rounded-2xl bg-white p-2 dark:bg-cosmic-800"
 											src="img/assets/icons/10days.svg"
 											alt=""
 										/>
@@ -3281,7 +3282,7 @@
 										class="flex items-center justify-between py-2"
 									>
 										<img
-											class="rounded-2xl bg-white p-2 dark:bg-cosmic-800"
+											class="h-11 w-11 rounded-2xl bg-white p-2 dark:bg-cosmic-800"
 											src="img/assets/icons/calendar.svg"
 											alt=""
 										/>

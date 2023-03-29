@@ -6,7 +6,8 @@
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www",
     "tailwind dev": "npx tailwindcss -i ./src/css/input.css -o ./public/css/style.css --watch",
-    "tailwind build": "npx tailwindcss -i ./src/css/input.css -o ./public/css/style.css --minify"
+    "tailwind build": "npx tailwindcss -i ./src/css/input.css -o ./public/css/style.css --minify",
+    "workbox build": "npx workbox-cli generateSW workbox-config.js"
   },
   "dependencies": {
     "alpinejs": "^3.12.0",

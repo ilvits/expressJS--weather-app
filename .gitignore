@@ -51,4 +51,8 @@ npm-debug.log
 # Ignore all local history of files
 .history
 .ionide
+
+### Generated files ###
 public/css/style.css
+public/sw.js
+public/sw.js.map
