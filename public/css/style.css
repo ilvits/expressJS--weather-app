@@ -1954,6 +1954,10 @@ li .card__wrapper {
   border-color: rgb(243 244 247 / var(--tw-border-opacity));
 }
 
+.border-gray-200\/30 {
+  border-color: rgb(212 212 222 / 0.3);
+}
+
 .border-gray-200\/50 {
   border-color: rgb(212 212 222 / 0.5);
 }
@@ -1971,10 +1975,6 @@ li .card__wrapper {
 .border-primary-light {
   --tw-border-opacity: 1;
   border-color: rgb(51 119 255 / var(--tw-border-opacity));
-}
-
-.border-gray-200\/30 {
-  border-color: rgb(212 212 222 / 0.3);
 }
 
 .bg-\[\#424F69\] {
@@ -2045,8 +2045,8 @@ li .card__wrapper {
   background-color: rgb(51 119 255 / var(--tw-bg-opacity));
 }
 
-.bg-primary-light\/60 {
-  background-color: rgb(51 119 255 / 0.6);
+.bg-primary-light\/30 {
+  background-color: rgb(51 119 255 / 0.3);
 }
 
 .bg-white {
@@ -2061,18 +2061,6 @@ li .card__wrapper {
 .bg-yellow {
   --tw-bg-opacity: 1;
   background-color: rgb(254 184 0 / var(--tw-bg-opacity));
-}
-
-.bg-primary-light\/40 {
-  background-color: rgb(51 119 255 / 0.4);
-}
-
-.bg-primary-light\/20 {
-  background-color: rgb(51 119 255 / 0.2);
-}
-
-.bg-primary-light\/30 {
-  background-color: rgb(51 119 255 / 0.3);
 }
 
 .bg-gradient-to-b {
@@ -2975,13 +2963,17 @@ input {
   background-color: rgb(254 184 0 / var(--tw-bg-opacity));
 }
 
-.dark .dark\:bg-primary-dark\/60 {
-  background-color: rgb(254 184 0 / 0.6);
+.dark .dark\:bg-primary-dark\/40 {
+  background-color: rgb(254 184 0 / 0.4);
 }
 
 .dark .dark\:bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.dark .dark\:bg-primary-dark\/60 {
+  background-color: rgb(254 184 0 / 0.6);
 }
 
 .dark .dark\:bg-gradient-to-br {
