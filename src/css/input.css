@@ -71,6 +71,7 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
 	-webkit-box-shadow: 0 0 0 50px #132846 inset !important;
+	box-shadow: inset;
 }
 
 input[type="search"]::-webkit-search-decoration,

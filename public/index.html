@@ -313,10 +313,10 @@
 												class="relative grid h-[120px] w-full grid-flow-col items-end justify-around"
 											>
 												<div
-													class="detail-item transition-300 absolute flex h-full w-full -translate-x-1 -translate-y-5 justify-center"
+													class="detail-item transition-300 absolute flex h-full w-full -translate-x-1 -translate-y-5 justify-center overflow-clip"
 												>
 													<div
-														class="absolute bottom-0 h-[75px] w-[150px]"
+														class="absolute bottom-1 h-[75px] w-[150px]"
 													>
 														<div
 															class="h-full w-full rounded-t-full border border-b-0 border-dashed border-cyan/60"
@@ -327,7 +327,7 @@
 															class="sky absolute top-0 h-full w-full origin-bottom rounded-t-full border border-b-0 border-solid border-cyan bg-gradient-to-b from-[#EDF8FF] to-transparent dark:from-[#0F3C5C]"
 														></div>
 														<div
-															class="absolute h-[75px] w-[150px] bg-white dark:bg-cosmic-800"
+															class="absolute hidden h-[75px] w-[150px] rounded-b-full bg-white from-[#192848] to-[#182847] dark:bg-gradient-to-r"
 														></div>
 														<div
 															class="absolute -bottom-[4px] -left-[4px] h-2 w-2 rounded-full bg-cyan"
@@ -2923,10 +2923,10 @@
 												class="relative grid h-[120px] w-full grid-flow-col items-end justify-around"
 											>
 												<div
-													class="detail-item transition-300 absolute flex h-full w-full -translate-x-1 -translate-y-5 justify-center"
+													class="detail-item transition-300 absolute flex h-full w-full -translate-x-1 -translate-y-5 justify-center overflow-clip"
 												>
 													<div
-														class="absolute bottom-0 h-[75px] w-[150px]"
+														class="absolute bottom-1 h-[75px] w-[150px]"
 													>
 														<div
 															class="h-full w-full rounded-t-full border border-b-0 border-dashed border-cyan/60"
@@ -2937,7 +2937,7 @@
 															class="sky absolute top-0 h-full w-full origin-bottom rounded-t-full border border-b-0 border-solid border-cyan bg-gradient-to-b from-[#EDF8FF] to-transparent dark:from-[#0F3C5C]"
 														></div>
 														<div
-															class="absolute h-[75px] w-[150px] bg-white dark:bg-cosmic-800"
+															class="absolute hidden h-[75px] w-[150px] rounded-b-full bg-white from-[#192848] to-[#182847] dark:bg-gradient-to-r"
 														></div>
 														<div
 															class="absolute -bottom-[4px] -left-[4px] h-2 w-2 rounded-full bg-cyan"
@@ -3131,21 +3131,19 @@
 									<template x-for="i in 24" :key="i">
 										<li
 											x-init="i -= 1"
-											x-effect="icon = i === 0 ? checkIcon(slide.weatherData.currentConditions.icon,  slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(slide.weatherData.timezone).format('HH'))) : checkIcon(slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH')))"
+											x-effect="icon = i === 0 ? checkIcon(slide.weatherData.currentConditions.icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(slide.weatherData.timezone).format('HH'))) : checkIcon(slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH')))"
 											class="no-drag flex snap-start scroll-ml-3 flex-col items-center justify-end px-2"
 										>
 											<!-- Date -->
 											<div
-												x-text="moment().add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH') === '00' ? moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('D MMMM') : ''"
 												class="no-drag date truncate pb-1 text-xs text-gray-300 dark:text-cosmic-500"
 											></div>
 											<div
 												class="no-drag icon relative flex h-11 w-11 items-center justify-center rounded-xl bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645]"
 											>
 												<img
-													:src="weatherIconsSmallPath + weatherIcons[icon]"
+													:src="weatherIconsSmallPath + weatherIcons[i === 0 ? checkIcon(slide.weatherData.currentConditions.icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(slide.weatherData.timezone).format('HH'))) : checkIcon(slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH')))]"
 													class="no-drag h-6 w-6"
-													:class="icon ? 'opacity-100' : 'opacity-0'"
 													alt=""
 												/>
 												<!-- Precipprob -->
@@ -3249,7 +3247,7 @@
 								</ul>
 								<!-- ! 10-day forecast & Monthly Forecast Btns -->
 								<section
-									class="mx-4 flex flex-col border-t border-gray-200/50 pt-4 dark:border-cosmic-800"
+									class="mx-4 flex flex-col border-t border-gray-200/30 pt-4 dark:border-cosmic-800"
 								>
 									<div
 										@click="$dispatch('addpopup2', slide); setTimeout(() => {$dispatch('detaileddaysadd', { dayid : 0, days: slide.weatherData.days.slice(0,10) })}, 150);"
