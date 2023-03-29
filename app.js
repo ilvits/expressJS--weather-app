@@ -18,6 +18,13 @@ const apiResolveRouter = require("./routes/API/resolveadressAPI");
 
 const app = express();
 
+app.use(function (req, res, next) {
+	if (/\.(css)$/.test(req.url)) {
+		res.minifyOptions = res.minifyOptions || {};
+		res.minifyOptions.minify = false;
+	}
+	next();
+});
 // // View engine setup
 // app.set("views", path.join(__dirname, "views"));
 // app.set("view engine", "ejs");
@@ -27,7 +34,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(compression());
-// app.use(minify());
+app.use(minify());
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -54,5 +61,15 @@ app.use((err, req, res) => {
 	res.status(err.status || 500);
 	res.render("error");
 });
+
+var myErrorHandler = function (errorInfo, callback) {
+	console.log(errorInfo);
+	// below is the default implementation (minify.Minifier.defaultErrorHandler)
+	if (errorInfo.stage === "compile") {
+		callback(errorInfo.error, JSON.stringify(errorInfo.error));
+		return;
+	}
+	callback(errorInfo.error, errorInfo.body);
+};
 
 module.exports = app;

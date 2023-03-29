@@ -125,7 +125,7 @@ const languageStrings = {
 		},
 		placeholders: {
 			main: {
-				header: "There’s no bad weather, only bad clothes ;)",
+				header: "Плохой погоды не бывает",
 				text: "Смотрите погоду по всему миру, сохраняйте избранные локации.",
 			},
 			locations: {

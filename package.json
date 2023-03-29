@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www",
-    "tailwind": "npx tailwindcss -i ./src/css/input.css -o ./public/css/style.css --watch"
+    "tailwind dev": "npx tailwindcss -i ./src/css/input.css -o ./public/css/style.css --watch",
+    "tailwind build": "npx tailwindcss -i ./src/css/input.css -o ./public/css/style.css --minify"
   },
   "dependencies": {
     "alpinejs": "^3.12.0",

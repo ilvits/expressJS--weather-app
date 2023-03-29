@@ -5,6 +5,12 @@
 @layer base {
 	@font-face {
 		font-family: "Nunito";
+		src: url(../fonts/Nunito/Nunito-VariableFont_wght.woff2) format("woff");
+		font-display: swap;
+	}
+	/*
+		@font-face {
+		font-family: "Nunito";
 		font-weight: 300;
 		src: url(../fonts/Nunito/Nunito-Light.woff2) format("woff");
 		font-display: swap;
@@ -35,7 +41,7 @@
 		font-weight: 700;
 		src: url(../fonts/Nunito/Nunito-Bold.woff2) format("woff");
 		font-display: swap;
-	}
+	} */
 }
 /* @font-face {
     font-family: 'Noto_Emoji';
@@ -47,7 +53,7 @@ small {
 	@apply text-xxs leading-3 text-gray-300 dark:text-cosmic-500;
 }
 h3 {
-	@apply text-lg leading-[22px] font-bold  text-cosmic-900 dark:text-white;
+	@apply text-lg font-bold leading-[22px]  text-cosmic-900 dark:text-white;
 }
 strong {
 	@apply font-bold leading-5 text-cosmic-900 dark:text-white;
@@ -56,7 +62,7 @@ span {
 	@apply text-xs font-normal leading-[14px] text-cosmic-900 dark:text-white;
 }
 p {
-	@apply font-normal text-sm leading-5;
+	@apply text-sm font-normal leading-5;
 }
 
 /* Change the white to any color */
@@ -102,35 +108,35 @@ input[type="search"] {
     @apply !bg-primary-light dark:!bg-primary-dark;
   } */
 	li .card__wrapper {
-		@apply flex gap-2 p-4 transition-all-500 rounded-2xl mx-auto h-[85px]
-    bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645];
+		@apply transition-all-500 mx-auto flex h-[85px] gap-2 rounded-2xl bg-white
+    p-4 dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645];
 	}
 	.transition-all-300 {
-		@apply ease-[cubic-bezier(.23,1,.32,1)] transition-all transform-gpu duration-300;
+		@apply transform-gpu transition-all duration-300 ease-[cubic-bezier(.23,1,.32,1)];
 	}
 	.transition-all-500 {
-		@apply ease-[cubic-bezier(.23,1,.32,1)] transition-all transform-gpu duration-500;
+		@apply transform-gpu transition-all duration-500 ease-[cubic-bezier(.23,1,.32,1)];
 	}
 	.transition-300 {
-		@apply ease-[cubic-bezier(.23,1,.32,1)] transition transform-gpu duration-300;
+		@apply transform-gpu transition duration-300 ease-[cubic-bezier(.23,1,.32,1)];
 	}
 	.transition-500 {
-		@apply ease-[cubic-bezier(.23,1,.32,1)] transition transform-gpu duration-500;
+		@apply transform-gpu transition duration-500 ease-[cubic-bezier(.23,1,.32,1)];
 	}
 	.transition-transform-300 {
-		@apply ease-[cubic-bezier(.23,1,.32,1)] transition-transform transform-gpu duration-300;
+		@apply transform-gpu transition-transform duration-300 ease-[cubic-bezier(.23,1,.32,1)];
 	}
 	.transition-transform-500 {
-		@apply ease-[cubic-bezier(.23,1,.32,1)] transition-transform transform-gpu duration-500;
+		@apply transform-gpu transition-transform duration-500 ease-[cubic-bezier(.23,1,.32,1)];
 	}
 	.transition-opacity-500 {
-		@apply ease-[cubic-bezier(.23,1,.32,1)] transition-opacity transform-gpu duration-500;
+		@apply transform-gpu transition-opacity duration-500 ease-[cubic-bezier(.23,1,.32,1)];
 	}
 	.transition-opacity-300 {
-		@apply ease-[cubic-bezier(.23,1,.32,1)] transition-opacity transform-gpu duration-300;
+		@apply transform-gpu transition-opacity duration-300 ease-[cubic-bezier(.23,1,.32,1)];
 	}
 	.transition-colors-500 {
-		@apply ease-[cubic-bezier(.23,1,.32,1)] transition-colors transform-gpu duration-500;
+		@apply transform-gpu transition-colors duration-500 ease-[cubic-bezier(.23,1,.32,1)];
 	}
 }
 html,
