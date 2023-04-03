@@ -750,7 +750,7 @@
 						
 					})"
                 x-data="{ locationsEditMode: false, locationEditModal: false }"
-                class="transition-all-500 fixed top-0 left-0 h-full w-full overflow-x-clip overflow-y-scroll bg-gray-100 pb-20 dark:bg-cosmic-900"
+                class="transition-all-500 fixed top-0 left-0 h-full w-full overflow-x-hidden overflow-y-scroll bg-gray-100 pb-20 dark:bg-cosmic-900"
             >
                 <!-- Backdrop -->
                 <div
@@ -763,7 +763,7 @@
 
                 <section
                     id="container-settings"
-                    class="relative flex h-full flex-col gap-6 overflow-x-clip overflow-y-scroll"
+                    class="relative flex h-full flex-col gap-6 overflow-x-hidden overflow-y-scroll"
                 >
                     <!-- HEADER -->
                     <header
@@ -850,7 +850,7 @@
                             </button>
                         </div>
                         <section
-                            class="transition-all-500 absolute h-screen w-full overflow-x-clip overflow-y-scroll"
+                            class="transition-all-500 absolute h-screen w-full overflow-x-hidden overflow-y-scroll"
                             x-show="inputFocus"
                             x-transition:enter-start="opacity-0"
                             x-transition:leave-end="opacity-0"
@@ -1335,7 +1335,7 @@
             <!-- *? Settings ?* -->
             <section
                 x-cloak
-                class="transition-all-500 fixed top-0 left-0 h-full w-full overflow-x-clip overflow-y-scroll bg-gray-100 pb-20 dark:bg-cosmic-900"
+                class="transition-all-500 fixed top-0 left-0 h-full w-full overflow-x-hidden overflow-y-scroll bg-gray-100 pb-20 dark:bg-cosmic-900"
                 x-show="menuSettings"
                 x-data="{ themeDropdown: false }"
             >
@@ -1737,7 +1737,7 @@
                 </section>
                 <!-- About -->
                 <section
-                    class="transition-all-500 fixed top-0 left-0 z-[100] h-full w-full overflow-x-clip overflow-y-scroll bg-gray-100/80 pb-20 backdrop-blur-xl dark:bg-cosmic-900/80"
+                    class="transition-all-500 fixed top-0 left-0 z-[100] h-full w-full overflow-x-hidden overflow-y-scroll bg-gray-100/80 pb-20 backdrop-blur-xl dark:bg-cosmic-900/80"
                     x-cloak
                     x-show="modalAbout"
                     x-transition:enter-start="opacity-0 scale-95"
@@ -1980,7 +1980,7 @@
                     x-transition:enter-start="translate-x-full"
                     x-transition:leave-end="translate-x-full"
                     @scroll="detailedAtTop = $el.scrollTop < 44 ? true : false; legend = false; detailedAtTop ? changeColor(false) : changeColor(true)"
-                    class="transition-all-500 fixed top-0 left-0 z-[10000] h-full w-full overflow-x-clip overflow-y-scroll bg-white dark:bg-cosmic-900"
+                    class="transition-all-500 fixed top-0 left-0 z-[10000] h-full w-full overflow-x-hidden overflow-y-scroll bg-white dark:bg-cosmic-900"
                 >
                     <header
                         :class="detailedAtTop ? 'bg-white dark:bg-cosmic-900' : 'bg-gray-100 dark:bg-cosmic-800'"
@@ -2799,7 +2799,7 @@
                     x-show="show"
                     x-transition:enter-start="translate-y-full"
                     x-transition:leave-end="translate-y-full"
-                    class="transition-all-500 fixed top-0 left-0 z-[9999] h-full w-full overflow-x-clip overflow-y-scroll rounded-t-xl bg-gray-100/60 text-cosmic-900 backdrop-blur-md dark:bg-cosmic-900/60 dark:text-white"
+                    class="transition-all-500 fixed top-0 left-0 z-[9999] h-full w-full overflow-x-hidden overflow-y-scroll rounded-t-xl bg-gray-100/60 text-cosmic-900 backdrop-blur-md dark:bg-cosmic-900/60 dark:text-white"
                 >
                     <div
                         x-text="lang.common.buttons.cancel"
