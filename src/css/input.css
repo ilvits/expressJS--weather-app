@@ -3,45 +3,45 @@
 @tailwind utilities;
 
 @layer base {
-	@font-face {
-		font-family: "Nunito";
-		src: url(../fonts/Nunito/Nunito-VariableFont_wght.woff2) format("woff");
-		font-display: swap;
-	}
-	/*
-		@font-face {
-		font-family: "Nunito";
-		font-weight: 300;
-		src: url(../fonts/Nunito/Nunito-Light.woff2) format("woff");
-		font-display: swap;
-	}
+    @font-face {
+        font-family: 'Nunito';
+        src: url(../fonts/Nunito/Nunito-VariableFont_wght.woff2) format('woff');
+        font-display: swap;
+    }
 
-	@font-face {
-		font-family: "Nunito";
-		font-weight: 400;
-		src: url(../fonts/Nunito/Nunito-Regular.woff2) format("woff");
-		font-display: swap;
-	}
+    @font-face {
+        font-family: 'Nunito';
+        font-weight: 300;
+        src: url(../fonts/Nunito/Nunito-VariableFont_wght.woff2) format('woff');
+        font-display: swap;
+    }
 
-	@font-face {
-		font-family: "Nunito";
-		font-weight: 500;
-		src: url(../fonts/Nunito/Nunito-Medium.woff2) format("woff");
-		font-display: swap;
-	}
+    @font-face {
+        font-family: 'Nunito';
+        font-weight: 400;
+        src: url(../fonts/Nunito/Nunito-VariableFont_wght.woff2) format('woff');
+        font-display: swap;
+    }
 
-	@font-face {
-		font-family: "Nunito";
-		font-weight: 600;
-		src: url(../fonts/Nunito/Nunito-SemiBold.woff2) format("woff");
-		font-display: swap;
-	}
-	@font-face {
-		font-family: "Nunito";
-		font-weight: 700;
-		src: url(../fonts/Nunito/Nunito-Bold.woff2) format("woff");
-		font-display: swap;
-	} */
+    @font-face {
+        font-family: 'Nunito';
+        font-weight: 500;
+        src: url(../fonts/Nunito/Nunito-VariableFont_wght.woff2) format('woff');
+        font-display: swap;
+    }
+
+    @font-face {
+        font-family: 'Nunito';
+        font-weight: 600;
+        src: url(../fonts/Nunito/Nunito-VariableFont_wght.woff2) format('woff');
+        font-display: swap;
+    }
+    @font-face {
+        font-family: 'Nunito';
+        font-weight: 700;
+        src: url(../fonts/Nunito/Nunito-VariableFont_wght.woff2) format('woff');
+        font-display: swap;
+    }
 }
 /* @font-face {
     font-family: 'Noto_Emoji';
@@ -50,19 +50,19 @@
     font-display: swap;
   } */
 small {
-	@apply text-xxs leading-3 text-gray-300 dark:text-cosmic-500;
+    @apply text-xxs leading-3 text-gray-300 dark:text-cosmic-500;
 }
 h3 {
-	@apply text-lg font-bold leading-[22px]  text-cosmic-900 dark:text-white;
+    @apply text-lg font-bold leading-[22px]  text-cosmic-900 dark:text-white;
 }
 strong {
-	@apply font-bold leading-5 text-cosmic-900 dark:text-white;
+    @apply font-bold leading-5 text-cosmic-900 dark:text-white;
 }
 span {
-	@apply text-xs font-normal leading-[14px] text-cosmic-900 dark:text-white;
+    @apply text-xs font-normal leading-[14px] text-cosmic-900 dark:text-white;
 }
 p {
-	@apply text-sm font-normal leading-5;
+    @apply text-sm font-normal leading-5;
 }
 
 /* Change the white to any color */
@@ -70,15 +70,15 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-	-webkit-box-shadow: 0 0 0 50px #132846 inset !important;
-	box-shadow: inset;
+    -webkit-box-shadow: 0 0 0 50px #132846 inset !important;
+    box-shadow: inset;
 }
 
-input[type="search"]::-webkit-search-decoration,
-input[type="search"]::-webkit-search-cancel-button,
-input[type="search"]::-webkit-search-results-button,
-input[type="search"]::-webkit-search-results-decoration {
-	-webkit-appearance: none;
+input[type='search']::-webkit-search-decoration,
+input[type='search']::-webkit-search-cancel-button,
+input[type='search']::-webkit-search-results-button,
+input[type='search']::-webkit-search-results-decoration {
+    -webkit-appearance: none;
 }
 
 /* input:-webkit-autofill {
@@ -87,169 +87,169 @@ input[type="search"]::-webkit-search-results-decoration {
 
 /*Change text in autofill textbox*/
 input:-webkit-autofill {
-	-webkit-text-fill-color: #132846 !important;
+    -webkit-text-fill-color: #132846 !important;
 }
 
 input {
-	border-radius: 0;
+    border-radius: 0;
 }
 
-input[type="search"] {
-	-webkit-appearance: none;
+input[type='search'] {
+    -webkit-appearance: none;
 }
 .splide__track {
-	overflow: unset !important;
+    overflow: unset !important;
 }
 [x-cloak] {
-	display: none !important;
+    display: none !important;
 }
 
 @layer components {
-	/* [class~="is-active"] {
+    /* [class~="is-active"] {
     @apply !bg-primary-light dark:!bg-primary-dark;
   } */
-	li .card__wrapper {
-		@apply transition-all-500 mx-auto flex h-[85px] gap-2 rounded-2xl bg-white
+    li .card__wrapper {
+        @apply transition-all-500 mx-auto flex h-[85px] gap-2 rounded-2xl bg-white
     p-4 dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645];
-	}
-	.transition-all-300 {
-		@apply transform-gpu transition-all duration-300 ease-[cubic-bezier(.23,1,.32,1)];
-	}
-	.transition-all-500 {
-		@apply transform-gpu transition-all duration-500 ease-[cubic-bezier(.23,1,.32,1)];
-	}
-	.transition-300 {
-		@apply transform-gpu transition duration-300 ease-[cubic-bezier(.23,1,.32,1)];
-	}
-	.transition-500 {
-		@apply transform-gpu transition duration-500 ease-[cubic-bezier(.23,1,.32,1)];
-	}
-	.transition-transform-300 {
-		@apply transform-gpu transition-transform duration-300 ease-[cubic-bezier(.23,1,.32,1)];
-	}
-	.transition-transform-500 {
-		@apply transform-gpu transition-transform duration-500 ease-[cubic-bezier(.23,1,.32,1)];
-	}
-	.transition-opacity-500 {
-		@apply transform-gpu transition-opacity duration-500 ease-[cubic-bezier(.23,1,.32,1)];
-	}
-	.transition-opacity-300 {
-		@apply transform-gpu transition-opacity duration-300 ease-[cubic-bezier(.23,1,.32,1)];
-	}
-	.transition-colors-500 {
-		@apply transform-gpu transition-colors duration-500 ease-[cubic-bezier(.23,1,.32,1)];
-	}
+    }
+    .transition-all-300 {
+        @apply transform-gpu transition-all duration-300 ease-[cubic-bezier(.23,1,.32,1)];
+    }
+    .transition-all-500 {
+        @apply transform-gpu transition-all duration-500 ease-[cubic-bezier(.23,1,.32,1)];
+    }
+    .transition-300 {
+        @apply transform-gpu transition duration-300 ease-[cubic-bezier(.23,1,.32,1)];
+    }
+    .transition-500 {
+        @apply transform-gpu transition duration-500 ease-[cubic-bezier(.23,1,.32,1)];
+    }
+    .transition-transform-300 {
+        @apply transform-gpu transition-transform duration-300 ease-[cubic-bezier(.23,1,.32,1)];
+    }
+    .transition-transform-500 {
+        @apply transform-gpu transition-transform duration-500 ease-[cubic-bezier(.23,1,.32,1)];
+    }
+    .transition-opacity-500 {
+        @apply transform-gpu transition-opacity duration-500 ease-[cubic-bezier(.23,1,.32,1)];
+    }
+    .transition-opacity-300 {
+        @apply transform-gpu transition-opacity duration-300 ease-[cubic-bezier(.23,1,.32,1)];
+    }
+    .transition-colors-500 {
+        @apply transform-gpu transition-colors duration-500 ease-[cubic-bezier(.23,1,.32,1)];
+    }
 }
 html,
 body {
-	overscroll-behavior: none;
+    overscroll-behavior: none;
 }
 body {
-	touch-action: pan-y;
+    touch-action: pan-y;
 }
 
 @media all and (display-mode: standalone) {
-	body {
-		background-color: yellow;
-	}
+    body {
+        background-color: yellow;
+    }
 }
 
 /* these are special */
 .slip-reordering {
-	transition-duration: 150ms;
-	transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+    transition-duration: 150ms;
+    transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .slip-reordering .card__wrapper {
-	transform: scale(1.06);
+    transform: scale(1.06);
 }
 
 .slip-swiping-container {
-	overflow-x: hidden;
+    overflow-x: hidden;
 }
 
 * {
-	user-select: none;
-	-moz-user-select: none;
-	-webkit-user-select: none;
-	cursor: default;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    cursor: default;
 }
 
 input {
-	user-select: auto;
-	-moz-user-select: auto;
-	-webkit-user-select: auto;
+    user-select: auto;
+    -moz-user-select: auto;
+    -webkit-user-select: auto;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
 .no-scrollbar::-webkit-scrollbar {
-	display: none !important;
-	width: 0 !important;
+    display: none !important;
+    width: 0 !important;
 }
 ::-webkit-scrollbar {
-	display: none !important;
-	width: 0 !important;
+    display: none !important;
+    width: 0 !important;
 }
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .no-scrollbar {
-	-ms-overflow-style: none !important;
-	overflow: -moz-scrollbars-none !important;
-	/* IE and Edge */
-	scrollbar-width: none !important;
-	/* Firefox */
+    -ms-overflow-style: none !important;
+    overflow: -moz-scrollbars-none !important;
+    /* IE and Edge */
+    scrollbar-width: none !important;
+    /* Firefox */
 }
 
 .spinner {
-	-webkit-animation: rotate 2s linear infinite;
-	animation: rotate 2s linear infinite;
+    -webkit-animation: rotate 2s linear infinite;
+    animation: rotate 2s linear infinite;
 }
 .spinner .path {
-	stroke-linecap: round;
-	-webkit-animation: dash 1.5s ease-in-out infinite;
-	animation: dash 1.5s ease-in-out infinite;
+    stroke-linecap: round;
+    -webkit-animation: dash 1.5s ease-in-out infinite;
+    animation: dash 1.5s ease-in-out infinite;
 }
 
 @-webkit-keyframes rotate {
-	100% {
-		transform: rotate(360deg);
-	}
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 @keyframes rotate {
-	100% {
-		transform: rotate(360deg);
-	}
+    100% {
+        transform: rotate(360deg);
+    }
 }
 @-webkit-keyframes dash {
-	0% {
-		stroke-dasharray: 1, 150;
-		stroke-dashoffset: 0;
-	}
-	50% {
-		stroke-dasharray: 90, 150;
-		stroke-dashoffset: -35;
-	}
-	100% {
-		stroke-dasharray: 90, 150;
-		stroke-dashoffset: -124;
-	}
+    0% {
+        stroke-dasharray: 1, 150;
+        stroke-dashoffset: 0;
+    }
+    50% {
+        stroke-dasharray: 90, 150;
+        stroke-dashoffset: -35;
+    }
+    100% {
+        stroke-dasharray: 90, 150;
+        stroke-dashoffset: -124;
+    }
 }
 @keyframes dash {
-	0% {
-		stroke-dasharray: 1, 150;
-		stroke-dashoffset: 0;
-	}
-	50% {
-		stroke-dasharray: 90, 150;
-		stroke-dashoffset: -35;
-	}
-	100% {
-		stroke-dasharray: 90, 150;
-		stroke-dashoffset: -124;
-	}
+    0% {
+        stroke-dasharray: 1, 150;
+        stroke-dashoffset: 0;
+    }
+    50% {
+        stroke-dasharray: 90, 150;
+        stroke-dashoffset: -35;
+    }
+    100% {
+        stroke-dasharray: 90, 150;
+        stroke-dashoffset: -124;
+    }
 }
 
 * {
-	-webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: transparent;
 }
