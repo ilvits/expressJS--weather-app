@@ -506,8 +506,8 @@ document.addEventListener('alpine:init', () => {
 
 // setup location Cards List on "My locations" (SlipJS)
 function setupSlip(list) {
+    let itemsArray = [];
     if (typeof locations !== 'undefined') {
-        let itemsArray = [];
         itemsArray = locations;
     } else {
         console.table('Locations undefined');
@@ -573,7 +573,7 @@ function setupSlip(list) {
             );
             event.preventDefault();
         } else {
-            reordered_locations = [];
+            let reordered_locations = [];
             const movedItem = itemsArray[fromSlide];
             itemsArray.splice(fromSlide, 1); // Remove item from the previous position
             itemsArray.splice(toSlide, 0, movedItem); // Insert item in the new position
