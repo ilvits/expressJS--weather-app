@@ -1359,26 +1359,6 @@
                             x-text="lang.settings.header"
                             class="text-lg font-semibold leading-5"
                         ></div>
-                        <!-- <ul>
-							<template x-for="card in slides" :key="card.id">
-								<li>
-									<div class="flex gap-2">
-										<div
-											@click="$dispatch('removecard', card)"
-											x-text="tempConverter(card.weatherData.currentConditions.temp) + ' °  '"
-										></div>
-										<div
-											@click="transitionOut()"
-											x-text="windConverter(card.weatherData.currentConditions.windspeed)"
-										></div>
-										<div
-											@click="transitionOut()"
-											x-text="pressureConverter(card.weatherData.currentConditions.pressure)"
-										></div>
-									</div>
-								</li>
-							</template>
-						</ul> -->
                     </header>
                     <!--  -->
                     <div
@@ -1423,13 +1403,13 @@
                         <section
                             id="set_wind"
                             class="flex items-center justify-between"
+                            @click="settingsChanged = true; settings.wind = !settings.wind; updateSettings('wind', settings.wind);"
                         >
                             <div
                                 class="text-base font-medium leading-5"
                                 x-text="lang.settings.wind.label"
                             ></div>
                             <div
-                                @click="settingsChanged = true; settings.wind = !settings.wind; updateSettings('wind', settings.wind);"
                                 class="relative h-7 w-32 rounded-md border border-primary-light dark:border-primary-dark"
                             >
                                 <div
@@ -1532,16 +1512,17 @@
                         <section
                             id="settings-theme-dropdown"
                             class="relative inline-flex items-center justify-between"
-                            @click="themeDropdown = true"
                         >
                             <div
                                 class="text-base font-medium leading-7"
                                 x-text="lang.settings.theme.label"
+                                @click="themeDropdown = true"
                             ></div>
                             <button
                                 type="button"
                                 x-text="lang.settings.theme.themes[settings.theme]"
                                 class="items-center text-base font-medium leading-5 text-primary-light dark:text-primary-dark"
+                                @click="themeDropdown = true"
                             ></button>
                             <div
                                 class="transition-500 fixed left-0 z-20 h-screen w-full bg-primary-backdrop/30 dark:bg-primary-backdrop/50"
@@ -1558,7 +1539,7 @@
                                 class="transition-transform-300 absolute right-0 top-10 z-20 -mt-10 w-[227px] origin-top-right divide-y divide-gray-100 rounded-xl border border-gray-100 bg-white py-2.5 px-4 text-base shadow-lg dark:divide-cosmic-800 dark:border-cosmic-800 dark:bg-cosmic-900"
                             >
                                 <li
-                                    @click="themeDropdown = false; settings.theme = 0; activateTheme(0);"
+                                    @click=" settings.theme = 0; activateTheme(0);"
                                     class="relative flex grow items-center py-2.5"
                                 >
                                     <div class="w-4">
@@ -1577,7 +1558,7 @@
                                     />
                                 </li>
                                 <li
-                                    @click="themeDropdown = false; settings.theme = 1; activateTheme(1);"
+                                    @click=" settings.theme = 1; activateTheme(1);"
                                     class="flex grow items-center py-2.5"
                                 >
                                     <div class="w-4">
@@ -1596,7 +1577,7 @@
                                     />
                                 </li>
                                 <li
-                                    @click="themeDropdown = false; settings.theme = 2; activateTheme(2);"
+                                    @click=" settings.theme = 2; activateTheme(2);"
                                     class="flex grow items-center py-2.5"
                                 >
                                     <div class="w-4">
@@ -1978,8 +1959,12 @@
                     x-init="detailedAtTop = true, changeColor(false)"
                     x-show="show"
                     x-transition:enter-start="translate-x-full"
+                    x-transition:leave="duration-700"
                     x-transition:leave-end="translate-x-full"
                     @scroll="detailedAtTop = $el.scrollTop < 44 ? true : false; legend = false; detailedAtTop ? changeColor(false) : changeColor(true)"
+                    @touchstart="start = Math.round($event.changedTouches[0].screenX); index = splide2.index"
+                    @touchmove.passive=""
+                    @touchend="stop = Math.round($event.changedTouches[0].screenX); console.log(stop - start, index); if (stop - start > 100 && index === 0) transitionOut()"
                     class="transition-all-500 fixed top-0 left-0 z-[10000] h-full w-full overflow-x-hidden overflow-y-scroll bg-white dark:bg-cosmic-900"
                 >
                     <header
@@ -2081,7 +2066,7 @@
                                         x-show="show"
                                         x-transition:enter-start="opacity-0"
                                         @detaileddayclose.window="closeday($event);"
-                                        class="splide__slide transition-opacity-500 flex w-full flex-col gap-4 bg-white duration-1000 dark:bg-cosmic-900"
+                                        class="splide__slide transition-500 flex w-full flex-col gap-4 bg-white duration-1000 dark:bg-cosmic-900"
                                     >
                                         <ul
                                             class="mt-2 flex flex-col divide-y divide-gray-100 dark:divide-cosmic-800"
@@ -2832,7 +2817,6 @@
 							inputFocus = false; 
 							menuLocationsBackdrop = false; 
 							searchClearText= false;
-							startUpdateInterval();
 							$dispatch('toast', { content: `Добавлена новая локация ${newLocation.name}` });
 							"
                     ></div>

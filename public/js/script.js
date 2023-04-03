@@ -133,6 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.onfocus = () => updateInfo();
 
         setupSlip(locationCardsContainer);
+        startUpdateInterval();
     }
 });
 
@@ -437,7 +438,7 @@ document.addEventListener('alpine:init', () => {
             ) {
                 this.show = false;
             }
-            setTimeout(() => this.removeday(day), 300);
+            setTimeout(() => this.removeday(day), 500);
         },
     }));
 
@@ -595,7 +596,7 @@ function setupSlip(list) {
 
 // Update all data in Slides and Cards after timeout
 function updateInfo(force = false) {
-    console.log('focus');
+    // console.log('focus');
     const date = new Date();
     const lastPageUpdate = new Date(localStorage.getItem('lastPageUpdate'));
     const delta = (date.getTime() - lastPageUpdate.getTime()) / 1000; // in sec
@@ -612,10 +613,10 @@ function updateInfo(force = false) {
             ).locale(language);
             console.log(
                 'last update: ',
-                lastUpdate.format('HH:mm') + ' || next update:',
-                lastUpdate.add(5, 'm').format('HH:mm')
+                lastUpdate.format('HH:mm:ss') + ' || next update:',
+                lastUpdate.add(5, 'm').format('HH:mm:ss')
             );
-            if (delta > 3600) {
+            if (delta > 300) {
                 console.log('update from API:', delta);
                 locations.forEach(location => {
                     getWeather(location);
