@@ -132,6 +132,41 @@ function startUpdateInterval() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    startUpdateInterval();
+    // Check if the API is supported
+    if ('setAppBadge' in navigator) {
+        navigator.setAppBadge(2).catch(error => {
+            console.log(error);
+        });
+    }
+
+    splide.on('overflow', function (isOverflow) {
+        splide.options = {
+            pagination: isOverflow,
+            drag: isOverflow,
+        };
+        if (isOverflow) {
+            splide.options.pagination = true;
+        } else {
+            // Not enough slides
+            splide.options.pagination = false;
+        }
+    });
+
+    splide.on('ready', function (mount) {
+        // console.log("*** Splide succesfully mounted ***");
+        if (splide.length) {
+            // console.log('slides:', splide.length);
+            // console.log('pagination', splide.options.pagination);
+            splide.options.pagination = true;
+        }
+    });
+
+    splide.on('moved', function (id) {
+        localStorage.activeSlide = id;
+    });
+
+    splide.mount();
     if (typeof locations !== 'undefined' && locations.length > 0) {
         locations.forEach(location => {
             const weatherData = localStorage.getItem(
@@ -149,41 +184,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.onfocus = () => updateInfo();
 
         setupSlip(locationCardsContainer);
-        startUpdateInterval();
-        // Check if the API is supported
-        if ('setAppBadge' in navigator) {
-            navigator.setAppBadge(2).catch(error => {
-                console.log(error);
-            });
-        }
-
-        splide.on('overflow', function (isOverflow) {
-            splide.options = {
-                pagination: isOverflow,
-                drag: isOverflow,
-            };
-            if (isOverflow) {
-                splide.options.pagination = true;
-            } else {
-                // Not enough slides
-                splide.options.pagination = false;
-            }
-        });
-
-        splide.on('ready', function (mount) {
-            // console.log("*** Splide succesfully mounted ***");
-            if (splide.length) {
-                // console.log('slides:', splide.length);
-                // console.log('pagination', splide.options.pagination);
-                splide.options.pagination = true;
-            }
-        });
-
-        splide.on('moved', function (id) {
-            localStorage.activeSlide = id;
-        });
-
-        splide.mount();
     }
 });
 
