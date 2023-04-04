@@ -4,21 +4,31 @@ async function getWeather(location, isPreview = false) {
     const lat = location.latitude;
     const lon = location.longitude;
     console.log('trying to update...');
-    try {
-        axios({
-            url: '/api/weather',
-            method: 'get',
-            params: {
-                lat,
-                lon,
-                lang: language,
-            },
-        }).then(response =>
-            parseWeatherData(location, response.data, isPreview)
-        );
-    } catch (err) {
-        console.warn({ message: err });
-    }
+    axios({
+        url: '/api/weather',
+        method: 'get',
+        params: {
+            lat,
+            lon,
+            lang: language,
+        },
+    })
+        .then(response => parseWeatherData(location, response.data, isPreview))
+        .catch(error => {
+            if (error.code === 'ERR_NETWORK') {
+                const message = languageStrings[language].errors.network;
+                window.dispatchEvent(
+                    new CustomEvent('toast', {
+                        detail: {
+                            type: 'error',
+                            data: 'weather',
+                            content: message,
+                            duration: 10000,
+                        },
+                    })
+                );
+            }
+        });
 }
 
 function parseWeatherData(location, data, isPreview) {
@@ -48,6 +58,7 @@ function parseWeatherData(location, data, isPreview) {
 
     let weatherData = {
         id: id,
+        lastUpdateEpoch: moment().unix(),
         raw: data,
         coordinates: {
             latitude: data.latitude,
@@ -79,17 +90,8 @@ function parseWeatherData(location, data, isPreview) {
         },
         days: data.days,
     };
-    // const icon = weatherData.currentConditions.icon;
-    // weatherData.currentConditions.icon =
-    // 	"img/assets/icons/weather-conditions/" + icon + ".svg";
-    // weatherData.currentConditions.smallicon =
-    // 	"img/assets/icons/weather-conditions/small/" + icon + ".svg";
 
     weatherData.days.forEach(day => {
-        // const icon = day.icon;
-        // day.icon = "img/assets/icons/weather-conditions/" + icon + ".svg";
-        // day.smallicon =
-        // 	"img/assets/icons/weather-conditions/small/" + icon + ".svg";
         const delta = day.sunsetEpoch - day.sunriseEpoch;
         day.daylight = moment
             .unix(delta)
@@ -108,20 +110,6 @@ function parseWeatherData(location, data, isPreview) {
             .utcOffset(timezone)
             .locale(language)
             .format('HH:mm');
-
-        // if (i < 16) {
-        // 	hours = day.hours;
-        // 	hours.forEach((hour) => {
-        // 		const icon = hour.icon;
-        // 		hour.icon =
-        // 			"img/assets/icons/weather-conditions/" + icon + ".svg";
-        // 		hour.smallicon =
-        // 			"img/assets/icons/weather-conditions/small/" +
-        // 			icon +
-        // 			".svg";
-        // 	});
-        // 	day.hours[i] = hours[i];
-        // }
     });
     console.log('isPreview', isPreview);
     if (isPreview) {
@@ -155,21 +143,30 @@ function saveWeatherData(id, weatherData) {
 }
 
 async function getSuggestions(query) {
-    try {
-        const response = await axios({
-            url: '/api/suggestions',
-            method: 'get',
-            params: {
-                string: query,
-                lang: language,
-            },
+    axios({
+        url: '/api/suggestions',
+        method: 'get',
+        params: {
+            string: query,
+            lang: language,
+        },
+    })
+        .then(response => parseSuggestions(response.data.features, query))
+        .catch(error => {
+            if (error.code === 'ERR_NETWORK') {
+                const message = languageStrings[language].errors.network;
+                window.dispatchEvent(
+                    new CustomEvent('toast', {
+                        detail: {
+                            type: 'error',
+                            data: 'weather',
+                            content: message,
+                            duration: 10000,
+                        },
+                    })
+                );
+            }
         });
-        const { data } = response;
-        parseSuggestions(data.features, query);
-        return await data;
-    } catch (err) {
-        console.warn({ message: err });
-    }
 }
 
 async function resolveAdress(position) {
@@ -188,5 +185,14 @@ async function resolveAdress(position) {
         return await data;
     } catch (err) {
         console.warn({ message: err });
+        window.dispatchEvent(
+            new CustomEvent('toast', {
+                detail: {
+                    type: 'error',
+                    content: err,
+                    duration: 10000,
+                },
+            })
+        );
     }
 }

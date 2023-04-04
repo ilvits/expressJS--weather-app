@@ -1145,7 +1145,7 @@
                                     >
                                         <img
                                             class="h-12 w-12 shrink-0"
-                                            :src="weatherIconsPath + weatherIcons[card.weatherData.currentConditions.icon]"
+                                            :src="weatherIconsPath + weatherIcons[checkIcon(card.weatherData.currentConditions.icon, card.weatherData.currentConditions.sunrise, card.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(card.weatherData.timezone).format('HH')))]"
                                             alt=""
                                         />
                                     </div>
@@ -1963,8 +1963,7 @@
                     x-transition:leave-end="translate-x-full"
                     @scroll="detailedAtTop = $el.scrollTop < 44 ? true : false; legend = false; detailedAtTop ? changeColor(false) : changeColor(true)"
                     @touchstart="start = Math.round($event.changedTouches[0].screenX); index = splide2.index"
-                    @touchmove.passive=""
-                    @touchend="stop = Math.round($event.changedTouches[0].screenX); console.log(stop - start, index); if (stop - start > 100 && index === 0) transitionOut()"
+                    @touchend="stop = Math.round($event.changedTouches[0].screenX); if (stop - start > 100 && !index) transitionOut()"
                     class="transition-all-500 fixed top-0 left-0 z-[10000] h-full w-full overflow-x-hidden overflow-y-scroll bg-white dark:bg-cosmic-900"
                 >
                     <header
@@ -3326,35 +3325,122 @@
                     x-show="show"
                     x-transition:enter-start="translate-y-48 h-0 my-0 p-0"
                     x-transition:leave-end="translate-y-48 h-0 my-0 p-0 opacity-0"
-                    class="toast--wrapper transition-all-500 my-1 flex items-start rounded-xl bg-[#424F69] p-4 text-white ease-[cubic-bezier(0.29,1.4,0.4,0.96)]"
+                    class="toast--wrapper transition-all-500 my-1 flex items-center rounded-xl bg-[#424F69] p-4 text-white ease-[cubic-bezier(0.29,1.4,0.4,0.96)]"
                 >
-                    <div
-                        class="icon shrink-0 stroke-white dark:stroke-cosmic-900"
-                    >
-                        <img
+                    <div class="icon h-5 w-5 shrink-0">
+                        <svg
                             x-show="toast.type === 'success'"
-                            src="img/assets/icons/noticeIcons/success.svg"
-                            alt=""
-                        />
-                        <img
+                            width="20"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                clip-rule="evenodd"
+                                d="M14.2155 6.912C14.5403 7.1691 14.5951 7.64079 14.338 7.96556L9.88491 13.5906C9.75421 13.7556 9.56014 13.8582 9.35011 13.8731C9.14008 13.8881 8.93344 13.814 8.78068 13.6691L5.73381 10.7785C5.43331 10.4934 5.42082 10.0187 5.7059 9.71821C5.99099 9.41771 6.4657 9.40522 6.7662 9.69031L9.21799 12.0164L13.162 7.0345C13.4191 6.70974 13.8908 6.65489 14.2155 6.912Z"
+                                fill="#5BC54A"
+                            />
+                            <rect
+                                x="0.75"
+                                y="0.75"
+                                width="18.5"
+                                height="18.5"
+                                rx="9.25"
+                                stroke="#5BC54A"
+                                stroke-width="1.5"
+                            />
+                        </svg>
+
+                        <svg
                             x-show="toast.type === 'info'"
-                            src="img/assets/icons/noticeIcons/info.svg"
-                            alt=""
-                        />
-                        <img
+                            width="20"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                clip-rule="evenodd"
+                                d="M8.4165 9.16663C8.4165 8.75241 8.75229 8.41663 9.1665 8.41663H9.99984C10.4141 8.41663 10.7498 8.75241 10.7498 9.16663V13.4166H10.8332C11.2474 13.4166 11.5832 13.7524 11.5832 14.1666C11.5832 14.5808 11.2474 14.9166 10.8332 14.9166H9.99984C9.58562 14.9166 9.24984 14.5808 9.24984 14.1666V9.91663H9.1665C8.75229 9.91663 8.4165 9.58084 8.4165 9.16663Z"
+                                fill="#3FD5FE"
+                            />
+                            <path
+                                d="M10.8332 5.83333C10.8332 6.29357 10.4601 6.66667 9.99984 6.66667C9.5396 6.66667 9.1665 6.29357 9.1665 5.83333C9.1665 5.3731 9.5396 5 9.99984 5C10.4601 5 10.8332 5.3731 10.8332 5.83333Z"
+                                fill="#3FD5FE"
+                            />
+                            <rect
+                                x="0.75"
+                                y="0.75"
+                                width="18.5"
+                                height="18.5"
+                                rx="9.25"
+                                stroke="#3FD5FE"
+                                stroke-width="1.5"
+                            />
+                        </svg>
+
+                        <svg
                             x-show="toast.type === 'warning'"
-                            src="img/assets/icons/noticeIcons/warning.svg"
-                            alt=""
-                        />
-                        <img
+                            width="20"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                clip-rule="evenodd"
+                                d="M10 5.25C10.4142 5.25 10.75 5.58579 10.75 6L10.75 11C10.75 11.4142 10.4142 11.75 10 11.75C9.58579 11.75 9.25 11.4142 9.25 11L9.25 6C9.25 5.58579 9.58579 5.25 10 5.25Z"
+                                fill="#F7D056"
+                            />
+                            <path
+                                fill-rule="evenodd"
+                                clip-rule="evenodd"
+                                d="M9.25 14.3333C9.25 13.919 9.58579 13.5833 10 13.5833H10.0083C10.4225 13.5833 10.7583 13.919 10.7583 14.3333C10.7583 14.7475 10.4225 15.0833 10.0083 15.0833H10C9.58579 15.0833 9.25 14.7475 9.25 14.3333Z"
+                                fill="#F7D056"
+                            />
+                            <rect
+                                x="0.75"
+                                y="0.75"
+                                width="18.5"
+                                height="18.5"
+                                rx="9.25"
+                                stroke="#F7D056"
+                                stroke-width="1.5"
+                            />
+                        </svg>
+
+                        <svg
                             x-show="toast.type === 'error'"
-                            src="img/assets/icons/noticeIcons/error.svg"
-                            alt=""
-                        />
+                            width="20"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                clip-rule="evenodd"
+                                d="M14.0053 5.99467C13.6791 5.66844 13.1502 5.66844 12.8239 5.99467L10 8.81861L7.17606 5.99467C6.84983 5.66844 6.3209 5.66844 5.99467 5.99467C5.66844 6.3209 5.66844 6.84983 5.99467 7.17606L8.81861 10L5.99467 12.8239C5.66844 13.1502 5.66844 13.6791 5.99467 14.0053C6.3209 14.3316 6.84983 14.3316 7.17606 14.0053L10 11.1814L12.8239 14.0053C13.1502 14.3316 13.6791 14.3316 14.0053 14.0053C14.3316 13.6791 14.3316 13.1502 14.0053 12.8239L11.1814 10L14.0053 7.17606C14.3316 6.84983 14.3316 6.3209 14.0053 5.99467Z"
+                                fill="#F46A47"
+                            />
+                            <rect
+                                x="0.75"
+                                y="0.75"
+                                width="18.5"
+                                height="18.5"
+                                rx="9.25"
+                                stroke="#F46A47"
+                                stroke-width="1.5"
+                            />
+                        </svg>
                     </div>
                     <div
                         x-html="toast.content"
-                        class="toast--text grow pl-2 text-sm font-medium leading-4"
+                        class="toast--text grow pl-4 text-sm font-medium leading-4"
                     ></div>
                     <button
                         class="toast--dismiss shrink-0 stroke-cosmic-500"
@@ -3419,61 +3505,7 @@
         <!-- <script src="js/installPromo.js"></script> -->
 
         <script>
-            const active_slide = localStorage.activeSlide || 0;
-            splide = new Splide('#main', {
-                // type: 'slide',
-                pagination: locations.length > 1 ? true : false,
-                speed: 700,
-                height: 'calc(100%)',
-                // autoHeight: true,
-                perPage: 1,
-                // perMove: 1,
-                start: active_slide || 0,
-                gap: '3rem',
-                arrows: false,
-                easing: 'cubic-bezier(.23,1,.32,1)',
-                noDrag: 'input, textarea, .no-drag',
-                classes: {
-                    page: 'bg-primary-light/30 dark:bg-primary-dark/40 h-1.5 w-1.5 [&.is-active]:bg-primary-light dark:[&.is-active]:bg-primary-dark rounded-full',
-                },
-            });
-
-            document.addEventListener('DOMContentLoaded', () => {
-                // Check if the API is supported
-                if ('setAppBadge' in navigator) {
-                    navigator.setAppBadge(2).catch(error => {
-                        console.log(error);
-                    });
-                }
-
-                splide.on('overflow', function (isOverflow) {
-                    splide.options = {
-                        pagination: isOverflow,
-                        drag: isOverflow,
-                    };
-                    if (isOverflow) {
-                        splide.options.pagination = true;
-                    } else {
-                        // Not enough slides
-                        splide.options.pagination = false;
-                    }
-                });
-
-                splide.on('ready', function (mount) {
-                    // console.log("*** Splide succesfully mounted ***");
-                    if (splide.length) {
-                        // console.log('slides:', splide.length);
-                        // console.log('pagination', splide.options.pagination);
-                        splide.options.pagination = true;
-                    }
-                });
-
-                splide.on('moved', function (id) {
-                    localStorage.activeSlide = id;
-                });
-
-                splide.mount();
-            });
+            document.addEventListener('DOMContentLoaded', () => {});
         </script>
     </body>
 </html>

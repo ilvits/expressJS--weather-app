@@ -1,5 +1,22 @@
 'use strict';
-
+const active_slide = localStorage.activeSlide || 0;
+const splide = new Splide('#main', {
+    // type: 'slide',
+    pagination: locations.length > 1 ? true : false,
+    speed: 700,
+    height: 'calc(100%)',
+    // autoHeight: true,
+    perPage: 1,
+    // perMove: 1,
+    start: active_slide || 0,
+    gap: '3rem',
+    arrows: false,
+    easing: 'cubic-bezier(.23,1,.32,1)',
+    noDrag: 'input, textarea, .no-drag',
+    classes: {
+        page: 'bg-primary-light/30 dark:bg-primary-dark/40 h-1.5 w-1.5 [&.is-active]:bg-primary-light dark:[&.is-active]:bg-primary-dark rounded-full',
+    },
+});
 document.body.style.webkitTouchCallout = 'none';
 const locationCardsContainer = document.querySelector(
     '#location-cards--container'
@@ -103,7 +120,6 @@ const addPopup = data => {
 
 function stopUpdateInterval() {
     clearInterval(updateInterval);
-    // release our intervalID from the variable
     updateInterval = null;
 }
 
@@ -111,7 +127,7 @@ function startUpdateInterval() {
     if (!updateInterval) {
         updateInterval = setInterval(() => {
             updateInfo();
-        }, 5000);
+        }, 10000);
     }
 }
 
@@ -134,6 +150,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
         setupSlip(locationCardsContainer);
         startUpdateInterval();
+        // Check if the API is supported
+        if ('setAppBadge' in navigator) {
+            navigator.setAppBadge(2).catch(error => {
+                console.log(error);
+            });
+        }
+
+        splide.on('overflow', function (isOverflow) {
+            splide.options = {
+                pagination: isOverflow,
+                drag: isOverflow,
+            };
+            if (isOverflow) {
+                splide.options.pagination = true;
+            } else {
+                // Not enough slides
+                splide.options.pagination = false;
+            }
+        });
+
+        splide.on('ready', function (mount) {
+            // console.log("*** Splide succesfully mounted ***");
+            if (splide.length) {
+                // console.log('slides:', splide.length);
+                // console.log('pagination', splide.options.pagination);
+                splide.options.pagination = true;
+            }
+        });
+
+        splide.on('moved', function (id) {
+            localStorage.activeSlide = id;
+        });
+
+        splide.mount();
     }
 });
 
@@ -141,6 +191,7 @@ window.addEventListener('weatherSaved', event => {
     console.log('after weather update: ', event.detail);
     const id = event.detail.id;
     const weatherData = event.detail.weatherData;
+    localStorage.setItem('lastPageUpdate', new Date());
 
     window.dispatchEvent(
         new CustomEvent('updateslide', {
@@ -477,12 +528,15 @@ document.addEventListener('alpine:init', () => {
         duration: 2500,
         add(event) {
             console.log(event.detail);
-            this.toasts.push({
-                id: Date.now() + Math.floor(Math.random() * 1000000),
-                type: event.detail.type || 'success',
-                content: event.detail.content,
-            });
-            this.duration = event.detail.duration || 2500;
+            console.log(this.toasts.length);
+            if (event.detail.data === 'weather' && this.toasts.length === 0) {
+                this.toasts.push({
+                    id: Date.now() + Math.floor(Math.random() * 1000000),
+                    type: event.detail.type || 'success',
+                    content: event.detail.content,
+                });
+                this.duration = event.detail.duration || 2500;
+            }
         },
         remove(toast) {
             this.toasts = this.toasts.filter(i => i.id !== toast.id);
@@ -597,34 +651,76 @@ function setupSlip(list) {
 // Update all data in Slides and Cards after timeout
 function updateInfo(force = false) {
     // console.log('focus');
-    const date = new Date();
-    const lastPageUpdate = new Date(localStorage.getItem('lastPageUpdate'));
-    const delta = (date.getTime() - lastPageUpdate.getTime()) / 1000; // in sec
-    if (typeof locations !== undefined || locations.length > 0) {
-        if (force) {
-            console.log('*** Force update ***');
-            locations.forEach(location => {
-                getWeather(location);
-            });
-            localStorage.setItem('lastPageUpdate', new Date());
-        } else {
-            const lastUpdate = moment(
-                new Date(localStorage.getItem('lastPageUpdate'))
-            ).locale(language);
-            console.log(
-                'last update: ',
-                lastUpdate.format('HH:mm:ss') + ' || next update:',
-                lastUpdate.add(5, 'm').format('HH:mm:ss')
+    if (force) {
+        console.log('*** Force update ***');
+        locations.forEach(location => {
+            const lastUpdate = moment.unix(
+                JSON.parse(localStorage.getItem('weatherData-' + location.id))
+                    .lastUpdateEpoch
             );
-            if (delta > 300) {
-                console.log('update from API:', delta);
-                locations.forEach(location => {
-                    getWeather(location);
-                });
-                localStorage.setItem('lastPageUpdate', new Date());
+            getWeather(location);
+            console.log(lastUpdate.locale(language).format('DD.MMM, HH:mm:ss'));
+        });
+    } else {
+        locations.forEach(location => {
+            const lastUpdate = moment.unix(
+                JSON.parse(localStorage.getItem('weatherData-' + location.id))
+                    .lastUpdateEpoch
+            );
+            const timeDelta = moment().diff(lastUpdate, 'minutes');
+            if (timeDelta >= 5) {
+                getWeather(location);
+                console.log(
+                    location.name,
+                    'updated:',
+                    lastUpdate.locale(language).format('DD.MMM, HH:mm:ss')
+                );
+            } else {
+                console.log(location.name);
+                console.log(
+                    'Last Update:',
+                    lastUpdate.locale(language).format('DD.MMM, HH:mm:ss'),
+                    '(',
+                    timeDelta,
+                    'minutes ago )'
+                );
+                console.log(
+                    'Next Update:',
+                    lastUpdate.add(5, 'm').format('DD.MMM, HH:mm:ss'),
+                    '\n\n'
+                );
             }
-        }
+        });
     }
+
+    // console.log('focus');
+    // const date = new Date();
+    // const lastPageUpdate = new Date(localStorage.getItem('lastPageUpdate'));
+    // const delta = (date.getTime() - lastPageUpdate.getTime()) / 1000; // in sec
+    // if (typeof locations !== undefined || locations.length > 0) {
+    //     if (force) {
+    //         console.log('*** Force update ***');
+    //         locations.forEach(location => {
+    //             getWeather(location);
+    //         });
+    //         localStorage.setItem('lastPageUpdate', new Date());
+    //     } else {
+    //         const lastUpdate = moment(
+    //             new Date(localStorage.getItem('lastPageUpdate'))
+    //         ).locale(language);
+    //         console.log(
+    //             'last update: ',
+    //             lastUpdate.format('HH:mm:ss') + ' || next update:',
+    //             lastUpdate.add(5, 'm').format('HH:mm:ss')
+    //         );
+    //         if (delta > 300) {
+    //             console.log('update from API:', delta);
+    //             locations.forEach(location => {
+    //                 getWeather(location);
+    //             });
+    //         }
+    //     }
+    // }
 }
 
 function displayMode() {
@@ -677,6 +773,15 @@ async function requestUserCountry() {
             localStorage.setItem('userCountry', userCountry);
         } catch (err) {
             console.warn({ message: err });
+            window.dispatchEvent(
+                new CustomEvent('toast', {
+                    detail: {
+                        type: 'error',
+                        content: err,
+                        duration: 10000,
+                    },
+                })
+            );
         }
     }
 }
@@ -876,14 +981,6 @@ function changeColor(atTop = true) {
 }
 
 function moonphaseConverter(m) {
-    // 0 – new moon
-    // 0-0.25 – waxing crescent
-    // 0.25 – first quarter
-    // 0.25-0.5 – waxing gibbous
-    // 0.5 – full moon
-    // 0.5-0.75 – waning gibbous
-    // 0.75 – last quarter
-    // 0.75 -1 – waning crescent
     switch (true) {
         case m === 0:
             return 'new';
@@ -1055,13 +1152,3 @@ function showError(error) {
             break;
     }
 }
-
-// let loading = anime.timeline({ autoplay: false, loop: false }).add({
-// 	targets: ".spinner .path",
-// 	// scale: [1, 2],
-// 	translateX: [-50, 50],
-// 	// opacity: [1, 0],
-// 	// easing: "easeInOutExpo",
-// 	// rotateZ: 360,
-// 	duration: 1100,
-// });
