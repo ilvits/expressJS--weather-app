@@ -1,10 +1,15 @@
-var express = require("express");
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const path = require('path');
 
 /* GET home page. */
-router.get("/", function (req, res, next) {
-	// res.render('index');
-	res.sendFile(path.join(__dirname, "/index.html"));
+router.get('/', function (req, res, next) {
+    // res.render('index');
+    res.sendFile(path.join(__dirname, '/index.html'));
+});
+
+router.get('/img/assets/icons/**/*', function (req, res) {
+    res.sendFile(path.join(__dirname, '../public/img/assets/icons/blank.png'));
 });
 
 // app.get("/", function (req, res) {

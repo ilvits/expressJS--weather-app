@@ -1,33 +1,14 @@
 'use strict';
-const active_slide = localStorage.activeSlide || 0;
-const splide = new Splide('#main', {
-    // type: 'slide',
-    pagination: locations.length > 1 ? true : false,
-    speed: 700,
-    height: 'calc(100%)',
-    // autoHeight: true,
-    perPage: 1,
-    // perMove: 1,
-    start: active_slide || 0,
-    gap: '3rem',
-    arrows: false,
-    easing: 'cubic-bezier(.23,1,.32,1)',
-    noDrag: 'input, textarea, .no-drag',
-    classes: {
-        page: 'bg-primary-light/30 dark:bg-primary-dark/40 h-1.5 w-1.5 [&.is-active]:bg-primary-light dark:[&.is-active]:bg-primary-dark rounded-full',
-    },
-});
-document.body.style.webkitTouchCallout = 'none';
-const locationCardsContainer = document.querySelector(
-    '#location-cards--container'
-);
 
-let splide2;
-let updateInterval;
+let splide2, updateInterval;
+document.body.style.webkitTouchCallout = 'none';
+const active_slide = localStorage.getItem('activeSlide') || 0;
 const moonPhaseIconsPath = 'img/assets/icons/moonphases/';
 const weatherIconsPath = 'img/assets/icons/weather-conditions/';
 const weatherIconsSmallPath = 'img/assets/icons/weather-conditions/small/';
-
+const locationCardsContainer = document.querySelector(
+    '#location-cards--container'
+);
 const moonPhaseIcons = {
     new: 'new.svg',
     waxingcrescent: 'waxingcrescent.svg',
@@ -73,6 +54,49 @@ const weatherIcons = {
     'thunder-showers-day': 'thunder-showers-day.svg',
     'thunder-showers-night': 'thunder-showers-night.svg',
 };
+
+const splide = new Splide('#main', {
+    // type: 'slide',
+    pagination: locations.length > 1 ? true : false,
+    speed: 700,
+    height: 'calc(100%)',
+    // autoHeight: true,
+    perPage: 1,
+    // perMove: 1,
+    start: active_slide || 0,
+    gap: '3rem',
+    arrows: false,
+    easing: 'cubic-bezier(.23,1,.32,1)',
+    noDrag: 'input, textarea, .no-drag',
+    classes: {
+        page: 'bg-primary-light/30 dark:bg-primary-dark/40 h-1.5 w-1.5 [&.is-active]:bg-primary-light dark:[&.is-active]:bg-primary-dark rounded-full',
+    },
+});
+
+splide.on('overflow', function (isOverflow) {
+    splide.options = {
+        pagination: isOverflow,
+        drag: isOverflow,
+    };
+    if (isOverflow) {
+        splide.options.pagination = true;
+    } else {
+        // Not enough slides
+        splide.options.pagination = false;
+    }
+});
+splide.on('ready', function (mount) {
+    // console.log("*** Splide succesfully mounted ***");
+    if (splide.length) {
+        // console.log('slides:', splide.length);
+        // console.log('pagination', splide.options.pagination);
+        splide.options.pagination = true;
+    }
+});
+
+splide.on('moved', function (id) {
+    localStorage.activeSlide = id;
+});
 
 const svgCheck =
     '<svg class="stroke-primary-light dark:stroke-primary-dark" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.66675 8L6.66675 12L13.3334 4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>';
@@ -140,33 +164,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    splide.on('overflow', function (isOverflow) {
-        splide.options = {
-            pagination: isOverflow,
-            drag: isOverflow,
-        };
-        if (isOverflow) {
-            splide.options.pagination = true;
-        } else {
-            // Not enough slides
-            splide.options.pagination = false;
-        }
-    });
+    setTimeout(() => {
+        splide.mount();
+    }, 100);
 
-    splide.on('ready', function (mount) {
-        // console.log("*** Splide succesfully mounted ***");
-        if (splide.length) {
-            // console.log('slides:', splide.length);
-            // console.log('pagination', splide.options.pagination);
-            splide.options.pagination = true;
-        }
-    });
-
-    splide.on('moved', function (id) {
-        localStorage.activeSlide = id;
-    });
-
-    splide.mount();
     if (typeof locations !== 'undefined' && locations.length > 0) {
         locations.forEach(location => {
             const weatherData = localStorage.getItem(
@@ -181,27 +182,25 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        window.onfocus = () => updateInfo();
+        // window.onfocus = () => updateInfo();
 
         setupSlip(locationCardsContainer);
     }
 });
 
 window.addEventListener('weatherSaved', event => {
-    console.log('after weather update: ', event.detail);
-    const id = event.detail.id;
-    const weatherData = event.detail.weatherData;
-    localStorage.setItem('lastPageUpdate', new Date());
-
+    console.log('after weather update: ', event);
     window.dispatchEvent(
         new CustomEvent('updateslide', {
             detail: {
-                id,
-                weatherData,
+                isUpdate: event.detail.isUpdate,
+                data: {
+                    id: event.detail.data.id,
+                    weatherData: event.detail.data.weatherData,
+                },
             },
         })
     );
-
     setTimeout(() => {
         splide.refresh();
     }, 150);
@@ -209,26 +208,31 @@ window.addEventListener('weatherSaved', event => {
 
 // updateAppData = (value) => window.appData.update(value);
 
-function updateLocation(data) {
-    console.log('update Location id:', data.detail.id);
+function updateLocation(data, userLocation = false) {
+    // console.log('update Location id:', data.detail.id);
     const id = data.detail.id;
-    const index = locations.findIndex(location => Number(location.id) === id);
-    for (key in data.detail) {
+    const index = userLocation
+        ? 0
+        : locations.findIndex(location => Number(location.id) === id);
+    for (let key in data.detail) {
         locations[index] = { ...locations[index], [key]: data.detail[key] };
     }
-    window.dispatchEvent(
-        new CustomEvent('updateslide', {
-            detail: { id, location: locations[index] },
-        })
-    );
-    window.dispatchEvent(
-        new CustomEvent('updatecard', {
-            detail: { id, location: locations[index] },
-        })
-    );
+    setTimeout(() => {
+        window.dispatchEvent(
+            new CustomEvent('updateslide', {
+                detail: {
+                    isUpdate: true,
+                    data: {
+                        id,
+                        location: locations[index],
+                    },
+                },
+            })
+        );
+    }, 500);
     setTimeout(() => {
         splide.refresh();
-    }, 100);
+    }, 600);
     localStorage.setItem('locations', JSON.stringify(locations));
 }
 
@@ -280,21 +284,26 @@ document.addEventListener('alpine:init', () => {
             }, 100);
         },
         update(event) {
-            const index = this.slides.findIndex(
-                slide => slide.id === event.detail.id
-            );
+            console.log('***');
+            console.log('isUpdate:', event.detail);
+            const index = event.detail.isUpdate
+                ? 0
+                : this.slides.findIndex(
+                      slide => slide.id === event.detail.data.id
+                  );
+            console.log('index:', index);
             if (index !== -1) {
-                for (let key in event.detail) {
+                for (let key in event.detail.data) {
                     this.slides[index] = {
                         ...this.slides[index],
-                        [key]: event.detail[key],
+                        [key]: event.detail.data[key],
                     };
                 }
                 setTimeout(() => {
                     splide.refresh();
                 }, 100);
             } else {
-                console.warn('slide not found');
+                console.warn('slide not found', index);
             }
         },
         swap(event) {
@@ -529,13 +538,19 @@ document.addEventListener('alpine:init', () => {
         add(event) {
             console.log(event.detail);
             console.log(this.toasts.length);
+            this.duration = event.detail.duration || 2500;
             if (event.detail.data === 'weather' && this.toasts.length === 0) {
                 this.toasts.push({
                     id: Date.now() + Math.floor(Math.random() * 1000000),
                     type: event.detail.type || 'success',
                     content: event.detail.content,
                 });
-                this.duration = event.detail.duration || 2500;
+            } else {
+                this.toasts.push({
+                    id: Date.now() + Math.floor(Math.random() * 1000000),
+                    type: event.detail.type || 'success',
+                    content: event.detail.content,
+                });
             }
         },
         remove(toast) {
@@ -547,7 +562,7 @@ document.addEventListener('alpine:init', () => {
         show: false,
         init() {
             console.log('show toast');
-            console.log(this.duration);
+            // console.log(this.duration);
             this.$nextTick(() => (this.show = true));
             setTimeout(() => this.transitionOut(), this.duration);
         },
@@ -675,6 +690,9 @@ function updateInfo(force = false) {
                     'updated:',
                     lastUpdate.locale(language).format('DD.MMM, HH:mm:ss')
                 );
+                locations[0].isUserLocation === 'true'
+                    ? getUserLocation(true)
+                    : undefined;
             } else {
                 console.log(location.name);
                 console.log(
@@ -759,7 +777,6 @@ function deleteLocations() {
     locations = [];
 }
 
-requestUserCountry();
 // Request User Country code. User country hide in location search suggestions.
 async function requestUserCountry() {
     if (!localStorage.getItem('userCountry')) {
@@ -786,6 +803,8 @@ async function requestUserCountry() {
     }
 }
 
+requestUserCountry();
+
 function inputProcessing(el) {
     const suggestionList = document.querySelector('.suggestions-list');
 
@@ -807,7 +826,12 @@ function inputProcessing(el) {
     }
 }
 
-function parseSuggestions(features, searchText, isUserLocation = false) {
+function parseSuggestions(
+    features,
+    searchText,
+    isUserLocation = false,
+    update = false
+) {
     const suggestionList = document.querySelector('.suggestions-list');
     const searchInput = document.querySelector('#searchInput');
     const nothingFound = document.querySelector(
@@ -866,7 +890,7 @@ function parseSuggestions(features, searchText, isUserLocation = false) {
             );
             const country = feature.context[contextCountryId].text;
 
-            if (isUserLocation === true) {
+            if (isUserLocation) {
                 window.dispatchEvent(
                     new CustomEvent('addpopup3', {
                         detail: {
@@ -881,6 +905,18 @@ function parseSuggestions(features, searchText, isUserLocation = false) {
                         },
                     })
                 );
+            } else if (update) {
+                const location = {
+                    id: id,
+                    name: name,
+                    country: country,
+                    region: region,
+                    countryCode: countryCode,
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    isUserLocation: 'true',
+                };
+                console.log(location);
             } else {
                 searchText = capitalize(searchText);
                 // console.log(searchText);
@@ -1050,19 +1086,29 @@ function classToggle(el, ...args) {
     args.map(e => el.classList.toggle(e));
 }
 
-function getUserLocation() {
+function getUserLocation(update = false) {
     const options = {
-        enableHighAccuracy: true,
+        // enableHighAccuracy: true,
         timeout: 10000,
+        maximumAge: 0,
     };
 
     // console.log(navigator.geolocation);
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            resolveAdress,
-            showError,
-            options
-        );
+        if (update) {
+            navigator.geolocation.getCurrentPosition(
+                userLocationSuccess =>
+                    resolveAdress(userLocationSuccess, update),
+                showError,
+                options
+            );
+        } else {
+            navigator.geolocation.getCurrentPosition(
+                resolveAdress,
+                showError,
+                options
+            );
+        }
     } else {
         x = 'Geolocation is not supported by this browser.';
     }

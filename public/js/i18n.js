@@ -123,7 +123,8 @@ const languageStrings = {
         errors: {
             timeout: 'Время ожидания запроса истекло. Попробуйте позже.',
             network:
-                "<b class='text-sm'>Не могу соединиться с сервером.</b> <br>Проверьте соединение с интернетом",
+                // "<b class='text-sm'>Не могу соединиться с сервером.</b> <br>Проверьте соединение с интернетом",
+                'Отсутствует подключение к Интернету',
         },
         placeholders: {
             main: {
@@ -264,7 +265,8 @@ const languageStrings = {
         errors: {
             timeout: 'The request to get user location timed out.',
             network:
-                "<b class='text-sm'>Can't connect to the server.</b> <br>Please check internet connection",
+                // "<b class='text-sm'>Can't connect to the server.</b> <br>Please check internet connection",
+                'No internet connection',
         },
         placeholders: {
             main: {

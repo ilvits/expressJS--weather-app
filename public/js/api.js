@@ -1,6 +1,6 @@
 'use strict';
 
-async function getWeather(location, isPreview = false) {
+async function getWeather(location, isPreview = false, isUpdate = false) {
     const lat = location.latitude;
     const lon = location.longitude;
     console.log('trying to update...');
@@ -13,14 +13,16 @@ async function getWeather(location, isPreview = false) {
             lang: language,
         },
     })
-        .then(response => parseWeatherData(location, response.data, isPreview))
+        .then(response =>
+            parseWeatherData(location, response.data, isPreview, isUpdate)
+        )
         .catch(error => {
             if (error.code === 'ERR_NETWORK') {
                 const message = languageStrings[language].errors.network;
                 window.dispatchEvent(
                     new CustomEvent('toast', {
                         detail: {
-                            type: 'error',
+                            type: 'warning',
                             data: 'weather',
                             content: message,
                             duration: 10000,
@@ -31,7 +33,7 @@ async function getWeather(location, isPreview = false) {
         });
 }
 
-function parseWeatherData(location, data, isPreview) {
+function parseWeatherData(location, data, isPreview, isUpdate) {
     // console.log(data);
     const id = Number(location.id);
     const delta =
@@ -123,23 +125,24 @@ function parseWeatherData(location, data, isPreview) {
                 },
             })
         );
-        saveWeatherData(id, weatherData);
-    } else {
-        saveWeatherData(id, weatherData);
     }
+    saveWeatherData(id, weatherData, isUpdate);
 }
 
-function saveWeatherData(id, weatherData) {
+function saveWeatherData(id, weatherData, isUpdate) {
+    console.log('isUpdate', isUpdate);
     localStorage.setItem('weatherData-' + id, JSON.stringify(weatherData));
     window.dispatchEvent(
         new CustomEvent('weatherSaved', {
             detail: {
-                id,
-                weatherData,
+                data: {
+                    id,
+                    weatherData,
+                },
+                isUpdate,
             },
         })
     );
-    return weatherData;
 }
 
 async function getSuggestions(query) {
@@ -169,30 +172,107 @@ async function getSuggestions(query) {
         });
 }
 
-async function resolveAdress(position) {
-    try {
-        const response = await axios({
-            url: '/api/resolveadress',
-            method: 'get',
-            params: {
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
-                lang: language,
-            },
+async function updateAdress(position) {
+    axios({
+        url: '/api/resolveadress',
+        method: 'get',
+        params: {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            lang: language,
+        },
+    })
+        .then(response =>
+            updateUserLocation(response.data.features, '', false, true)
+        )
+        .then(response => {
+            return response;
+        })
+        .catch(error => {
+            if (error.code === 'ERR_NETWORK') {
+                const message = languageStrings[language].errors.network;
+                window.dispatchEvent(
+                    new CustomEvent('toast', {
+                        detail: {
+                            type: 'error',
+                            data: 'weather',
+                            content: message,
+                            duration: 10000,
+                        },
+                    })
+                );
+            }
         });
-        const { data } = response;
-        parseSuggestions(data.features, '', true);
-        return await data;
-    } catch (err) {
-        console.warn({ message: err });
-        window.dispatchEvent(
-            new CustomEvent('toast', {
-                detail: {
-                    type: 'error',
-                    content: err,
-                    duration: 10000,
-                },
-            })
-        );
-    }
 }
+
+async function resolveAdress(position, update) {
+    axios({
+        url: '/api/resolveadress',
+        method: 'get',
+        params: {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            lang: language,
+        },
+    })
+        .then(response =>
+            update
+                ? parseUserAdress(response.data.features[0], update)
+                : parseSuggestions(response.data.features, '', true)
+        )
+        .catch(error => {
+            console.warn({ message: error });
+            window.dispatchEvent(
+                new CustomEvent('toast', {
+                    detail: {
+                        type: 'error',
+                        content: error.message,
+                        duration: 10000,
+                    },
+                })
+            );
+        });
+}
+
+const parseUserAdress = (feature, update) => {
+    console.log(feature);
+    const id = Number(feature.id.split('.')[1]);
+    const name = feature.text;
+    const countryCode =
+        feature.context[
+            feature.context.findIndex(item => item.id.includes('country'))
+        ].short_code;
+    let region;
+    if (feature.context.findIndex(item => item.id.includes('region')) !== -1) {
+        region =
+            feature.context[
+                feature.context.findIndex(item => item.id.includes('region'))
+            ].text;
+    }
+
+    const contextCountryId = feature.context.findIndex(item =>
+        item.id.includes('country')
+    );
+    const country = feature.context[contextCountryId].text;
+    const position = {
+        coords: {
+            longitude: feature.geometry.coordinates[0],
+            latitude: feature.geometry.coordinates[1],
+        },
+    };
+    const data = {
+        detail: {
+            id: id,
+            name: name,
+            originalName: name,
+            country: country,
+            region: region,
+            countryCode: countryCode,
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            isUserLocation: 'true',
+        },
+    };
+    updateLocation(data, update);
+    getWeather(data.detail, false, update);
+};
