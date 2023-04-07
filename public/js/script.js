@@ -105,8 +105,6 @@ const svgSystemTheme =
 const svgClearText =
     '<svg class="stroke-gray-300 dark:stroke-cosmic-500 stroke-1.5" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <circle cx="10" cy="10" r="9.25" /><path d="M7 13L10 10M10 10L13 7M10 10L7 7M10 10L13 13" stroke-linecap="round" stroke-linejoin="round" /></svg>';
 
-localStorage.setItem('lastPageUpdate', new Date());
-
 const checkDarkMode = () => document.documentElement.classList.contains('dark');
 
 function checkIcon(iconName, sunrise, sunset, hour) {
@@ -156,6 +154,7 @@ function startUpdateInterval() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    document.scrollingElement.scrollTop = 0;
     startUpdateInterval();
     // Check if the API is supported
     if ('setAppBadge' in navigator) {
@@ -182,23 +181,17 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // window.onfocus = () => updateInfo();
+        window.onfocus = () => updateInfo();
 
         setupSlip(locationCardsContainer);
     }
 });
 
 window.addEventListener('weatherSaved', event => {
-    console.log('after weather update: ', event);
+    console.log('after weather update: ', event.detail);
     window.dispatchEvent(
         new CustomEvent('updateslide', {
-            detail: {
-                isUpdate: event.detail.isUpdate,
-                data: {
-                    id: event.detail.data.id,
-                    weatherData: event.detail.data.weatherData,
-                },
-            },
+            detail: event.detail,
         })
     );
     setTimeout(() => {
@@ -704,41 +697,12 @@ function updateInfo(force = false) {
                 );
                 console.log(
                     'Next Update:',
-                    lastUpdate.add(5, 'm').format('DD.MMM, HH:mm:ss'),
-                    '\n\n'
+                    lastUpdate.add(5, 'm').format('DD.MMM, HH:mm:ss')
                 );
+                console.log();
             }
         });
     }
-
-    // console.log('focus');
-    // const date = new Date();
-    // const lastPageUpdate = new Date(localStorage.getItem('lastPageUpdate'));
-    // const delta = (date.getTime() - lastPageUpdate.getTime()) / 1000; // in sec
-    // if (typeof locations !== undefined || locations.length > 0) {
-    //     if (force) {
-    //         console.log('*** Force update ***');
-    //         locations.forEach(location => {
-    //             getWeather(location);
-    //         });
-    //         localStorage.setItem('lastPageUpdate', new Date());
-    //     } else {
-    //         const lastUpdate = moment(
-    //             new Date(localStorage.getItem('lastPageUpdate'))
-    //         ).locale(language);
-    //         console.log(
-    //             'last update: ',
-    //             lastUpdate.format('HH:mm:ss') + ' || next update:',
-    //             lastUpdate.add(5, 'm').format('HH:mm:ss')
-    //         );
-    //         if (delta > 300) {
-    //             console.log('update from API:', delta);
-    //             locations.forEach(location => {
-    //                 getWeather(location);
-    //             });
-    //         }
-    //     }
-    // }
 }
 
 function displayMode() {
