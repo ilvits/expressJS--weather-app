@@ -834,7 +834,6 @@
                 ></div>
 
                 <section
-                    id="container-settings"
                     class="relative flex h-full flex-col gap-6 overflow-x-hidden overflow-y-scroll"
                 >
                     <!-- HEADER -->
@@ -922,7 +921,7 @@
                             </button>
                         </div>
                         <section
-                            class="transition-all-500 absolute h-screen w-full overflow-x-hidden overflow-y-scroll"
+                            class="transition-all-500 absolute w-full overflow-x-hidden overflow-y-scroll"
                             x-show="inputFocus"
                             x-transition:enter-start="opacity-0"
                             x-transition:leave-end="opacity-0"
@@ -1041,24 +1040,18 @@
                             <li
                                 @click="locationsEditMode ? false : splide.go(slides.findIndex((item) => item.id === card.id)); locationsEditMode ? false : menuLocations = false"
                                 x-ref="cardItem"
-                                x-transition:leave-end="opacity-0 h-0 my-0 -translate-x-full"
+                                x-transition:leave-end="opacity-0 h-[0px] my-0 -translate-x-full"
                                 class="no-reorder no-swipe transition-all-500 my-2 flex h-[85px] items-center"
                                 :isuserlocation="card.location.isUserLocation"
                             >
-                                <div
-                                    x-show="locationsEditMode && index === 0"
-                                    x-transition:enter-start="opacity-0"
-                                    x-transition:leave-end="opacity-0"
-                                    class="transition-opacity-500 absolute top-0 left-0 z-10 h-full w-full bg-primary-backdrop/40"
-                                ></div>
                                 <!-- *** edit buttons *** -->
                                 <section
-                                    x-show="locationsEditMode && index !== 0"
+                                    x-show="locationsEditMode"
                                     x-transition:enter-start="w-[calc(100%_-_100px)]"
                                     x-transition:enter-end="w-full"
                                     x-transition:leave-start="w-full"
                                     x-transition:leave-end="w-[calc(100%_-_100px)]"
-                                    :class="locationsEditMode && index !== 0 ? 'w-full z-0' : 'w-[calc(100%_-_100px)] -z-10'"
+                                    :class="locationsEditMode ? 'w-full z-0' : 'w-[calc(100%_-_100px)] -z-10'"
                                     class="location-card--edit-buttons-container transition-all-500 no-reorder no-swipe absolute left-1/2 flex h-[80px] -translate-x-1/2 justify-between"
                                 >
                                     <button
@@ -1077,9 +1070,9 @@
                                     </button>
                                     <button
                                         type="button"
-                                        x-show="locationsEditMode && index !== 0"
+                                        x-show="locationsEditMode"
                                         @click="
-											$el.closest('li').classList.add('opacity-0', 'h-0', 'my-0', '-translate-x-[calc(100%_+_100px)]');
+											$el.closest('li').classList.add('opacity-0', 'h-[0px]', 'my-0', '-translate-x-[calc(100%_+_100px)]');
 											setTimeout(() => { $dispatch('removecard', card) }, 500)"
                                         class="trash no-reorder no-swipe absolute -right-[100px] z-50"
                                     >
@@ -1123,11 +1116,17 @@
                                 <!-- *** card *** -->
                                 <section
                                     class="card__wrapper no-reorder no-swipe pointer-events-none items-center"
-                                    :class="locationsEditMode && index !== 0 ? 'h-[80px] w-[calc(100%_-_100px)]' : 'h-[85px] w-full'"
+                                    :class="locationsEditMode ? 'h-[80px] w-[calc(100%_-_100px)]' : 'h-[85px] w-full'"
                                 >
                                     <div
+                                        x-show="locationsEditMode && index === 0"
+                                        x-transition:enter-start="opacity-0"
+                                        x-transition:leave-end="opacity-0"
+                                        class="transition-opacity-500 absolute top-0 left-0 z-10 h-full w-full rounded-2xl bg-white/60 dark:bg-primary-backdrop/40"
+                                    ></div>
+                                    <div
                                         class="card__location-info absolute flex flex-auto flex-col"
-                                        :class="locationsEditMode && index !== 0 ? 'w-[calc(100%_-_64px)] ' : 'w-[calc(100%_-_160px)]'"
+                                        :class="locationsEditMode ? 'w-[calc(100%_-_64px)] ' : 'w-[calc(100%_-_160px)]'"
                                     >
                                         <small
                                             x-text="moment().locale(language).utcOffset(card.weatherData.timezone).format('HH:mm')"
@@ -1161,8 +1160,8 @@
                                         </div>
                                         <span
                                             x-show="index === 0 ? true : !locationsEditMode"
-                                            x-transition:enter-start="opacity-0 translate-y-1 h-0"
-                                            x-transition:leave-end="opacity-0 translate-y-1 h-0"
+                                            x-transition:enter-start="opacity-0 translate-y-1 h-[0px]"
+                                            x-transition:leave-end="opacity-0 translate-y-1 h-[0px]"
                                             x-text="card.weatherData.currentConditions.conditions"
                                             class="card__current-condition transition-all-300 h-3.5 truncate"
                                         ></span>
@@ -1427,10 +1426,7 @@
                     x-transition:leave-end="opacity-0"
                     class="transition-all-500 fixed top-0 left-0 z-20 h-full w-full bg-primary-backdrop/60 backdrop-blur-lg dark:bg-primary-backdrop/50"
                 ></div>
-                <section
-                    id="container-settings"
-                    class="relative grid grid-flow-row gap-6"
-                >
+                <section class="relative grid grid-flow-row gap-6">
                     <!-- HEADER -->
                     <header
                         @click="settingsChanged ? updateInfo(true) : ''; settingsChanged = false;"
@@ -1797,58 +1793,59 @@
                         </div>
                     </div>
                 </section>
-                <!-- About -->
-                <section
-                    class="transition-all-500 fixed top-0 left-0 z-[100] h-full w-full overflow-x-hidden overflow-y-scroll bg-gray-100/80 pb-20 backdrop-blur-xl dark:bg-cosmic-900/80"
-                    x-cloak
-                    x-show="modalAbout"
-                    x-transition:enter-start="opacity-0 scale-95"
-                    x-transition:enter-end=""
-                    x-transition:leave-start=""
-                    x-transition:leave-end="opacity-0 scale-95"
-                >
-                    <div class="relative flex flex-col gap-6">
-                        <header
-                            class="sticky top-0 z-10 flex h-12 w-full items-center justify-between bg-gray-100/50 px-4 pt-4 pb-1 backdrop-blur-md dark:bg-cosmic-900/80"
+            </section>
+            <!-- About -->
+            <section
+                class="transition-all-500 fixed top-0 left-0 h-full w-full overflow-x-hidden overflow-y-scroll bg-gray-100/80 pb-20 backdrop-blur-xl dark:bg-cosmic-900/80"
+                x-cloak
+                x-show="modalAbout"
+                x-transition:enter-start="opacity-0 scale-95"
+                x-transition:enter-end=""
+                x-transition:leave-start=""
+                x-transition:leave-end="opacity-0 scale-95"
+            >
+                <div class="relative flex flex-col gap-6">
+                    <header
+                        class="sticky top-0 z-10 flex h-12 w-full items-center justify-between bg-gray-100/50 px-4 pt-4 pb-1 backdrop-blur-md dark:bg-cosmic-900/80"
+                    >
+                        <div class="w-6"></div>
+                        <div
+                            x-text="lang.settings.about.header"
+                            class="grow text-center text-base font-semibold leading-8"
+                        ></div>
+                        <div
+                            class="w-6 stroke-primary-light dark:stroke-primary-dark"
+                            @click="modalAbout = false"
                         >
-                            <div class="w-6"></div>
-                            <div
-                                x-text="lang.settings.about.header"
-                                class="grow text-center text-base font-semibold leading-8"
-                            ></div>
-                            <div
-                                class="w-6 stroke-primary-light dark:stroke-primary-dark"
-                                @click="modalAbout = false"
+                            <svg
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
                             >
-                                <svg
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        d="M6.44971 16.9502L11.6997 11.7002M11.6997 11.7002L16.9497 6.4502M11.6997 11.7002L6.44971 6.4502M11.6997 11.7002L16.9497 16.9502"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    />
-                                </svg>
-                            </div>
-                        </header>
-                        <section
-                            x-html="lang.settings.about.text"
-                            class="flex w-full flex-col gap-4 bg-white p-6 text-sm leading-4 dark:bg-cosmic-800"
-                        ></section>
-                        <section
-                            class="flex w-full flex-col items-start gap-2 truncate text-base font-medium leading-5"
-                        >
-                            <button
-                                class="px-6 py-2.5"
-                                @click="window.location.href = 'https://t.me/fairybrainsWeather';"
-                                x-text="lang.settings.about.links[0]"
-                            ></button>
-                            <!-- <button
+                                <path
+                                    d="M6.44971 16.9502L11.6997 11.7002M11.6997 11.7002L16.9497 6.4502M11.6997 11.7002L6.44971 6.4502M11.6997 11.7002L16.9497 16.9502"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                            </svg>
+                        </div>
+                    </header>
+                    <section
+                        x-html="lang.settings.about.text"
+                        class="flex w-full flex-col gap-4 bg-white p-6 text-sm leading-4 dark:bg-cosmic-800"
+                    ></section>
+                    <section
+                        class="flex w-full flex-col items-start gap-2 truncate text-base font-medium leading-5"
+                    >
+                        <button
+                            class="px-6 py-2.5"
+                            @click="window.location.href = 'https://t.me/fairybrainsWeather';"
+                            x-text="lang.settings.about.links[0]"
+                        ></button>
+                        <!-- <button
 								class="px-6 py-2.5"
 								x-text="lang.settings.about.links[1]"
 							></button>
@@ -1856,11 +1853,9 @@
 								class="px-6 py-2.5"
 								x-text="lang.settings.about.links[2]"
 							></button> -->
-                        </section>
-                    </div>
-                </section>
+                    </section>
+                </div>
             </section>
-
             <!-- *? TAP BAR ?* -->
             <section
                 id="tapbar"
@@ -2049,7 +2044,7 @@
                         $el.style.transitionDuration = '0ms'"
                     @touchmove="
                         stop = Math.round($event.changedTouches[0].screenX); 
-                        if (!index && stop-start > 0) $el.style.left=`${stop - start}px`
+                        if (!index && stop-start > 0) $el.style.left=`${(stop - start)/3}px`
                         console.log(stop-start);
                         "
                     @touchend="
@@ -2759,7 +2754,7 @@
                         $el.style.transitionDuration = '0ms'"
                     @touchmove="
                         stop = Math.round($event.changedTouches[0].screenX); 
-                        $el.style.left=`${stop - start}px`"
+                        $el.style.left=`${(stop - start)/3}px`"
                     @touchend="
                         $el.style.transitionDuration = '700ms'; 
                         stop = Math.round($event.changedTouches[0].screenX); 
@@ -3512,8 +3507,8 @@
                 <li
                     x-data="toast"
                     x-show="show"
-                    x-transition:enter-start="translate-y-48 h-0 my-0 p-0"
-                    x-transition:leave-end="translate-y-48 h-0 my-0 p-0 opacity-0"
+                    x-transition:enter-start="translate-y-48 h-[0px] my-0 p-0"
+                    x-transition:leave-end="translate-y-48 h-[0px] my-0 p-0 opacity-0"
                     class="toast--wrapper transition-all-500 my-1 flex items-center rounded-xl bg-[#424F69] p-4 text-white ease-[cubic-bezier(0.29,1.4,0.4,0.96)]"
                 >
                     <div class="icon h-5 w-5 shrink-0">

@@ -8,7 +8,13 @@ router.get('/', function (req, res, next) {
     res.sendFile(path.join(__dirname, '/index.html'));
 });
 
-router.get('/img/assets/icons/**/*', function (req, res) {
+router.get('/img/assets/icons/weather-conditions/*', function (req, res) {
+    res.sendFile(
+        path.join(__dirname, '../public/img/assets/icons/emptypic.svg')
+    );
+});
+
+router.get('/img/assets/icons/*', function (req, res) {
     res.sendFile(path.join(__dirname, '../public/img/assets/icons/blank.png'));
 });
 

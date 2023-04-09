@@ -154,7 +154,6 @@ function startUpdateInterval() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.scrollingElement.scrollTop = 0;
     startUpdateInterval();
     // Check if the API is supported
     if ('setAppBadge' in navigator) {
