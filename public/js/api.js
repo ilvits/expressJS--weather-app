@@ -1,6 +1,10 @@
 'use strict';
 
-async function getWeather(location, isPreview = false, isUpdate = false) {
+async function getWeather(
+    location,
+    isPreview = false,
+    geoPositionUpdate = false
+) {
     const lat = location.latitude;
     const lon = location.longitude;
     console.log('trying to update...');
@@ -14,7 +18,12 @@ async function getWeather(location, isPreview = false, isUpdate = false) {
         },
     })
         .then(response =>
-            parseWeatherData(location, response.data, isPreview, isUpdate)
+            parseWeatherData(
+                location,
+                response.data,
+                isPreview,
+                geoPositionUpdate
+            )
         )
         .catch(error => {
             if (error.code === 'ERR_NETWORK') {
@@ -33,7 +42,7 @@ async function getWeather(location, isPreview = false, isUpdate = false) {
         });
 }
 
-function parseWeatherData(location, data, isPreview, isUpdate) {
+function parseWeatherData(location, data, isPreview, geoPositionUpdate) {
     // console.log(data);
     const id = Number(location.id);
     const delta =
@@ -126,11 +135,11 @@ function parseWeatherData(location, data, isPreview, isUpdate) {
             })
         );
     }
-    saveWeatherData(id, weatherData, isUpdate);
+    saveWeatherData(id, weatherData, geoPositionUpdate);
 }
 
-function saveWeatherData(id, weatherData, isUpdate) {
-    console.log('isUpdate', isUpdate);
+function saveWeatherData(id, weatherData, geoPositionUpdate) {
+    // console.log('geoPositionUpdate', geoPositionUpdate);
     localStorage.setItem('weatherData-' + id, JSON.stringify(weatherData));
     window.dispatchEvent(
         new CustomEvent('weatherSaved', {
@@ -139,7 +148,7 @@ function saveWeatherData(id, weatherData, isUpdate) {
                     id,
                     weatherData,
                 },
-                isUpdate,
+                geoPositionUpdate,
             },
         })
     );
@@ -262,17 +271,20 @@ const parseUserAdress = (feature, update) => {
     };
     const data = {
         detail: {
-            id: id,
-            name: name,
-            originalName: name,
-            country: country,
-            region: region,
-            countryCode: countryCode,
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            isUserLocation: 'true',
+            data: {
+                id: id,
+                name: name,
+                originalName: name,
+                country: country,
+                region: region,
+                countryCode: countryCode,
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+                isUserLocation: 'true',
+            },
+            geoPositionUpdate: update,
         },
     };
     updateLocation(data, update);
-    getWeather(data.detail, false, update);
+    getWeather(data.detail.data, false, update);
 };

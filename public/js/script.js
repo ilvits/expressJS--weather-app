@@ -183,6 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.onfocus = () => updateInfo();
 
         setupSlip(locationCardsContainer);
+        updateInfo();
     }
 });
 
@@ -200,20 +201,23 @@ window.addEventListener('weatherSaved', event => {
 
 // updateAppData = (value) => window.appData.update(value);
 
-function updateLocation(data, userLocation = false) {
+function updateLocation(locationData, userLocation = false) {
     // console.log('update Location id:', data.detail.id);
-    const id = data.detail.id;
+    const id = locationData.detail.data.id;
     const index = userLocation
         ? 0
         : locations.findIndex(location => Number(location.id) === id);
-    for (let key in data.detail) {
-        locations[index] = { ...locations[index], [key]: data.detail[key] };
+    for (let key in locationData.detail.data) {
+        locations[index] = {
+            ...locations[index],
+            [key]: locationData.detail.data[key],
+        };
     }
     setTimeout(() => {
         window.dispatchEvent(
             new CustomEvent('updateslide', {
                 detail: {
-                    isUpdate: true,
+                    geoPositionUpdate: locationData.detail.geoPositionUpdate,
                     data: {
                         id,
                         location: locations[index],
@@ -277,8 +281,8 @@ document.addEventListener('alpine:init', () => {
         },
         update(event) {
             console.log('***');
-            console.log('isUpdate:', event.detail);
-            const index = event.detail.isUpdate
+            console.log('Update Data:', event.detail.data);
+            const index = event.detail.geoPositionUpdate
                 ? 0
                 : this.slides.findIndex(
                       slide => slide.id === event.detail.data.id
@@ -669,7 +673,7 @@ function updateInfo(force = false) {
             console.log(lastUpdate.locale(language).format('DD.MMM, HH:mm:ss'));
         });
     } else {
-        locations.forEach(location => {
+        locations.forEach((location, index) => {
             const lastUpdate = moment.unix(
                 JSON.parse(localStorage.getItem('weatherData-' + location.id))
                     .lastUpdateEpoch
@@ -677,12 +681,12 @@ function updateInfo(force = false) {
             const timeDelta = moment().diff(lastUpdate, 'minutes');
             if (timeDelta >= 5) {
                 getWeather(location);
-                console.log(
-                    location.name,
-                    'updated:',
-                    lastUpdate.locale(language).format('DD.MMM, HH:mm:ss')
-                );
-                locations[0].isUserLocation === 'true'
+                // console.log(
+                //     location.name,
+                //     'updated:',
+                //     lastUpdate.locale(language).format('DD.MMM, HH:mm:ss')
+                // );
+                index === 0 && locations[0].isUserLocation === 'true'
                     ? getUserLocation(true)
                     : undefined;
             } else {

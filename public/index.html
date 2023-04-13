@@ -1444,8 +1444,16 @@
 									console.log(editedCard);
 									locationEditModal = false; 
 									menuLocationsBackdrop = false;
-									updateLocation({ detail: { id: editedCard.id, name: editedCard.originalName }})
-									$dispatch('toast', { content: `Название локации изменено на ${editedCard.originalName}` })
+									updateLocation({ 
+                                        detail: { 
+                                            data: { 
+                                                id: editedCard.id, 
+                                                name: editedCard.originalName,
+                                            }, 
+                                            geoPositionUpdate: false,
+                                        } 
+                                    });
+									$dispatch('toast', { content: `${lang.toasts.renameLocation} <b>${editedCard.originalName}</b>` })
 								"
                                 class="pt-4 text-left text-sm text-primary-light dark:text-primary-dark"
                             ></button>
@@ -1465,8 +1473,16 @@
 									console.log(editedCard);
 									locationEditModal = false; 
 									menuLocationsBackdrop = false;
-									updateLocation({ detail: { id: editedCard.id, name: $refs.editLocationInput.value }})
-									$dispatch('toast', { content: `Название локации изменено на ${$refs.editLocationInput.value}` })
+									updateLocation({ 
+                                        detail: { 
+                                            data: { 
+                                                id: editedCard.id, 
+                                                name: $refs.editLocationInput.value,
+                                            }, 
+                                            geoPositionUpdate: false,
+                                        }
+                                    });
+									$dispatch('toast', { content: `${lang.toasts.renameLocation} <b>${$refs.editLocationInput.value}</b>` })
 									"
                                 x-text="lang.common.buttons.ok"
                             ></button>
@@ -3031,7 +3047,7 @@
 							inputFocus = false;
 							menuLocationsBackdrop = false; 
 							searchClearText= false;
-							$dispatch('toast', { content: `Добавлена новая локация ${newLocation.name}` });
+							$dispatch('toast', { content: `${lang.toasts.newLocation} <b>${newLocation.name}</b>` });
 							"
                     ></div>
                     <template x-for="slide in location" :key="slide.id">

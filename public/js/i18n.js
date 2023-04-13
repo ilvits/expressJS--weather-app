@@ -140,6 +140,10 @@ const languageStrings = {
                 text: 'Разрешите определить Ваше местоположение, чтобы не тратить время на поиск.',
             },
         },
+        toasts: {
+            newLocation: 'Добавлена новая локация',
+            renameLocation: 'Название локации изменено на',
+        },
     },
     en: {
         common: {
@@ -281,6 +285,10 @@ const languageStrings = {
                 header: 'Add your current location?',
                 text: "Let us determine your location so you don't waste time looking for it by yourself.",
             },
+        },
+        toasts: {
+            newLocation: 'Added new location',
+            renameLocation: 'Location renamed to',
         },
     },
 };
