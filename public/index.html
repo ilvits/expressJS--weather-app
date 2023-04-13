@@ -1200,12 +1200,11 @@
                                     <div class="no-reorder no-swipe grow"></div>
                                     <button
                                         type="button"
-                                        class="no-swipe w-10"
-                                        :class="card.location.isUserLocation === 'true' ? 'opacity-50 no-reorder' : 'opacity-100 instant'"
+                                        class="no-swipe instant w-10"
+                                        :class="card.location.isUserLocation === 'true' ? 'opacity-50' : 'opacity-100'"
                                     >
                                         <svg
-                                            class="no-swipe fill-gray-300 dark:fill-cosmic-400"
-                                            :class="card.location.isUserLocation === 'true' ? 'no-reorder' : 'instant'"
+                                            class="no-swipe instant fill-gray-300 dark:fill-cosmic-400"
                                             width="40"
                                             height="40"
                                             viewBox="0 0 40 40"
@@ -1238,7 +1237,7 @@
                                     :class="locationsEditMode ? 'h-[80px] w-[calc(100%_-_100px)]' : 'h-[85px] w-full'"
                                 >
                                     <div
-                                        x-show="locationsEditMode && index === 0"
+                                        x-show="locationsEditMode && card.location.isUserLocation === 'true'"
                                         x-transition:enter-start="opacity-0"
                                         x-transition:leave-end="opacity-0"
                                         class="transition-opacity-500 absolute top-0 left-0 z-10 h-full w-full rounded-2xl bg-white/60 dark:bg-primary-backdrop/40"
@@ -1278,7 +1277,7 @@
                                             </div>
                                         </div>
                                         <span
-                                            x-show="index === 0 ? true : !locationsEditMode"
+                                            x-show="!locationsEditMode"
                                             x-transition:enter-start="opacity-0 translate-y-1 h-[0px]"
                                             x-transition:leave-end="opacity-0 translate-y-1 h-[0px]"
                                             x-text="card.weatherData.currentConditions.conditions"
@@ -1286,7 +1285,7 @@
                                         ></span>
                                     </div>
                                     <div
-                                        x-show="index === 0 ? true : !locationsEditMode"
+                                        x-show="!locationsEditMode"
                                         x-transition:enter-start="opacity-0 scale-50 translate-x-20"
                                         x-transition:leave-end="opacity-0 scale-50 translate-x-20"
                                         class="card__weather-info transition-500 absolute right-16 flex w-20 shrink-0 flex-col items-center"
@@ -1337,7 +1336,7 @@
                                         </small>
                                     </div>
                                     <div
-                                        x-show="index === 0 ? true : !locationsEditMode"
+                                        x-show="card.location.isUserLocation === 'true' ? true : !locationsEditMode"
                                         x-transition:enter-start="opacity-0 scale-50"
                                         x-transition:leave-end="opacity-0 scale-50"
                                         class="card__weather-icon transition-all-500 absolute right-4 h-12 w-12 shrink-0"
@@ -1350,7 +1349,7 @@
                                     </div>
                                 </section>
                                 <button
-                                    x-show="locationsEditMode && index !== 0"
+                                    x-show="locationsEditMode && card.location.isUserLocation === 'false'"
                                     x-transition:enter-start="opacity-0"
                                     x-transition:leave-end="opacity-0"
                                     @click="

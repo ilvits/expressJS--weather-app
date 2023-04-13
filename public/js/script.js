@@ -179,9 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 weatherData,
             });
         });
-
         window.onfocus = () => updateInfo();
-
         setupSlip(locationCardsContainer);
         updateInfo();
     }
@@ -198,8 +196,6 @@ window.addEventListener('weatherSaved', event => {
         splide.refresh();
     }, 150);
 });
-
-// updateAppData = (value) => window.appData.update(value);
 
 function updateLocation(locationData, userLocation = false) {
     // console.log('update Location id:', data.detail.id);
@@ -277,17 +273,17 @@ document.addEventListener('alpine:init', () => {
                 : this.slides.push(event.detail);
             setTimeout(() => {
                 splide.refresh();
+                if (this.slides.length <= 1) {
+                    setupSlip(locationCardsContainer);
+                }
             }, 100);
         },
         update(event) {
-            console.log('***');
-            console.log('Update Data:', event.detail.data);
             const index = event.detail.geoPositionUpdate
                 ? 0
                 : this.slides.findIndex(
                       slide => slide.id === event.detail.data.id
                   );
-            console.log('index:', index);
             if (index !== -1) {
                 for (let key in event.detail.data) {
                     this.slides[index] = {
@@ -395,12 +391,12 @@ document.addEventListener('alpine:init', () => {
         show: false,
 
         init() {
-            console.log('show newLocation');
+            // console.log('show newLocation');
             this.$nextTick(() => (this.show = true));
         },
 
         transitionOut() {
-            console.log('hide newLocation');
+            // console.log('hide newLocation');
             this.show = false;
             setTimeout(() => this.removepopup3(this.newLocation), 500);
             setTimeout(() => this.removelocation(this.slide), 500);
@@ -411,13 +407,13 @@ document.addEventListener('alpine:init', () => {
         showslide: false,
 
         init() {
-            console.log('show newSlide');
+            // console.log('show newSlide');
             this.isLoading = false;
             this.$nextTick(() => (this.showslide = true));
         },
 
         transitionOut() {
-            console.log('hide newSlide');
+            // console.log('hide newSlide');
             this.showslide = false;
             setTimeout(() => this.removelocation(this.slide), 500);
         },
@@ -532,8 +528,7 @@ document.addEventListener('alpine:init', () => {
         toasts: [],
         duration: 2500,
         add(event) {
-            console.log(event.detail);
-            console.log(this.toasts.length);
+            // console.log(event.detail);
             this.duration = event.detail.duration || 2500;
             if (event.detail.data === 'weather' && this.toasts.length === 0) {
                 this.toasts.push({
@@ -614,17 +609,17 @@ function setupSlip(list) {
     list.addEventListener(
         'slip:beforereorder',
         function (event) {
-            if (event.target.classList.contains('no-reorder')) {
+            if (
+                event.target.classList.contains('no-reorder') ||
+                event.target.closest('li').attributes.isuserlocation.value ===
+                    'true'
+            ) {
                 event.preventDefault();
             }
         },
         false
     );
     list.addEventListener('slip:reorder', function (event) {
-        console.log(
-            'isuserlocation',
-            event.target.attributes.isuserlocation.value
-        );
         const fromSlide = event.detail.originalIndex - 1;
         const toSlide = event.detail.spliceIndex - 1;
         if (
@@ -633,10 +628,6 @@ function setupSlip(list) {
                 event.detail.insertBefore.attributes.isuserlocation.value ===
                     'true')
         ) {
-            console.log(
-                'isuserlocation',
-                event.target.attributes.isuserlocation.value
-            );
             event.preventDefault();
         } else {
             let reordered_locations = [];
@@ -654,6 +645,7 @@ function setupSlip(list) {
                 })
             );
             localStorage.setItem('locations', JSON.stringify(locations));
+            itemsArray = locations;
         }
     });
     return new Slip(list);
@@ -661,52 +653,104 @@ function setupSlip(list) {
 
 // Update all data in Slides and Cards after timeout
 function updateInfo(force = false) {
-    // console.log('focus');
+    // If force is true, update all locations regardless of last update time
     if (force) {
         console.log('*** Force update ***');
+        // Iterate through each location
         locations.forEach(location => {
+            // Get the last update time for this location from local storage
             const lastUpdate = moment.unix(
                 JSON.parse(localStorage.getItem('weatherData-' + location.id))
                     .lastUpdateEpoch
             );
+            // Call the getWeather function for this location
             getWeather(location);
-            console.log(lastUpdate.locale(language).format('DD.MMM, HH:mm:ss'));
         });
     } else {
+        // Otherwise, only update locations that have not been updated in the last 5 minutes
         locations.forEach((location, index) => {
+            // Get the last update time for this location from local storage
             const lastUpdate = moment.unix(
                 JSON.parse(localStorage.getItem('weatherData-' + location.id))
                     .lastUpdateEpoch
             );
+            // Calculate the time between now and the last update time in minutes
             const timeDelta = moment().diff(lastUpdate, 'minutes');
             if (timeDelta >= 5) {
+                // If the time difference is greater than or equal to 5 minutes, update this location
                 getWeather(location);
-                // console.log(
-                //     location.name,
-                //     'updated:',
-                //     lastUpdate.locale(language).format('DD.MMM, HH:mm:ss')
-                // );
+                // if the location is the user's location (index 0), update the user's geolocation
                 index === 0 && locations[0].isUserLocation === 'true'
                     ? getUserLocation(true)
                     : undefined;
-            } else {
-                console.log(location.name);
-                console.log(
-                    'Last Update:',
-                    lastUpdate.locale(language).format('DD.MMM, HH:mm:ss'),
-                    '(',
-                    timeDelta,
-                    'minutes ago )'
-                );
-                console.log(
-                    'Next Update:',
-                    lastUpdate.add(5, 'm').format('DD.MMM, HH:mm:ss')
-                );
-                console.log();
+                // } else {
+                //     // Otherwise, log the last and next update times for this location
+                //     console.log(location.name);
+                //     console.log(
+                //         'Last Update:',
+                //         lastUpdate.locale(language).format('DD.MMM, HH:mm:ss'),
+                //         '(',
+                //         timeDelta,
+                //         'minutes ago )'
+                //     );
+                //     console.log(
+                //         'Next Update:',
+                //         lastUpdate.add(5, 'm').format('DD.MMM, HH:mm:ss')
+                //     );
+                //     console.log();
             }
         });
     }
 }
+
+// // Update all data in Slides and Cards after timeout
+// function updateInfo(force = false) {
+//     // console.log('focus');
+//     if (force) {
+//         console.log('*** Force update ***');
+//         locations.forEach(location => {
+//             const lastUpdate = moment.unix(
+//                 JSON.parse(localStorage.getItem('weatherData-' + location.id))
+//                     .lastUpdateEpoch
+//             );
+//             getWeather(location);
+//             console.log(lastUpdate.locale(language).format('DD.MMM, HH:mm:ss'));
+//         });
+//     } else {
+//         locations.forEach((location, index) => {
+//             const lastUpdate = moment.unix(
+//                 JSON.parse(localStorage.getItem('weatherData-' + location.id))
+//                     .lastUpdateEpoch
+//             );
+//             const timeDelta = moment().diff(lastUpdate, 'minutes');
+//             if (timeDelta >= 5) {
+//                 getWeather(location);
+//                 // console.log(
+//                 //     location.name,
+//                 //     'updated:',
+//                 //     lastUpdate.locale(language).format('DD.MMM, HH:mm:ss')
+//                 // );
+//                 index === 0 && locations[0].isUserLocation === 'true'
+//                     ? getUserLocation(true)
+//                     : undefined;
+//             } else {
+//                 console.log(location.name);
+//                 console.log(
+//                     'Last Update:',
+//                     lastUpdate.locale(language).format('DD.MMM, HH:mm:ss'),
+//                     '(',
+//                     timeDelta,
+//                     'minutes ago )'
+//                 );
+//                 console.log(
+//                     'Next Update:',
+//                     lastUpdate.add(5, 'm').format('DD.MMM, HH:mm:ss')
+//                 );
+//                 console.log();
+//             }
+//         });
+//     }
+// }
 
 function displayMode() {
     let displayMode = 'browser';
