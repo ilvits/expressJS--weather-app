@@ -1883,7 +1883,7 @@
 										splide.refresh();
 									}, 500);
 									stopUpdateInterval();
-									$dispatch('toast', { content: 'Все добавленные локации удалены' })
+									$dispatch('toast', { content: lang.toasts.clearLocations });
 									"
                                 x-text="lang.common.buttons.delete"
                             ></button>
@@ -1921,7 +1921,7 @@
 									lang = languageStrings[settings.lang ? 'en' : 'ru']
 									modalResetSettings = false;
 									menuSettingsBackdrop = false;
-									$dispatch('toast', { content: 'Все настройки сброшены' })
+									$dispatch('toast', { content: lang.toasts.resetSettings })
 								"
                                 x-text="lang.common.buttons.reset"
                             ></button>

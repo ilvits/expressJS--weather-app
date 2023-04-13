@@ -143,6 +143,8 @@ const languageStrings = {
         toasts: {
             newLocation: 'Добавлена новая локация',
             renameLocation: 'Название локации изменено на',
+            resetSettings: 'Настройки сброшены',
+            clearLocations: 'Все добавленные локации удалены',
         },
     },
     en: {
@@ -289,6 +291,8 @@ const languageStrings = {
         toasts: {
             newLocation: 'Added new location',
             renameLocation: 'Location renamed to',
+            resetSettings: 'All settings reset',
+            clearLocations: 'All locations deleted',
         },
     },
 };
