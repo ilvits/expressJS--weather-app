@@ -232,10 +232,19 @@ const isDesktop = () => {
         )
     );
 };
-screen.orientation.onchange = () => {
-    console.log('orientation changed: ' + screen.orientation.type);
-    window.dispatchEvent(new CustomEvent('orientationchange'));
-};
+
+screen.orientation
+    ? (screen.orientation.onchange = () => {
+          console.log(
+              'orientation changed: ' + screen.orientation.type,
+              window.orientation
+          );
+          window.dispatchEvent(new CustomEvent('orientationchange'));
+      })
+    : (onorientationchange = () => {
+          //   console.log(window.orientation);
+          document.dispatchEvent(new CustomEvent('orientationchange'));
+      });
 
 document.addEventListener('alpine:init', () => {
     Alpine.data('main', () => ({
@@ -274,21 +283,36 @@ document.addEventListener('alpine:init', () => {
             if (isDesktop()) {
                 this.orientation = 'portrait';
             } else {
-                if (
-                    window.orientation === 0 ||
-                    window.orientation === 180 ||
-                    screen.orientation.type === 'portrait-primary' ||
-                    screen.orientation.type === 'portrait-secondary'
-                ) {
-                    console.log('That looks good.');
-                    this.orientation = 'portrait';
-                    this.orientationDeg = -window.orientation;
+                if (typeof screen.orientation === 'undefined') {
+                    if (
+                        window.orientation === 0 ||
+                        window.orientation === 180
+                    ) {
+                        console.log('That looks good.');
+                        this.orientation = 'portrait';
+                        this.orientationDeg = -window.orientation;
+                    } else {
+                        console.log(
+                            'Mmmh… you should rotate your device to portrait'
+                        );
+                        this.orientation = 'landscape';
+                        this.orientationDeg = -window.orientation;
+                    }
                 } else {
-                    console.log(
-                        'Mmmh… you should rotate your device to portrait'
-                    );
-                    this.orientation = 'landscape';
-                    this.orientationDeg = -window.orientation;
+                    if (
+                        screen.orientation.type === 'portrait-primary' ||
+                        screen.orientation.type === 'portrait-secondary'
+                    ) {
+                        console.log('That looks good.');
+                        this.orientation = 'portrait';
+                        this.orientationDeg = -window.orientation;
+                    } else {
+                        console.log(
+                            'Mmmh… you should rotate your device to portrait'
+                        );
+                        this.orientation = 'landscape';
+                        this.orientationDeg = -window.orientation;
+                    }
                 }
             }
         },
