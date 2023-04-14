@@ -13,7 +13,7 @@ module.exports = {
     theme: {
         screens: {
             xs: '380px',
-            sm: '500px',
+            sm: '550px',
             md: '768px',
             lg: '976px',
             xl: '1440px',
@@ -56,6 +56,12 @@ module.exports = {
                     '0%, 100%': { transform: 'rotate(-6deg)' },
                     '50%': { transform: 'rotate(6deg)' },
                 },
+                'phonerotate': {
+                    '0%': { opacity: 0 },
+                    '10%, 90%': { opacity: 1 },
+                    '30%, 100%': { transform: 'rotate(0deg)' },
+                    '100%': { opacity: 0 },
+                },
             },
             animation: {
                 'fly': 'fly 3s running infinite',
@@ -63,6 +69,7 @@ module.exports = {
                 'spin-slow': 'spin 3s running infinite',
                 'wiggle-3': 'wiggle-3 1s ease-in-out infinite',
                 'wiggle-6': 'wiggle-6 1s ease-in-out infinite',
+                'phonerotate': 'phonerotate 3s ease-in-out infinite',
             },
             zIndex: {
                 60: '60',

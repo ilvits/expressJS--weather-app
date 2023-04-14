@@ -42,6 +42,12 @@
         src: url(../fonts/Nunito/Nunito-VariableFont_wght.woff2) format('woff');
         font-display: swap;
     }
+    @font-face {
+        font-family: 'Nunito';
+        font-weight: 900;
+        src: url(../fonts/Nunito/Nunito-VariableFont_wght.woff2) format('woff');
+        font-display: swap;
+    }
 }
 /* @font-face {
     font-family: 'Noto_Emoji';

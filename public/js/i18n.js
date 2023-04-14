@@ -139,6 +139,9 @@ const languageStrings = {
                 header: 'Добавить вашу геолокацию?',
                 text: 'Разрешите определить Ваше местоположение, чтобы не тратить время на поиск.',
             },
+            phoneRotate: {
+                text: 'Пожалуйста, поверните телефон в портретный режим',
+            },
         },
         toasts: {
             newLocation: 'Добавлена новая локация',
@@ -286,6 +289,9 @@ const languageStrings = {
             addUserLocation: {
                 header: 'Add your current location?',
                 text: "Let us determine your location so you don't waste time looking for it by yourself.",
+            },
+            phoneRotate: {
+                text: 'Please rotate your phone in portrait mode',
             },
         },
         toasts: {
