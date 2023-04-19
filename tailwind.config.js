@@ -107,6 +107,8 @@ module.exports = {
             'current': 'currentColor',
             'black': colors.black,
             'white': colors.white,
+            'green': colors.green,
+            'rose': colors.rose,
             'red': colors.red,
             'primary-backdrop': '#14181F',
             'primary-light': '#3377FF',

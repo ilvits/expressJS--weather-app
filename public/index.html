@@ -9,6 +9,10 @@
         <meta name="format-detection" content="telephone=no" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta
+            name="description"
+            content="Get real-time information about temperature, humidity, barometric pressure and other factors that affect the weather, and make plans with the confidence that the wrong weather won't ruin them."
+        />
+        <meta
             name="viewport"
             content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
         />
@@ -471,12 +475,12 @@
                                                 </div>
                                                 <!-- * DETAILS * -->
                                                 <div
-                                                    class="transition-all-500 w-full overflow-hidden font-semibold"
+                                                    class="transition-all-500 -mx-4 overflow-hidden font-semibold"
                                                     :class="details ?' h-[232px] opacity-100' : 'h-[0px] opacity-0'"
                                                 >
                                                     <div
                                                         id="details-1"
-                                                        class="relative grid h-[120px] w-full grid-flow-col items-end justify-around"
+                                                        class="relative grid h-[120px] w-full grid-cols-3 items-end justify-around"
                                                     >
                                                         <div
                                                             class="detail-item transition-300 absolute flex h-full w-full -translate-x-1 -translate-y-5 justify-center overflow-hidden"
@@ -573,24 +577,25 @@
                                                                 class="flex flex-col items-center gap-1.5 leading-[18px]"
                                                             >
                                                                 <div
-                                                                    x-text="lang.weather.tempmax"
+                                                                    x-text="`t° ${lang.weather.tempmax}, ${lang.weather.tempmin}`"
                                                                     class="text-xs font-light text-gray-300 dark:text-cosmic-500"
                                                                 ></div>
                                                                 <div
-                                                                    x-text="tempConverter(slide.weatherData.currentConditions.tempmax) + '°'"
-                                                                    class="tempmax"
+                                                                    x-text="`
+                                                                        ↑${tempConverter(slide.weatherData.currentConditions.tempmax)} °
+                                                                        ↓${tempConverter(slide.weatherData.currentConditions.tempmin)} °
+                                                                        `"
                                                                 ></div>
                                                             </div>
                                                             <div
                                                                 class="flex flex-col items-center gap-1.5 leading-[18px]"
                                                             >
                                                                 <div
-                                                                    x-text="lang.weather.tempmin"
+                                                                    x-text="lang.weather.precipitation"
                                                                     class="text-xs font-light text-gray-300 dark:text-cosmic-500"
                                                                 ></div>
                                                                 <div
-                                                                    x-text="tempConverter(slide.weatherData.currentConditions.tempmin) + '°'"
-                                                                    class="tempmin"
+                                                                    x-text="slide.weatherData.currentConditions.precipprob + '%'"
                                                                 ></div>
                                                             </div>
                                                         </div>
@@ -601,13 +606,25 @@
                                                                 class="flex flex-col items-center gap-1.5 leading-[18px]"
                                                             >
                                                                 <div
-                                                                    x-text="lang.weather.precipitation"
+                                                                    x-text="lang.weather.uvindex"
                                                                     class="text-xs font-light text-gray-300 dark:text-cosmic-500"
                                                                 ></div>
                                                                 <div
-                                                                    x-text="slide.weatherData.currentConditions.precipprob + '%'"
-                                                                    class="precipprob"
-                                                                ></div>
+                                                                    class="relative my-2 h-0.5 w-20 rounded-full bg-gradient-to-r from-green-600 via-yellow to-rose-700"
+                                                                >
+                                                                    <div
+                                                                        x-text="slide.weatherData.currentConditions.uvindex"
+                                                                        class="absolute top-1/2 left-0 h-5 w-5 -translate-y-1/2 rounded-full pt-[1.5px]"
+                                                                        :class="{
+                                                                            'bg-green-500': slide.weatherData.currentConditions.uvindex < 3,
+                                                                            'bg-yellow text-cosmic-900': slide.weatherData.currentConditions.uvindex >= 3 && slide.weatherData.currentConditions.uvindex < 6,
+                                                                            'bg-orange text-cosmic-900': slide.weatherData.currentConditions.uvindex >= 6 && slide.weatherData.currentConditions.uvindex < 8,
+                                                                            'bg-rose-700 text-white': slide.weatherData.currentConditions.uvindex >= 8 && slide.weatherData.currentConditions.uvindex < 10,
+                                                                            'bg-violet w-7 text-white': slide.weatherData.currentConditions.uvindex >= 10,
+                                                                            }"
+                                                                        :style="`left: ${slide.weatherData.currentConditions.uvindex * 100 / 12}%`"
+                                                                    ></div>
+                                                                </div>
                                                             </div>
                                                             <div
                                                                 class="flex flex-col items-center gap-1.5 leading-[18px]"
@@ -810,8 +827,8 @@
                                                             >
                                                                 <div
                                                                     x-show="id === 0"
-                                                                    class="absolute -top-[2px] h-[8px] w-[8px] rounded-full border-[1.5px] border-gray-100 bg-[#6390F0] dark:border-cosmic-900 dark:bg-white"
-                                                                    :style="{left: dotShift+ '%'}"
+                                                                    class="absolute -top-[2px] h-[8px] w-[8px] -translate-x-1/2 rounded-full border-[1.5px] border-gray-100 bg-[#6390F0] dark:border-cosmic-900 dark:bg-white"
+                                                                    :style="{left: dotShift + '%'}"
                                                                 ></div>
                                                             </div>
                                                         </div>
@@ -989,32 +1006,33 @@
                         x-cloak
                         x-show="menuLocations"
                         x-init="
-                                $watch('inputFocus', (focus) => {
-                                    if (focus) {
-                                        menuLocationsBackdrop = true; 
-                                        searchClearText = false; 
-                                        locationsEditMode = false; 
-                                        locationEditModal = false;
-                                        $refs.searchInput.value = ''; 
-                                        $refs.suggestions.innerHTML = '';
-                                        checkUserLocation();
-                                        showUserLocationPlaceholder = true;
-                                        setTimeout(() => { $refs.searchInput.focus() }, 500);
-                                    } else {
-                                        menuLocationsBackdrop = false; 
-                                        searchClearText= false;
-                                        $refs.searchInput.value = '';
-                                        $refs.suggestions.innerHTML = '';
-                                        $refs.notFound.classList.add('opacity-0');
-                                    }
-                                })
-                                $watch('menuLocations', () => { 
-                                    inputFocus = false; 
+                            $watch('inputFocus', (focus) => {
+                                if (focus) {
+                                    menuLocationsBackdrop = true; 
+                                    searchClearText = false; 
                                     locationsEditMode = false; 
-                                    locationEditModal = false; 
+                                    locationEditModal = false;
+                                    $refs.searchInput.value = ''; 
+                                    $refs.suggestions.innerHTML = '';
+                                    checkUserLocation();
+                                    showUserLocationPlaceholder = true;
+                                    setTimeout(() => { $refs.searchInput.focus() }, 500);
+                                } else {
                                     menuLocationsBackdrop = false; 
-                                    
-                                })"
+                                    searchClearText= false;
+                                    $refs.searchInput.value = '';
+                                    $refs.suggestions.innerHTML = '';
+                                    $refs.notFound.classList.add('opacity-0');
+                                }
+                            })
+                            $watch('menuLocations', () => { 
+                                inputFocus = false; 
+                                locationsEditMode = false; 
+                                locationEditModal = false; 
+                                menuLocationsBackdrop = false; 
+                                
+                            })
+                            "
                         x-data="{ locationsEditMode: false, locationEditModal: false }"
                         class="transition-all-500 absolute top-0 left-0 h-full w-full overflow-x-hidden overflow-y-scroll bg-gray-100 pb-20 dark:bg-cosmic-900"
                     >
@@ -2065,7 +2083,7 @@
                             >
                                 <button
                                     class="px-6 py-2.5"
-                                    @click="window.location.href = 'https://t.me/fairybrainsWeather';"
+                                    @click="window.location.href = 'https://t.me/+dssqyqvAIztjMmRi';"
                                     x-text="lang.settings.about.links[0]"
                                 ></button>
                                 <!-- <button
@@ -3262,12 +3280,12 @@
                                                 </div>
                                                 <!-- * DETAILS * -->
                                                 <div
-                                                    class="transition-all-500 w-full overflow-hidden font-semibold"
+                                                    class="transition-all-500 -mx-4 overflow-hidden font-semibold"
                                                     :class="details ?' h-[232px] opacity-100' : 'h-[0px] opacity-0'"
                                                 >
                                                     <div
                                                         id="details-1"
-                                                        class="relative grid h-[120px] w-full grid-flow-col items-end justify-around"
+                                                        class="relative grid h-[120px] w-full grid-cols-3 items-end justify-around"
                                                     >
                                                         <div
                                                             class="detail-item transition-300 absolute flex h-full w-full -translate-x-1 -translate-y-5 justify-center overflow-hidden"
@@ -3364,24 +3382,25 @@
                                                                 class="flex flex-col items-center gap-1.5 leading-[18px]"
                                                             >
                                                                 <div
-                                                                    x-text="lang.weather.tempmax"
+                                                                    x-text="`t° ${lang.weather.tempmax}, ${lang.weather.tempmin}`"
                                                                     class="text-xs font-light text-gray-300 dark:text-cosmic-500"
                                                                 ></div>
                                                                 <div
-                                                                    x-text="tempConverter(slide.weatherData.currentConditions.tempmax) + '°'"
-                                                                    class="tempmax"
+                                                                    x-text="`
+                                                                        ↑${tempConverter(slide.weatherData.currentConditions.tempmax)} °
+                                                                        ↓${tempConverter(slide.weatherData.currentConditions.tempmin)} °
+                                                                        `"
                                                                 ></div>
                                                             </div>
                                                             <div
                                                                 class="flex flex-col items-center gap-1.5 leading-[18px]"
                                                             >
                                                                 <div
-                                                                    x-text="lang.weather.tempmin"
+                                                                    x-text="lang.weather.precipitation"
                                                                     class="text-xs font-light text-gray-300 dark:text-cosmic-500"
                                                                 ></div>
                                                                 <div
-                                                                    x-text="tempConverter(slide.weatherData.currentConditions.tempmin) + '°'"
-                                                                    class="tempmin"
+                                                                    x-text="slide.weatherData.currentConditions.precipprob + '%'"
                                                                 ></div>
                                                             </div>
                                                         </div>
@@ -3392,13 +3411,25 @@
                                                                 class="flex flex-col items-center gap-1.5 leading-[18px]"
                                                             >
                                                                 <div
-                                                                    x-text="lang.weather.precipitation"
+                                                                    x-text="lang.weather.uvindex"
                                                                     class="text-xs font-light text-gray-300 dark:text-cosmic-500"
                                                                 ></div>
                                                                 <div
-                                                                    x-text="slide.weatherData.currentConditions.precipprob + '%'"
-                                                                    class="precipprob"
-                                                                ></div>
+                                                                    class="relative my-2 h-0.5 w-20 rounded-full bg-gradient-to-r from-green-600 via-yellow to-rose-700"
+                                                                >
+                                                                    <div
+                                                                        x-text="slide.weatherData.currentConditions.uvindex"
+                                                                        class="absolute top-1/2 left-0 h-5 w-5 -translate-y-1/2 rounded-full pt-[1.5px]"
+                                                                        :class="{
+                                                                            'bg-green-500': slide.weatherData.currentConditions.uvindex < 3,
+                                                                            'bg-yellow text-cosmic-900': slide.weatherData.currentConditions.uvindex >= 3 && slide.weatherData.currentConditions.uvindex < 6,
+                                                                            'bg-orange text-cosmic-900': slide.weatherData.currentConditions.uvindex >= 6 && slide.weatherData.currentConditions.uvindex < 8,
+                                                                            'bg-rose-700 text-white': slide.weatherData.currentConditions.uvindex >= 8 && slide.weatherData.currentConditions.uvindex < 10,
+                                                                            'bg-violet w-7 text-white': slide.weatherData.currentConditions.uvindex >= 10,
+                                                                            }"
+                                                                        :style="`left: ${slide.weatherData.currentConditions.uvindex * 100 / 12}%`"
+                                                                    ></div>
+                                                                </div>
                                                             </div>
                                                             <div
                                                                 class="flex flex-col items-center gap-1.5 leading-[18px]"
@@ -3483,7 +3514,7 @@
                                                             ? checkIcon(slide.weatherData.currentConditions.icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(slide.weatherData.timezone).format('HH'))) 
                                                             : checkIcon(slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH')))
                                                             "
-                                                    class="no-drag flex snap-start scroll-ml-3 flex-col items-center justify-end px-2"
+                                                    class="no-drag flex w-[60px] snap-start scroll-ml-3 flex-col items-center justify-end px-2"
                                                 >
                                                     <!-- Date -->
                                                     <div
@@ -3601,8 +3632,8 @@
                                                             >
                                                                 <div
                                                                     x-show="id === 0"
-                                                                    class="absolute -top-[2px] h-[8px] w-[8px] rounded-full border-[1.5px] border-gray-100 bg-[#6390F0] dark:border-cosmic-900 dark:bg-white"
-                                                                    :style="{left: dotShift+ '%'}"
+                                                                    class="absolute -top-[2px] h-[8px] w-[8px] -translate-x-1/2 rounded-full border-[1.5px] border-gray-100 bg-[#6390F0] dark:border-cosmic-900 dark:bg-white"
+                                                                    :style="{left: dotShift + '%'}"
                                                                 ></div>
                                                             </div>
                                                         </div>

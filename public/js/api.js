@@ -59,7 +59,7 @@ function parseWeatherData(location, data, isPreview, geoPositionUpdate) {
         .utcOffset(timezone)
         .locale(language)
         .format('HH:mm');
-    const dayLight = moment
+    const daylight = moment
         .unix(delta)
         .utc()
         .locale(language)
@@ -68,7 +68,7 @@ function parseWeatherData(location, data, isPreview, geoPositionUpdate) {
         );
 
     let weatherData = {
-        id: id,
+        id,
         lastUpdateEpoch: moment().unix(),
         raw: data,
         coordinates: {
@@ -80,11 +80,12 @@ function parseWeatherData(location, data, isPreview, geoPositionUpdate) {
             temp: data.currentConditions.temp,
             tempmax: data.days[0].tempmax,
             tempmin: data.days[0].tempmin,
+            uvindex: data.currentConditions.uvindex,
             feelslike: data.currentConditions.feelslike,
             conditions: data.currentConditions.conditions,
-            sunrise: sunrise,
-            sunset: sunset,
-            daylight: dayLight,
+            sunrise,
+            sunset,
+            daylight,
             moonphase: data.currentConditions.moonphase,
             sunposition: sunPositionDegree(
                 data.currentConditions.sunriseEpoch,
@@ -128,7 +129,7 @@ function parseWeatherData(location, data, isPreview, geoPositionUpdate) {
         window.dispatchEvent(
             new CustomEvent('addnewslide', {
                 detail: {
-                    id: id,
+                    id,
                     location,
                     weatherData,
                 },
@@ -272,12 +273,12 @@ const parseUserAdress = (feature, update) => {
     const data = {
         detail: {
             data: {
-                id: id,
-                name: name,
+                id,
+                name,
                 originalName: name,
-                country: country,
-                region: region,
-                countryCode: countryCode,
+                country,
+                region,
+                countryCode,
                 latitude: position.coords.latitude,
                 longitude: position.coords.longitude,
                 isUserLocation: 'true',

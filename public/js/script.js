@@ -368,7 +368,6 @@ document.addEventListener('alpine:init', () => {
                 splide.refresh();
             }, 100);
         },
-
         removecard(event) {
             const index = this.slides.findIndex(
                 card => card.id === event.detail.id
@@ -1136,10 +1135,13 @@ function tempRangeLineStyles(obj, tempRange, currentTemperature) {
         (100 * (tempmin - tempRange.tempmin)) / weekTempdelta
     );
     const currentTempShift = tempConverter(currentTemperature) - tempmin;
+
+    let dotShift = Math.round((100 * currentTempShift) / currentDayTempDelta);
+    dotShift = dotShift < 0 ? 0 : dotShift > 100 ? 100 : dotShift;
     const styles = {
         width: gradientWidth,
-        left: left,
-        dotShift: Math.round((100 * currentTempShift) / currentDayTempDelta),
+        left,
+        dotShift,
     };
     return styles;
 }

@@ -32,8 +32,9 @@ const languageStrings = {
         },
         weather: {
             feelslike: 'Ощущается как',
-            tempmax: 't° максимум',
-            tempmin: 't° минимум',
+            tempmax: 'макс.',
+            tempmin: 'мин.',
+            uvindex: 'УФ-индекс',
             precipitation: 'Осадки',
             precipprob: 'Вероятность осадков',
             pressure: 'Давление',
@@ -183,8 +184,9 @@ const languageStrings = {
         },
         weather: {
             feelslike: 'Feels like',
-            tempmax: 't° maximum',
-            tempmin: 't° minimum',
+            tempmax: 'max',
+            tempmin: 'min',
+            uvindex: 'UV index',
             precipitation: 'Precipprob',
             precipprob: 'Precipprob',
             pressure: 'Pressure',
