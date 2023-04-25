@@ -249,6 +249,7 @@ screen.orientation
 document.addEventListener('alpine:init', () => {
     Alpine.data('main', () => ({
         slides: [],
+        phonePower: false,
         atTop: true,
         detailedAtTop: false,
         orientation: '',
@@ -835,7 +836,7 @@ function displayMode() {
 
 function resetSettings() {
     localStorage.removeItem('settings');
-    settings = initSettings();
+    settings = init();
     activateTheme(2);
 }
 
@@ -854,6 +855,7 @@ async function requestUserCountry() {
             const response = await axios({
                 url: 'https://ipinfo.io/json?token=bf205b8bacf2c5',
                 method: 'get',
+                crossDomain: true,
             });
             userCountry =
                 (await response.data.country.toLowerCase()) || 'Unknown';
@@ -1043,23 +1045,14 @@ function parseSuggestions(
     }
 }
 
-function tempConverter(temp) {
-    const result = settings.temp ? (temp * 9) / 5 + 32 : temp;
-    // console.log("temp", Math.round(result));
-    return Math.round(result);
-}
+const tempConverter = temp =>
+    Math.round(settings.temp ? (temp * 9) / 5 + 32 : temp);
 
-function windConverter(wind) {
-    const result = Math.round(settings.wind ? wind : 0.277778 * wind);
-    // console.log("wind", result);
-    return result;
-}
+const windConverter = wind =>
+    Math.round(settings.wind ? wind : 0.277778 * wind);
 
-function pressureConverter(p) {
-    const result = Math.round(settings.pressure ? p : (p * 0.1) / 0.1333223684);
-    // console.log("pressure", result);
-    return result;
-}
+const pressureConverter = p =>
+    Math.round(settings.pressure ? p : (p * 0.1) / 0.1333223684);
 
 function changeColor(atTop = true) {
     const darkmode = checkDarkMode();
@@ -1107,20 +1100,14 @@ function moonphaseConverter(m) {
     }
 }
 
-function minMax(array, days) {
-    let i;
-    let minMin = array[0]; // ignoring case of empty array for conciseness
-    let maxMax = array[0];
-    for (i = 0; i < days; i++) {
-        const value = array[i];
-        if (value.tempmin < minMin.tempmin) minMin = value;
-        if (value.tempmax > maxMax.tempmax) maxMax = value;
-    }
-    const tempRange = {
-        tempmin: tempConverter(minMin.tempmin),
-        tempmax: tempConverter(maxMax.tempmax),
-    };
-    return tempRange;
+function minMax(arr) {
+    const tempmax = Math.round(
+        Math.max(...arr.slice().map(item => item.tempmax))
+    );
+    const tempmin = Math.round(
+        Math.min(...arr.slice().map(item => item.tempmin))
+    );
+    return { tempmin, tempmax };
 }
 
 function tempRangeLineStyles(obj, tempRange, currentTemperature) {

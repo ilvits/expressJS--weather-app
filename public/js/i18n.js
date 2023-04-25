@@ -1,5 +1,5 @@
 const languageStrings = {
-    ru: {
+    'ru': {
         common: {
             warning: 'Внимание',
             buttons: {
@@ -22,7 +22,7 @@ const languageStrings = {
             today: 'Сегодня',
             tomorrow: 'Завтра',
             morning: 'Утром',
-            noon: 'Днем',
+            afternoon: 'Днем',
             evening: 'Вечером',
             night: 'Ночью',
             sunrise: 'Восход',
@@ -34,7 +34,14 @@ const languageStrings = {
             feelslike: 'Ощущается как',
             tempmax: 'макс.',
             tempmin: 'мин.',
-            uvindex: 'УФ-индекс',
+            uvindex: {
+                label: 'УФ-индекс',
+                0: 'нормальный',
+                3: 'умеренный',
+                6: 'высокий',
+                8: 'очень высокий',
+                11: 'экстремальный',
+            },
             precipitation: 'Осадки',
             precipprob: 'Вероятность осадков',
             pressure: 'Давление',
@@ -111,6 +118,9 @@ const languageStrings = {
             resetSettings: {
                 text: 'Вы уверены, что хотите сбросить все настройки приложения?',
             },
+            renameLocation: {
+                label: 'Переименовать локацию',
+            },
             legend: {
                 header: 'Обозначения',
                 items: [
@@ -132,6 +142,10 @@ const languageStrings = {
                 header: 'Плохой погоды не бывает',
                 text: 'Смотрите погоду по всему миру, сохраняйте избранные локации.',
             },
+            nothingFound: {
+                header: 'Ничего не найдено',
+                text: 'Попробуйте изменить запрос.',
+            },
             locations: {
                 header: 'Здесь будут ваши локации',
                 text: 'Воспользуйтесь строкой поиска, чтобы найти, а затем добавить нужную локацию.',
@@ -151,7 +165,7 @@ const languageStrings = {
             clearLocations: 'Все добавленные локации удалены',
         },
     },
-    en: {
+    'en-US': {
         common: {
             warning: 'Warning',
             buttons: {
@@ -174,7 +188,7 @@ const languageStrings = {
             today: 'Today',
             tomorrow: 'Tomorrow',
             morning: 'Morning',
-            noon: 'Noon',
+            afternoon: 'Afternoon',
             evening: 'Evening',
             night: 'Night',
             sunrise: 'Sunrise',
@@ -186,7 +200,6 @@ const languageStrings = {
             feelslike: 'Feels like',
             tempmax: 'max',
             tempmin: 'min',
-            uvindex: 'UV index',
             precipitation: 'Precipprob',
             precipprob: 'Precipprob',
             pressure: 'Pressure',
@@ -208,6 +221,14 @@ const languageStrings = {
                 waninggibbous: 'Waning Gibbous',
                 lastquarter: 'Last Quarter',
                 waningcrescent: 'Waning Crescent',
+            },
+            uvindex: {
+                label: 'UV index',
+                0: 'Low',
+                3: 'Moderate',
+                6: 'High',
+                8: 'Very high',
+                11: 'Extreme',
             },
         },
         slides: {
@@ -263,6 +284,9 @@ const languageStrings = {
             resetSettings: {
                 text: 'Are you sure you want to reset all app settings?',
             },
+            renameLocation: {
+                label: 'Rename Location',
+            },
             legend: {
                 header: 'Abbreviations',
                 items: [
@@ -287,6 +311,10 @@ const languageStrings = {
             locations: {
                 header: 'Add your locations',
                 text: 'Use the search bar to find and then add the location you need.',
+            },
+            nothingFound: {
+                header: 'Nothing found',
+                text: 'Try searching again.',
             },
             addUserLocation: {
                 header: 'Add your current location?',

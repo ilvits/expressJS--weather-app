@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
         const baseurl = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline`;
         const params = {
             unitGroup: 'metric',
-            key: Token_2,
+            key: Token_1,
             elements: [
                 // "name",
                 // "datetime",
@@ -72,6 +72,7 @@ router.get('/', async (req, res) => {
                 'Accept': 'application/json',
                 'Accept-Encoding': 'gzip',
             },
+            crossDomain: true,
             // timeout: 4000,
         })
             .then(response => {
