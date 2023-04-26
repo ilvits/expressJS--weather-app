@@ -348,15 +348,12 @@
                     class="splide h-full overflow-x-hidden"
                     aria-label="Splide"
                 >
-                    <!-- Splide -->
+                    <!-- *? Main Slides ?* -->
                     <div class="splide__track h-full">
                         <ul class="splide__list">
                             <!-- ! Slide -->
                             <template x-for="slide in slides" :key="slide.id">
-                                <li
-                                    x-init="uvindex = slide.weatherData.currentConditions.uvindex"
-                                    class="splide__slide w-full"
-                                >
+                                <li class="splide__slide w-full">
                                     <section
                                         class="no-scrollbar h-full overflow-y-scroll bg-gray-100 pb-24 dark:bg-cosmic-900"
                                         :class="{'pb-44': displaymode !== 'standalone'}"
@@ -673,16 +670,16 @@
                                                                     class="relative my-2 h-0.5 w-20 rounded-full bg-gradient-to-r from-cyan via-lemon to-[#FF3326]"
                                                                 >
                                                                     <div
-                                                                        x-text="uvindex"
+                                                                        x-text="slide.weatherData.currentConditions.uvindex"
                                                                         class="absolute top-1/2 left-0 -translate-y-1/2 rounded-[4px] px-[3px] py-px pt-[1.5px] text-sm leading-4 text-cosmic-900"
                                                                         :class="{
-                                                                            'bg-cyan': uvindex < 3,
-                                                                            'bg-yellowDark': uvindex >= 3 && uvindex < 6,
-                                                                            'bg-orange': uvindex >= 6 && uvindex < 8,
-                                                                            'bg-red': uvindex >= 8 && uvindex < 10,
-                                                                            'bg-violet pr-1': uvindex >= 10,
+                                                                            'bg-cyan': slide.weatherData.currentConditions.uvindex < 3,
+                                                                            'bg-yellowDark': slide.weatherData.currentConditions.uvindex >= 3 && slide.weatherData.currentConditions.uvindex < 6,
+                                                                            'bg-orange': slide.weatherData.currentConditions.uvindex >= 6 && slide.weatherData.currentConditions.uvindex < 8,
+                                                                            'bg-red': slide.weatherData.currentConditions.uvindex >= 8 && slide.weatherData.currentConditions.uvindex < 10,
+                                                                            'bg-violet pr-1': slide.weatherData.currentConditions.uvindex >= 10,
                                                                             }"
-                                                                        :style="`left: ${uvindex * 100 / 12}%`"
+                                                                        :style="`left: ${slide.weatherData.currentConditions.uvindex * 100 / 12}%`"
                                                                     ></div>
                                                                 </div>
                                                             </div>
@@ -1062,7 +1059,7 @@
                         ></button>
                     </div>
 
-                    <!-- *? Locations ?* -->
+                    <!-- *? My Locations ?* -->
                     <section
                         x-cloak
                         x-show="menuLocations"
@@ -3237,16 +3234,16 @@
                                                                     class="relative my-2 h-0.5 w-20 rounded-full bg-gradient-to-r from-cyan via-lemon to-[#FF3326]"
                                                                 >
                                                                     <div
-                                                                        x-text="uvindex"
+                                                                        x-text="slide.weatherData.currentConditions.uvindex"
                                                                         class="absolute top-1/2 left-0 -translate-y-1/2 rounded-[4px] px-[3px] py-px pt-[1.5px] text-sm leading-4 text-cosmic-900"
                                                                         :class="{
-                                                                            'bg-cyan': uvindex < 3,
-                                                                            'bg-yellowDark': uvindex >= 3 && uvindex < 6,
-                                                                            'bg-orange': uvindex >= 6 && uvindex < 8,
-                                                                            'bg-red': uvindex >= 8 && uvindex < 10,
-                                                                            'bg-violet pr-1': uvindex >= 10,
+                                                                            'bg-cyan': slide.weatherData.currentConditions.uvindex < 3,
+                                                                            'bg-yellowDark': slide.weatherData.currentConditions.uvindex >= 3 && slide.weatherData.currentConditions.uvindex < 6,
+                                                                            'bg-orange': slide.weatherData.currentConditions.uvindex >= 6 && slide.weatherData.currentConditions.uvindex < 8,
+                                                                            'bg-red': slide.weatherData.currentConditions.uvindex >= 8 && slide.weatherData.currentConditions.uvindex < 10,
+                                                                            'bg-violet pr-1': slide.weatherData.currentConditions.uvindex >= 10,
                                                                             }"
-                                                                        :style="`left: ${uvindex * 100 / 12}%`"
+                                                                        :style="`left: ${slide.weatherData.currentConditions.uvindex * 100 / 12}%`"
                                                                     ></div>
                                                                 </div>
                                                             </div>
