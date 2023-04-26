@@ -290,7 +290,6 @@ function parseSuggestions(
                     longitude: position.coords.longitude,
                     isUserLocation: 'true',
                 };
-                console.log(location);
             } else {
                 searchText = capitalize(searchText);
                 // console.log(searchText);
@@ -410,7 +409,6 @@ async function resolveAdress(position, update) {
 }
 
 const parseUserAdress = (feature, update) => {
-    console.log(feature);
     const id = Number(feature.id.split('.')[1]);
     const name = feature.text;
     const countryCode =

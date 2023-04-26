@@ -179,7 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 window.addEventListener('weatherSaved', event => {
-    console.log('after weather update: ', event.detail);
     window.dispatchEvent(
         new CustomEvent('updateslide', {
             detail: event.detail,
@@ -235,10 +234,6 @@ const isDesktop = () => {
 
 screen.orientation
     ? (screen.orientation.onchange = () => {
-          console.log(
-              'orientation changed: ' + screen.orientation.type,
-              window.orientation
-          );
           window.dispatchEvent(new CustomEvent('orientationchange'));
       })
     : (onorientationchange = () => {
@@ -289,13 +284,9 @@ document.addEventListener('alpine:init', () => {
                         window.orientation === 0 ||
                         window.orientation === 180
                     ) {
-                        console.log('That looks good.');
                         this.orientation = 'portrait';
                         this.orientationDeg = -window.orientation;
                     } else {
-                        console.log(
-                            'Mmmh… you should rotate your device to portrait'
-                        );
                         this.orientation = 'landscape';
                         this.orientationDeg = -window.orientation;
                     }
@@ -304,13 +295,9 @@ document.addEventListener('alpine:init', () => {
                         screen.orientation.type === 'portrait-primary' ||
                         screen.orientation.type === 'portrait-secondary'
                     ) {
-                        console.log('That looks good.');
                         this.orientation = 'portrait';
                         this.orientationDeg = -window.orientation;
                     } else {
-                        console.log(
-                            'Mmmh… you should rotate your device to portrait'
-                        );
                         this.orientation = 'landscape';
                         this.orientationDeg = -window.orientation;
                     }
@@ -388,11 +375,9 @@ document.addEventListener('alpine:init', () => {
     Alpine.data('card', () => ({
         showcard: true,
         init() {
-            console.log('show card');
             this.$nextTick(() => (this.show = true));
         },
         transitionOut() {
-            console.log('hide card');
             this.show = false;
             setTimeout(() => this.removecard(this.card), 500);
         },
@@ -410,7 +395,6 @@ document.addEventListener('alpine:init', () => {
         },
 
         addnewslide(event) {
-            console.log(event.detail);
             this.location.push(event.detail);
         },
         popup1info() {
@@ -442,7 +426,6 @@ document.addEventListener('alpine:init', () => {
             this.popup3 = this.popup3.filter(i => i.id !== popup.id);
         },
         removelocation() {
-            console.log('del slide');
             this.location = [];
         },
     }));
@@ -502,7 +485,6 @@ document.addEventListener('alpine:init', () => {
                 this.offset = 16 + event.detail.dayid * 50;
             });
             // }
-            console.log(event.detail.dayid);
             setTimeout(() => {
                 splide2 = new Splide('#daysDetailed', {
                     pagination: false,
@@ -541,8 +523,6 @@ document.addEventListener('alpine:init', () => {
             this.$nextTick(() => (this.show = true));
         },
         closeday(day) {
-            console.log('hide day');
-            // console.log(day.detail.id);
             if (
                 this.detailedDays.findIndex(
                     item => Number(item.id) === Number(day.detail.id)
@@ -558,11 +538,9 @@ document.addEventListener('alpine:init', () => {
         show: false,
         offset: 0,
         init() {
-            console.log('show detailedForecast');
             this.$nextTick(() => (this.show = true));
         },
         transitionOut() {
-            console.log('hide detailedForecast');
             this.show = false;
 
             checkDarkMode() ? changeColor(false) : changeColor(true);
@@ -574,11 +552,9 @@ document.addEventListener('alpine:init', () => {
     Alpine.data('monthlyForecast', () => ({
         show: false,
         init() {
-            console.log('show monthlyForecast');
             this.$nextTick(() => (this.show = true));
         },
         transitionOut() {
-            console.log('hide monthlyForecast');
             this.show = false;
             setTimeout(() => this.removepopup1(this.monthlyForecast), 500);
         },
@@ -612,13 +588,11 @@ document.addEventListener('alpine:init', () => {
     Alpine.data('toast', () => ({
         show: false,
         init() {
-            console.log('show toast');
             // console.log(this.duration);
             this.$nextTick(() => (this.show = true));
             setTimeout(() => this.transitionOut(), this.duration);
         },
         transitionOut() {
-            console.log('hide toast');
             this.show = false;
             setTimeout(() => this.remove(this.toast), 500);
         },
@@ -900,7 +874,6 @@ function minMax(arr) {
 }
 
 function tempRangeLineStyles(obj, tempRange, currentTemperature) {
-    console.log(obj);
     const tempmin = obj.tempmin;
     const tempmax = obj.tempmax;
     const weekTempdelta = tempRange.tempmax - tempRange.tempmin;

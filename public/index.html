@@ -232,7 +232,7 @@
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
                     navigator.serviceWorker.register('/sw.js').then(
-                        registration => {
+                        registratdwion => {
                             console.log(
                                 `Service Worker registered! Scope: ${registration.scope}`
                             );
@@ -825,8 +825,7 @@
                                                             ? lang.datetime.today 
                                                             : id === 1
                                                             ? lang.datetime.tomorrow 
-                                                            : moment.unix(day.datetimeEpoch).locale(language).format('DD MMMM');
-                                                            console.log(lineStyles);"
+                                                            : moment.unix(day.datetimeEpoch).locale(language).format('DD MMMM');"
                                                     class="flex w-full flex-nowrap items-center gap-5 py-[2px] font-light"
                                                     @click="$dispatch('addpopup2', slide); setTimeout(() => {$dispatch('detaileddaysadd', { dayid : id, days: slide.weatherData.days.slice(0, 10) })}, 150);"
                                                 >
@@ -1600,7 +1599,6 @@
                                         x-text="lang.locations.restoreName"
                                         x-show="editedCard.name !== editedCard.originalName"
                                         @click="
-                                                console.log(editedCard);
                                                 locationEditModal = false; 
                                                 menuLocationsBackdrop = false;
                                                 updateLocation({ 
@@ -1629,7 +1627,6 @@
                                         class="settings--modal--ok-btn ml-2 w-1/2 rounded-lg bg-primary-light p-2 text-sm font-semibold text-white disabled:bg-primary-light/50 dark:bg-primary-dark dark:text-cosmic-900 disabled:dark:bg-primary-dark/50 disabled:dark:text-cosmic-900"
                                         type="button"
                                         @click="
-                                                console.log(editedCard);
                                                 locationEditModal = false; 
                                                 menuLocationsBackdrop = false;
                                                 updateLocation({ 
@@ -2580,7 +2577,6 @@
                                                                     alt=""
                                                                 />
                                                                 <div
-                                                                    x-init="console.log(detailedDay.weatherData.hours[index].windgust);"
                                                                     x-text="lang.weather.windgust + ' ' + detailedDay.weatherData.hours[index].windgust + ' ' + lang.weather.units.wind[settings.wind ? 1 : 0]"
                                                                     class="text-sm leading-4"
                                                                 ></div>
