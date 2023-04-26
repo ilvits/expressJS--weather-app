@@ -743,74 +743,10 @@ function updateInfo(force = false) {
                 index === 0 && locations[0].isUserLocation === 'true'
                     ? getUserLocation(true)
                     : undefined;
-                // } else {
-                //     // Otherwise, log the last and next update times for this location
-                //     console.log(location.name);
-                //     console.log(
-                //         'Last Update:',
-                //         lastUpdate.locale(language).format('DD.MMM, HH:mm:ss'),
-                //         '(',
-                //         timeDelta,
-                //         'minutes ago )'
-                //     );
-                //     console.log(
-                //         'Next Update:',
-                //         lastUpdate.add(5, 'm').format('DD.MMM, HH:mm:ss')
-                //     );
-                //     console.log();
             }
         });
     }
 }
-
-// // Update all data in Slides and Cards after timeout
-// function updateInfo(force = false) {
-//     // console.log('focus');
-//     if (force) {
-//         console.log('*** Force update ***');
-//         locations.forEach(location => {
-//             const lastUpdate = moment.unix(
-//                 JSON.parse(localStorage.getItem('weatherData-' + location.id))
-//                     .lastUpdateEpoch
-//             );
-//             getWeather(location);
-//             console.log(lastUpdate.locale(language).format('DD.MMM, HH:mm:ss'));
-//         });
-//     } else {
-//         locations.forEach((location, index) => {
-//             const lastUpdate = moment.unix(
-//                 JSON.parse(localStorage.getItem('weatherData-' + location.id))
-//                     .lastUpdateEpoch
-//             );
-//             const timeDelta = moment().diff(lastUpdate, 'minutes');
-//             if (timeDelta >= 5) {
-//                 getWeather(location);
-//                 // console.log(
-//                 //     location.name,
-//                 //     'updated:',
-//                 //     lastUpdate.locale(language).format('DD.MMM, HH:mm:ss')
-//                 // );
-//                 index === 0 && locations[0].isUserLocation === 'true'
-//                     ? getUserLocation(true)
-//                     : undefined;
-//             } else {
-//                 console.log(location.name);
-//                 console.log(
-//                     'Last Update:',
-//                     lastUpdate.locale(language).format('DD.MMM, HH:mm:ss'),
-//                     '(',
-//                     timeDelta,
-//                     'minutes ago )'
-//                 );
-//                 console.log(
-//                     'Next Update:',
-//                     lastUpdate.add(5, 'm').format('DD.MMM, HH:mm:ss')
-//                 );
-//                 console.log();
-//             }
-//         });
-//     }
-// }
 
 function displayMode() {
     let displayMode = 'browser';
@@ -898,153 +834,6 @@ function inputProcessing(el) {
     }
 }
 
-function parseSuggestions(
-    features,
-    searchText,
-    isUserLocation = false,
-    update = false
-) {
-    const suggestionList = document.querySelector('.suggestions-list');
-    const searchInput = document.querySelector('#searchInput');
-    const nothingFound = document.querySelector(
-        '#search-user-location--not-found'
-    );
-    suggestionList.innerHTML = '';
-    const f = [];
-    features.forEach(el => {
-        f.push({
-            id: Number(el.id.split('.')[1]),
-            name: el.text,
-        });
-    });
-    console.table(f);
-    if (features.length === 0) {
-        // console.log("Nothing found");
-        nothingFound.classList.remove('hidden');
-        setTimeout(() => {
-            nothingFound.classList.remove('opacity-0');
-        }, 100);
-    } else {
-        nothingFound.classList.add('hidden', 'opacity-0');
-        suggestionList.classList.remove('invisible', 'opacity-0');
-        for (const feature of Object.values(features)) {
-            const position = {
-                coords: {
-                    longitude: feature.geometry.coordinates[0],
-                    latitude: feature.geometry.coordinates[1],
-                },
-            };
-            const id = Number(feature.id.split('.')[1]);
-            const name = feature.text;
-            const countryCode =
-                feature.context[
-                    feature.context.findIndex(item =>
-                        item.id.includes('country')
-                    )
-                ].short_code;
-            let region;
-            if (
-                feature.context.findIndex(item =>
-                    item.id.includes('region')
-                ) !== -1
-            ) {
-                region =
-                    feature.context[
-                        feature.context.findIndex(item =>
-                            item.id.includes('region')
-                        )
-                    ].text;
-            }
-
-            let text;
-            const contextCountryId = feature.context.findIndex(item =>
-                item.id.includes('country')
-            );
-            const country = feature.context[contextCountryId].text;
-
-            if (isUserLocation) {
-                window.dispatchEvent(
-                    new CustomEvent('addpopup3', {
-                        detail: {
-                            id: id,
-                            name: name,
-                            country: country,
-                            region: region,
-                            countryCode: countryCode,
-                            latitude: position.coords.latitude,
-                            longitude: position.coords.longitude,
-                            isUserLocation: 'true',
-                        },
-                    })
-                );
-            } else if (update) {
-                const location = {
-                    id: id,
-                    name: name,
-                    country: country,
-                    region: region,
-                    countryCode: countryCode,
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    isUserLocation: 'true',
-                };
-                console.log(location);
-            } else {
-                searchText = capitalize(searchText);
-                // console.log(searchText);
-                const locationLi = document.createElement('li');
-                locationLi.onclick = () =>
-                    window.dispatchEvent(
-                        new CustomEvent('addpopup3', {
-                            detail: {
-                                id: id,
-                                name: name,
-                                country: country,
-                                region: region,
-                                countryCode: countryCode,
-                                latitude: position.coords.latitude,
-                                longitude: position.coords.longitude,
-                                isUserLocation: 'false',
-                            },
-                        })
-                    );
-                if (
-                    typeof locations !== 'undefined' &&
-                    locations.findIndex(item => item.id === id) === -1
-                ) {
-                    locationLi.classList.add('flex', 'pr-2', 'whitespace-pre');
-                    text = `${name.replace(
-                        searchText,
-                        `<div class="text-primary-light dark:text-primary-dark">${searchText}</div>`
-                    )}<div class="text-gray-300 dark:text-cosmic-500 truncate">${
-                        region ? ', ' + region : ''
-                    }${
-                        countryCode === userCountry ? '' : ', ' + country
-                    }</div>`;
-                } else {
-                    locationLi.classList.add(
-                        'flex',
-                        'pointer-events-none',
-                        'text-gray-300',
-                        'pr-2',
-                        'truncate'
-                    );
-                    text = `${name}${region ? ', ' + region : ''}${
-                        countryCode === userCountry ? '' : ', ' + country
-                    }`;
-                }
-
-                locationLi.innerHTML = text;
-                if (searchInput.value.length > 0) {
-                    suggestionList.appendChild(locationLi);
-                } else {
-                    suggestionList.innerHTML = '';
-                }
-            }
-        }
-    }
-}
-
 const tempConverter = temp =>
     Math.round(settings.temp ? (temp * 9) / 5 + 32 : temp);
 
@@ -1111,26 +900,24 @@ function minMax(arr) {
 }
 
 function tempRangeLineStyles(obj, tempRange, currentTemperature) {
-    const tempmin = tempConverter(obj.tempmin);
-    const tempmax = tempConverter(obj.tempmax);
+    console.log(obj);
+    const tempmin = obj.tempmin;
+    const tempmax = obj.tempmax;
     const weekTempdelta = tempRange.tempmax - tempRange.tempmin;
     const currentDayTempDelta = tempmax - tempmin;
-    const gradientWidth = Math.round(
-        (100 * (tempmax - tempmin)) / weekTempdelta
-    );
+    const width = Math.round((100 * (tempmax - tempmin)) / weekTempdelta);
     const left = Math.round(
         (100 * (tempmin - tempRange.tempmin)) / weekTempdelta
     );
-    const currentTempShift = tempConverter(currentTemperature) - tempmin;
+    const currentTempShift = currentTemperature - tempmin;
 
     let dotShift = Math.round((100 * currentTempShift) / currentDayTempDelta);
     dotShift = dotShift < 0 ? 0 : dotShift > 100 ? 100 : dotShift;
-    const styles = {
-        width: gradientWidth,
+    return {
+        width,
         left,
         dotShift,
     };
-    return styles;
 }
 
 function error(err) {

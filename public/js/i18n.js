@@ -157,6 +157,9 @@ const languageStrings = {
             phoneRotate: {
                 text: 'Пожалуйста, поверните телефон в портретный режим',
             },
+            locationName: {
+                text: 'Введите название локации',
+            },
         },
         toasts: {
             newLocation: 'Добавлена новая локация',
@@ -322,6 +325,9 @@ const languageStrings = {
             },
             phoneRotate: {
                 text: 'Please rotate your phone in portrait mode',
+            },
+            locationName: {
+                text: 'Enter location name',
             },
         },
         toasts: {

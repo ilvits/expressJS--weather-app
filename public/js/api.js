@@ -77,33 +77,43 @@ function parseWeatherData(location, data, isPreview, geoPositionUpdate) {
         },
         timezone: timezone,
         currentConditions: {
-            temp: data.currentConditions.temp,
-            tempmax: data.days[0].tempmax,
-            tempmin: data.days[0].tempmin,
+            temp: tempConverter(data.currentConditions.temp),
+            tempmax: tempConverter(data.days[0].tempmax),
+            tempmin: tempConverter(data.days[0].tempmin),
+            feelslike: tempConverter(data.currentConditions.feelslike),
+            pressure: pressureConverter(data.currentConditions.pressure),
+            windspeed: windConverter(data.currentConditions.windspeed),
+            windgust: windConverter(data.currentConditions.windgust),
+            precipprob: Math.round(data.currentConditions.precipprob),
+            humidity: Math.round(data.currentConditions.humidity),
+            winddir: data.currentConditions.winddir,
             uvindex: data.currentConditions.uvindex,
-            feelslike: data.currentConditions.feelslike,
             conditions: data.currentConditions.conditions,
             sunrise,
             sunset,
             daylight,
             moonphase: data.currentConditions.moonphase,
+            icon: data.currentConditions.icon,
             sunposition: sunPositionDegree(
                 data.currentConditions.sunriseEpoch,
                 data.currentConditions.sunsetEpoch,
                 moment().unix()
             ),
-            pressure: data.currentConditions.pressure,
-            windspeed: data.currentConditions.windspeed,
-            winddir: data.currentConditions.winddir,
-            windgust: data.currentConditions.windgust,
-            humidity: Math.round(data.currentConditions.humidity),
-            precipprob: Math.round(data.currentConditions.precipprob),
-            icon: data.currentConditions.icon,
         },
         days: data.days,
     };
 
     weatherData.days.forEach(day => {
+        day.temp = tempConverter(day.temp);
+        day.tempmax = tempConverter(day.tempmax);
+        day.tempmin = tempConverter(day.tempmin);
+        day.feelslike = tempConverter(day.feelslike);
+        day.pressure = pressureConverter(day.pressure);
+        day.windspeed = windConverter(day.windspeed);
+        day.windgust = windConverter(day.windgust);
+        day.humidity = Math.round(day.humidity);
+        day.precipprob = Math.round(day.precipprob);
+
         const delta = day.sunsetEpoch - day.sunriseEpoch;
         day.daylight = moment
             .unix(delta)
@@ -122,8 +132,16 @@ function parseWeatherData(location, data, isPreview, geoPositionUpdate) {
             .utcOffset(timezone)
             .locale(language)
             .format('HH:mm');
+        day.hours.forEach(hour => {
+            hour.temp = tempConverter(hour.temp);
+            hour.humidity = Math.round(hour.humidity);
+            hour.precipprob = Math.round(hour.precipprob);
+            hour.windspeed = windConverter(hour.windspeed);
+            hour.windgust = windConverter(hour.windgust);
+            hour.feelslike = tempConverter(hour.feelslike);
+            hour.pressure = pressureConverter(hour.pressure);
+        });
     });
-    console.log('isPreview', isPreview);
     if (isPreview) {
         // console.log('weather', weatherData);
         window.dispatchEvent(
@@ -180,6 +198,153 @@ async function getSuggestions(query) {
                 );
             }
         });
+}
+
+function parseSuggestions(
+    features,
+    searchText,
+    isUserLocation = false,
+    update = false
+) {
+    const suggestionList = document.querySelector('.suggestions-list');
+    const searchInput = document.querySelector('#searchInput');
+    const nothingFound = document.querySelector(
+        '#search-user-location--not-found'
+    );
+    suggestionList.innerHTML = '';
+    const f = [];
+    features.forEach(el => {
+        f.push({
+            id: Number(el.id.split('.')[1]),
+            name: el.text,
+        });
+    });
+    console.table(f);
+    if (features.length === 0) {
+        // console.log("Nothing found");
+        nothingFound.classList.remove('hidden');
+        setTimeout(() => {
+            nothingFound.classList.remove('opacity-0');
+        }, 100);
+    } else {
+        nothingFound.classList.add('hidden', 'opacity-0');
+        suggestionList.classList.remove('invisible', 'opacity-0');
+        for (const feature of Object.values(features)) {
+            const position = {
+                coords: {
+                    longitude: feature.geometry.coordinates[0],
+                    latitude: feature.geometry.coordinates[1],
+                },
+            };
+            const id = Number(feature.id.split('.')[1]);
+            const name = feature.text;
+            const countryCode =
+                feature.context[
+                    feature.context.findIndex(item =>
+                        item.id.includes('country')
+                    )
+                ].short_code;
+            let region;
+            if (
+                feature.context.findIndex(item =>
+                    item.id.includes('region')
+                ) !== -1
+            ) {
+                region =
+                    feature.context[
+                        feature.context.findIndex(item =>
+                            item.id.includes('region')
+                        )
+                    ].text;
+            }
+
+            let text;
+            const contextCountryId = feature.context.findIndex(item =>
+                item.id.includes('country')
+            );
+            const country = feature.context[contextCountryId].text;
+
+            if (isUserLocation) {
+                window.dispatchEvent(
+                    new CustomEvent('addpopup3', {
+                        detail: {
+                            id: id,
+                            name: name,
+                            country: country,
+                            region: region,
+                            countryCode: countryCode,
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude,
+                            isUserLocation: 'true',
+                        },
+                    })
+                );
+            } else if (update) {
+                const location = {
+                    id: id,
+                    name: name,
+                    country: country,
+                    region: region,
+                    countryCode: countryCode,
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    isUserLocation: 'true',
+                };
+                console.log(location);
+            } else {
+                searchText = capitalize(searchText);
+                // console.log(searchText);
+                const locationLi = document.createElement('li');
+                locationLi.onclick = () =>
+                    window.dispatchEvent(
+                        new CustomEvent('addpopup3', {
+                            detail: {
+                                id: id,
+                                name: name,
+                                country: country,
+                                region: region,
+                                countryCode: countryCode,
+                                latitude: position.coords.latitude,
+                                longitude: position.coords.longitude,
+                                isUserLocation: 'false',
+                            },
+                        })
+                    );
+                if (
+                    typeof locations !== 'undefined' &&
+                    locations.findIndex(item => item.id === id) === -1
+                ) {
+                    locationLi.classList.add('flex', 'pr-2', 'whitespace-pre');
+                    text = `${name.replace(
+                        searchText,
+                        `<div class="text-primary-light dark:text-primary-dark">${searchText}</div>`
+                    )}<div class="text-gray-300 dark:text-cosmic-500 truncate">${
+                        region ? ', ' + region : ''
+                    }${
+                        countryCode === userCountry ? '' : ', ' + country
+                    }</div>`;
+                } else {
+                    locationLi.classList.add(
+                        'flex',
+                        'pointer-events-none',
+                        'text-gray-300',
+                        'pr-2',
+                        'truncate'
+                    );
+                    text = `${name}${region ? ', ' + region : ''}${
+                        countryCode === userCountry ? '' : ', ' + country
+                    }`;
+                }
+
+                locationLi.innerHTML = text;
+                if (searchInput.value.length > 0) {
+                    suggestionList.appendChild(locationLi);
+                } else {
+                    suggestionList.innerHTML = '';
+                }
+            }
+        }
+    }
 }
 
 async function updateAdress(position) {
