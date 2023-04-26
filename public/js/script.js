@@ -1,6 +1,6 @@
 'use strict';
 
-let splide2, updateInterval;
+let splide, splide2, updateInterval;
 document.body.style.webkitTouchCallout = 'none';
 const active_slide = localStorage.getItem('activeSlide') || 0;
 const moonPhaseIconsPath = 'img/assets/icons/moonphases/';
@@ -55,47 +55,51 @@ const weatherIcons = {
     'thunder-showers-night': 'thunder-showers-night.svg',
 };
 
-const splide = new Splide('#main', {
-    // type: 'slide',
-    pagination: locations.length > 1 ? true : false,
-    speed: 700,
-    height: 'calc(100%)',
-    // autoHeight: true,
-    perPage: 1,
-    // perMove: 1,
-    start: active_slide || 0,
-    gap: '3rem',
-    arrows: false,
-    easing: 'cubic-bezier(.23,1,.32,1)',
-    noDrag: 'input, textarea, .no-drag',
-    classes: {
-        page: 'bg-primary-light/30 dark:bg-primary-dark/40 h-1.5 w-1.5 [&.is-active]:bg-primary-light dark:[&.is-active]:bg-primary-dark rounded-full',
-    },
-});
+document.addEventListener('DOMContentLoaded', () => {
+    requestUserCountry();
 
-splide.on('overflow', function (isOverflow) {
-    splide.options = {
-        pagination: isOverflow,
-        drag: isOverflow,
-    };
-    if (isOverflow) {
-        splide.options.pagination = true;
-    } else {
-        // Not enough slides
-        splide.options.pagination = false;
-    }
-});
-splide.on('ready', function (mount) {
-    // console.log("*** Splide succesfully mounted ***");
-    if (splide.length) {
-        // console.log('slides:', splide.length);
-        // console.log('pagination', splide.options.pagination);
-        splide.options.pagination = true;
-    }
-});
+    splide = new Splide('#main', {
+        // type: 'slide',
+        pagination: locations.length > 1 ? true : false,
+        speed: 700,
+        height: 'calc(100%)',
+        // autoHeight: true,
+        perPage: 1,
+        // perMove: 1,
+        start: active_slide || 0,
+        gap: '3rem',
+        arrows: false,
+        easing: 'cubic-bezier(.23,1,.32,1)',
+        noDrag: 'input, textarea, .no-drag',
+        classes: {
+            page: 'bg-primary-light/30 dark:bg-primary-dark/40 h-1.5 w-1.5 [&.is-active]:bg-primary-light dark:[&.is-active]:bg-primary-dark rounded-full',
+        },
+    });
 
-splide.on('moved', function (id) {
-    localStorage.activeSlide = id;
+    splide.on('overflow', function (isOverflow) {
+        splide.options = {
+            pagination: isOverflow,
+            drag: isOverflow,
+        };
+        if (isOverflow) {
+            splide.options.pagination = true;
+        } else {
+            // Not enough slides
+            splide.options.pagination = false;
+        }
+    });
+    splide.on('ready', function (mount) {
+        // console.log("*** Splide succesfully mounted ***");
+        if (splide.length) {
+            // console.log('slides:', splide.length);
+            // console.log('pagination', splide.options.pagination);
+            splide.options.pagination = true;
+        }
+    });
+
+    splide.on('moved', function (id) {
+        localStorage.activeSlide = id;
+    });
 });
 
 const svgCheck =
@@ -784,8 +788,6 @@ async function requestUserCountry() {
         }
     }
 }
-
-requestUserCountry();
 
 function inputProcessing(el) {
     const suggestionList = document.querySelector('.suggestions-list');
