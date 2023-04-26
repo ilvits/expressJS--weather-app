@@ -231,18 +231,19 @@
         <script>
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('/sw.js').then(
-                        registratdwion => {
-                            console.log(
-                                `Service Worker registered! Scope: ${registration.scope}`
-                            );
-                        },
-                        error => {
-                            console.error(
-                                `Service Worker registration failed: ${error}`
-                            );
-                        }
-                    );
+                    navigator.serviceWorker.register('/sw.js');
+                    // .then(
+                    //     registration => {
+                    //         console.log(
+                    //             `Service Worker registered! Scope: ${registration.scope}`
+                    //         );
+                    //     },
+                    //     error => {
+                    //         console.error(
+                    //             `Service Worker registration failed: ${error}`
+                    //         );
+                    //     }
+                    // );
                 });
             }
         </script>
@@ -1298,7 +1299,7 @@
                             <!-- ! Location Cards List -->
                             <ol
                                 id="location-cards--container"
-                                class="slip-swiping-container transition-all-500 flex h-full w-full flex-col px-4"
+                                class="slip-swiping-container no-scrollbar transition-all-500 flex h-full w-full flex-col px-4"
                                 :class="{'pb-20': displaymode !== 'standalone'}"
                                 tabindex="0"
                                 role="listbox"
