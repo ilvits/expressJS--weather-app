@@ -188,22 +188,95 @@
             media="screen and (device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
             href="img/assets/pwa/splash_screens/8.3__iPad_Mini_portrait.png"
         />
-        <link rel="apple-touch-icon" href="img/assets/pwa/apple-icon-180.png" />
+        <link rel="shortcut icon" href="img/favicons/favicon.ico" />
+        <link
+            rel="icon"
+            sizes="16x16 32x32 64x64"
+            href="img/favicons/favicon.ico"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="196x196"
+            href="img/favicons/favicon-192.png"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="160x160"
+            href="img/favicons/favicon-160.png"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="96x96"
+            href="img/favicons/favicon-96.png"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="64x64"
+            href="img/favicons/favicon-64.png"
+        />
         <link
             rel="icon"
             type="image/png"
             sizes="32x32"
-            href="/favicon-32x32.png"
+            href="img/favicons/favicon-32.png"
         />
         <link
             rel="icon"
             type="image/png"
             sizes="16x16"
-            href="/favicon-16x16.png"
+            href="img/favicons/favicon-16.png"
         />
-        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#131e32" />
+        <link rel="apple-touch-icon" href="img/favicons/favicon-57.png" />
+        <link
+            rel="apple-touch-icon"
+            sizes="114x114"
+            href="img/favicons/favicon-114.png"
+        />
+        <link
+            rel="apple-touch-icon"
+            sizes="72x72"
+            href="img/favicons/favicon-72.png"
+        />
+        <link
+            rel="apple-touch-icon"
+            sizes="144x144"
+            href="img/favicons/favicon-144.png"
+        />
+        <link
+            rel="apple-touch-icon"
+            sizes="60x60"
+            href="img/favicons/favicon-60.png"
+        />
+        <link
+            rel="apple-touch-icon"
+            sizes="120x120"
+            href="img/favicons/favicon-120.png"
+        />
+        <link
+            rel="apple-touch-icon"
+            sizes="76x76"
+            href="img/favicons/favicon-76.png"
+        />
+        <link
+            rel="apple-touch-icon"
+            sizes="152x152"
+            href="img/favicons/favicon-152.png"
+        />
+        <link
+            rel="apple-touch-icon"
+            sizes="180x180"
+            href="img/favicons/favicon-180.png"
+        />
         <meta name="msapplication-TileColor" content="#131e32" />
-
+        <meta
+            name="msapplication-TileImage"
+            content="img/favicons/favicon-144.png"
+        />
+        <meta name="msapplication-config" content="browserconfig.xml" />
         <link rel="manifest" href="manifest.webmanifest" />
 
         <!-- Apple hide Safari -->
@@ -264,6 +337,7 @@
     >
         <div class="sm:relative sm:flex sm:h-screen sm:w-screen sm:gap-1">
             <div
+                x-show="orientation === 'portrait'"
                 class="hidden h-screen sm:absolute sm:left-1/4 sm:top-1/4 sm:block sm:h-[90%] sm:max-h-[800px] sm:w-96 sm:-translate-x-1/4 sm:-translate-y-1/4 sm:rounded-[50px] sm:shadow-[-4.0px_6.0px_24.0px_rgba(0,0,0,0.65)] sm:outline sm:outline-[3px] sm:outline-gray-300 sm:dark:bg-cosmic-900 sm:dark:outline-slate-500"
             >
                 <div
@@ -3778,13 +3852,16 @@
                     />
                 </section>
             </section>
+
+            <!-- !Landing on desktop mode -->
             <div
                 class="hidden lg:absolute lg:left-[calc(40%_+_200px)] lg:top-1/4 lg:flex lg:-translate-y-1/4 lg:flex-col"
             >
                 <img
-                    width="96"
-                    height="96"
-                    src="img/assets/icons/appIcon.svg"
+                    class="rounded-lg"
+                    width="128"
+                    height="128"
+                    src="img/assets/qr-code.svg"
                     alt=""
                 />
                 <header class="pb-4 pt-8 text-7xl font-black">Weather</header>

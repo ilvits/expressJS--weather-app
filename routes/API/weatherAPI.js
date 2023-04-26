@@ -11,15 +11,15 @@ router.get('/', async (req, res) => {
         re.test(req.query.lat) &&
         re.test(req.query.lon)
     ) {
-        const Token_1 = process.env.VISUAL_CROSSING__API_TOKEN; // !tsoyilya@fairybrains.com
-        const Token_2 = process.env.VISUAL_CROSSING__API_TOKEN_2; // !tsoyilya@gmail.com
+        const Token_1 = process.env.VISUAL_CROSSING__API_TOKEN;
+        const Token_2 = process.env.VISUAL_CROSSING__API_TOKEN_2;
         const Token_3 = process.env.VISUAL_CROSSING__API_TOKEN_3;
         const lang = req.query.lang;
         let paramsArray = [];
         const baseurl = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline`;
         const params = {
             unitGroup: 'metric',
-            key: Token_2,
+            key: Token_1,
             elements: [
                 // "name",
                 // "datetime",
