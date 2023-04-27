@@ -349,8 +349,13 @@
         </script>
         <title>FairyBrains Weather</title>
     </head>
-
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
     <body
+        x-cloak
         class="overflow-hidden bg-gray-100 text-cosmic-900 dark:bg-cosmic-900 dark:from-cosmic-600 dark:to-cosmic-800 dark:text-white"
         :class="isDesktop() && 'sm:bg-gradient-to-bl sm:from-white sm:to-gray-300'"
         x-data="main"
@@ -364,6 +369,7 @@
     >
         <div class="sm:relative sm:flex sm:h-screen sm:w-screen sm:gap-1">
             <div
+                x-cloak
                 x-show="orientation === 'portrait'"
                 class="hidden h-screen sm:absolute sm:left-1/4 sm:top-1/4 sm:block sm:h-[90%] sm:max-h-[800px] sm:w-96 sm:-translate-x-1/4 sm:-translate-y-1/4 sm:rounded-[50px] sm:shadow-[-4.0px_6.0px_24.0px_rgba(0,0,0,0.65)] sm:outline sm:outline-[3px] sm:outline-gray-300 sm:dark:bg-cosmic-900 sm:dark:outline-slate-500"
             >
@@ -3879,6 +3885,7 @@
 
             <!-- !Landing on desktop mode -->
             <div
+                x-cloak
                 class="hidden lg:absolute lg:left-[calc(40%_+_200px)] lg:top-1/4 lg:flex lg:-translate-y-1/4 lg:flex-col"
             >
                 <img
