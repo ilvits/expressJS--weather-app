@@ -2,16 +2,49 @@
 <html lang="en" class="no-scrollbar">
     <head>
         <meta charset="UTF-8" />
-        <!-- <meta
-			http-equiv="Content-Security-Policy"
-			content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"
-		/> -->
-        <meta name="format-detection" content="telephone=no" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta
             name="description"
-            content="Get real-time information about temperature, humidity, barometric pressure and other factors that affect the weather, and make plans with the confidence that the wrong weather won't ruin them."
+            content="Real-time, hourly and next 10 and 30 days forecast. Search, add and edit your favorite locations. Customize units."
         />
+        <meta name="author" content="ILViTs tsoyilya@fairybrains.com" />
+        <meta name="designer" content="Kate Dementeva kate@fairybrains.com" />
+        <meta name="reply-to" content="admin@fairybrains.com" />
+        <meta name="owner" content="FairyBrains" />
+        <meta name="url" content="https://weather.fairybrains.com" />
+        <meta name="category" content="weather" />
+        <meta name="coverage" content="Worldwide" />
+        <meta name="distribution" content="Global" />
+
+        <meta name="og:title" content="Weather" />
+        <meta name="og:url" content="https://weather.fairybrains.com" />
+        <meta name="og:image" content="img/assets/pwa/icons/icon-512x512.png" />
+        <meta name="og:site_name" content="Fairy Weather App" />
+        <meta
+            name="og:description"
+            content="Real-time, hourly and next 10 and 30 days forecast. Search, add and edit your favorite locations. Customize units."
+        />
+        <meta name="og:email" content="admin@fairybrains.com" />
+
+        <meta name="msapplication-TileColor" content="#131e32" />
+        <meta
+            name="msapplication-TileImage"
+            content="img/favicons/favicon-144.png"
+        />
+        <meta name="msapplication-config" content="browserconfig.xml" />
+        <link rel="manifest" href="manifest.webmanifest" />
+
+        <!-- Apple hide Safari -->
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+
+        <!-- Android add to the home screen -->
+        <meta name="mobile-web-app-capable" content="yes" />
+
+        <meta name="application-name" content="Weather" />
+        <meta name="apple-mobile-web-app-title" content="Weather" />
+
+        <meta name="format-detection" content="telephone=no" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
         <meta
             name="viewport"
             content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
@@ -271,22 +304,7 @@
             sizes="180x180"
             href="img/favicons/favicon-180.png"
         />
-        <meta name="msapplication-TileColor" content="#131e32" />
-        <meta
-            name="msapplication-TileImage"
-            content="img/favicons/favicon-144.png"
-        />
-        <meta name="msapplication-config" content="browserconfig.xml" />
-        <link rel="manifest" href="manifest.webmanifest" />
 
-        <!-- Apple hide Safari -->
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-
-        <!-- Android add to the home screen -->
-        <meta name="mobile-web-app-capable" content="yes" />
-
-        <meta name="application-name" content="Weather" />
-        <meta name="apple-mobile-web-app-title" content="Weather" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
@@ -321,7 +339,7 @@
         <script defer src="js/alpine/timeout.min.js"></script>
         <script defer src="js/alpine/alpine.min.js"></script>
         <script defer src="js/slip/slip.min.js"></script>
-
+        <script defer src="js/lazysizes.min.js"></script>
         <script>
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
@@ -3864,16 +3882,16 @@
                 class="hidden lg:absolute lg:left-[calc(40%_+_200px)] lg:top-1/4 lg:flex lg:-translate-y-1/4 lg:flex-col"
             >
                 <img
-                    class="rounded-lg"
+                    class="lazyload rounded-lg"
                     width="128"
                     height="128"
                     src="img/assets/qr-code.svg"
                     alt=""
                 />
                 <header class="pb-4 pt-8 text-7xl font-black">Weather</header>
-                <div class="text-3xl font-medium">
+                <h1 class="text-3xl font-medium">
                     Weather Forecast App by FairyBrains
-                </div>
+                </h1>
                 <div class="mt-16 pb-8 text-6xl font-semibold">
                     Light and dark colour theme
                 </div>
