@@ -7,7 +7,7 @@ async function getWeather(
 ) {
     const lat = location.latitude;
     const lon = location.longitude;
-    console.log('trying to update...');
+    // console.log('trying to update...');
     axios({
         url: '/api/weather',
         method: 'get',
@@ -219,7 +219,7 @@ function parseSuggestions(
             name: el.text,
         });
     });
-    console.table(f);
+
     if (features.length === 0) {
         // console.log("Nothing found");
         nothingFound.classList.remove('hidden');

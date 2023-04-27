@@ -346,8 +346,6 @@ document.addEventListener('alpine:init', () => {
                 setTimeout(() => {
                     splide.refresh();
                 }, 100);
-            } else {
-                console.warn('slide not found', index);
             }
         },
         swap(event) {
