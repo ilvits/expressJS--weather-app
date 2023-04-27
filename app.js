@@ -7,7 +7,7 @@ const compression = require('compression');
 const express = require('express');
 // const cors = require('cors');
 const bodyParser = require('body-parser');
-// Const helmet = require('helmet');
+// const helmet = require('helmet');
 
 require('dotenv').config();
 
@@ -30,7 +30,7 @@ app.use(function (req, res, next) {
 // app.set("view engine", "ejs");
 
 // app.use(cors());
-// App.use(helmet());
+// app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(compression());

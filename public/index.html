@@ -287,14 +287,53 @@
 
         <meta name="application-name" content="Weather" />
         <meta name="apple-mobile-web-app-title" content="Weather" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-        <link preload rel="stylesheet" href="css/style.css" />
-        <link preload rel="stylesheet" href="css/splidejs/splide.min.css" />
+        <!-- We use the full link to the CSS file in the rest of the tags -->
+        <!-- <link
+            rel="preload"
+            as="style"
+            href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap"
+        />
+
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap"
+            media="print"
+            onload="this.media='all'"
+        />
+
+        <noscript>
+            <link
+                rel="stylesheet"
+                href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap"
+            />
+        </noscript> -->
+
+        <!-- <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600&display=swap"
+            rel="stylesheet"
+        /> -->
+        <link
+            rel="preload"
+            href="css/style.css"
+            as="style"
+            onload="this.rel='stylesheet'"
+        />
+        <link
+            rel="preload"
+            href="css/splidejs/splide.min.css"
+            as="style"
+            onload="this.rel='stylesheet'"
+        />
+        <!-- <link preload rel="stylesheet" href="css/style.css" />
+        <link preload rel="stylesheet" href="css/splidejs/splide.min.css" /> -->
         <script src="js/i18n.js"></script>
         <script src="js/init.js"></script>
         <script src="js/utils/theme.js"></script>
         <script defer src="js/alpine/timeout.min.js"></script>
-        <!-- <script defer src="js/alpine/moment.min.js"></script> -->
         <script defer src="js/moment/moment.min.js"></script>
         <script defer src="js/moment/locales/ru.min.js"></script>
         <script defer src="js/alpine/i18n.min.js"></script>
