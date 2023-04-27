@@ -11,6 +11,9 @@ module.exports = {
         './public/**/*.html',
     ],
     theme: {
+        fontFamily: {
+            sans: ['Nunito', 'ui-sans-serif', 'system-ui'],
+        },
         screens: {
             xs: '380px',
             sm: '550px',
