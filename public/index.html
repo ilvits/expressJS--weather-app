@@ -575,7 +575,7 @@
                                                                 class="conditions"
                                                             ></div>
                                                             <div
-                                                                x-show="slide.weatherData.currentConditions.windgust"
+                                                                x-show="slide.weatherData.currentConditions.windgust > 36"
                                                                 x-text="lang.weather.windgust + ' ' + slide.weatherData.currentConditions.windgust + ' ' + lang.weather.units.wind[settings.wind ? 1 : 0]"
                                                                 class="windgust"
                                                             ></div>
@@ -622,7 +622,8 @@
                                                                 class="absolute bottom-1 h-[75px] w-[150px]"
                                                             >
                                                                 <div
-                                                                    class="h-full w-full rounded-t-full border border-b-0 border-dashed border-cyan/60"
+                                                                    class="h-full w-full rounded-t-full border border-b-0 border-solid"
+                                                                    :class="slide.weatherData.currentConditions.sunposition ? 'border-dashed border-cyan/60' : 'border-solid border-violetDark'"
                                                                 ></div>
                                                                 <!-- ? SKY -->
                                                                 <div
@@ -633,10 +634,12 @@
                                                                     class="absolute hidden h-[75px] w-[150px] rounded-b-full bg-white from-[#192848] to-[#182847] dark:bg-gradient-to-r"
                                                                 ></div>
                                                                 <div
-                                                                    class="absolute -bottom-[4px] -left-[4px] h-2 w-2 rounded-full bg-cyan"
+                                                                    class="absolute -bottom-[4px] -left-[4px] h-2 w-2 rounded-full"
+                                                                    :class="slide.weatherData.currentConditions.sunposition ? 'bg-cyan' : 'bg-violetDark'"
                                                                 ></div>
                                                                 <div
-                                                                    class="absolute -bottom-[4px] -right-[4px] h-2 w-2 rounded-full bg-cyan"
+                                                                    class="absolute -bottom-[4px] -right-[4px] h-2 w-2 rounded-full"
+                                                                    :class="slide.weatherData.currentConditions.sunposition ? 'bg-cyan' : 'bg-violetDark'"
                                                                 ></div>
                                                                 <!-- ! SUN -->
                                                                 <div
@@ -2952,7 +2955,7 @@
                                             ? lang.datetime.today 
                                             : id === 1
                                             ? lang.datetime.tomorrow 
-                                            : moment.unix(day.datetimeEpoch).locale(language).format('DD MMMM');"
+                                            : moment.unix(day.datetimeEpoch).locale(language).format('dd').toUpperCase() + ', ' + moment.unix(day.datetimeEpoch).locale(language).format('D MMMM');"
                                         class="flex w-full flex-nowrap items-center gap-5 py-[2px] font-light"
                                     >
                                         <div
@@ -3181,7 +3184,8 @@
                                                                 class="absolute bottom-1 h-[75px] w-[150px]"
                                                             >
                                                                 <div
-                                                                    class="h-full w-full rounded-t-full border border-b-0 border-dashed border-cyan/60"
+                                                                    class="h-full w-full rounded-t-full border border-b-0 border-solid"
+                                                                    :class="slide.weatherData.currentConditions.sunposition ? 'border-dashed border-cyan/60' : 'border-solid border-violetDark'"
                                                                 ></div>
                                                                 <!-- ? SKY -->
                                                                 <div
@@ -3192,10 +3196,12 @@
                                                                     class="absolute hidden h-[75px] w-[150px] rounded-b-full bg-white from-[#192848] to-[#182847] dark:bg-gradient-to-r"
                                                                 ></div>
                                                                 <div
-                                                                    class="absolute -bottom-[4px] -left-[4px] h-2 w-2 rounded-full bg-cyan"
+                                                                    class="absolute -bottom-[4px] -left-[4px] h-2 w-2 rounded-full"
+                                                                    :class="slide.weatherData.currentConditions.sunposition ? 'bg-cyan' : 'bg-violetDark'"
                                                                 ></div>
                                                                 <div
-                                                                    class="absolute -bottom-[4px] -right-[4px] h-2 w-2 rounded-full bg-cyan"
+                                                                    class="absolute -bottom-[4px] -right-[4px] h-2 w-2 rounded-full"
+                                                                    :class="slide.weatherData.currentConditions.sunposition ? 'bg-cyan' : 'bg-violetDark'"
                                                                 ></div>
                                                                 <!-- ! SUN -->
                                                                 <div

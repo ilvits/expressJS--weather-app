@@ -107,6 +107,7 @@ module.exports = {
             'lemonDark': '#F7D056',
             'orange': '#FE6B00',
             'violet': '#FF0C63',
+            'violetDark': '#D580FF',
             'transparent': 'transparent',
             'current': 'currentColor',
             'black': colors.black,
