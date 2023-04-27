@@ -96,7 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
             splide.options.pagination = true;
         }
     });
-
     splide.on('moved', function (id) {
         localStorage.activeSlide = id;
     });
@@ -128,7 +127,7 @@ function checkIcon(iconName, sunrise, sunset, hour) {
     return iconName;
 }
 
-const addSlide = data => {
+const addSlide = function (data) {
     window.dispatchEvent(
         new CustomEvent('addslide', {
             detail: data,
@@ -136,7 +135,7 @@ const addSlide = data => {
     );
 };
 
-const addPopup = data => {
+const addPopup = function (data) {
     window.dispatchEvent(
         new CustomEvent('addpopup', {
             detail: data,
