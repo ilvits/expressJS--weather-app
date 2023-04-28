@@ -12,6 +12,5 @@
     "rules": {
         // "object-curly-spacing": 0
     },
-    "plugins": [
-        "prettier"]
+    "plugins": ["prettier"]
 }
