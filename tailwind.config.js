@@ -12,7 +12,7 @@ module.exports = {
     ],
     theme: {
         fontFamily: {
-            sans: ['Nunito', 'ui-sans-serif', 'system-ui'],
+            sans: ['Nunito', 'Gill Sans', 'sans-serif'],
         },
         screens: {
             xs: '380px',
@@ -29,9 +29,6 @@ module.exports = {
                 width: 'width',
                 height: 'height',
                 spacing: 'margin, padding',
-            },
-            fontFamily: {
-                sans: ['Nunito'],
             },
             fontSize: {
                 xxs: ['10px', '9px'],
