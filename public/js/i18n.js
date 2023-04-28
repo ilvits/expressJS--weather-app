@@ -179,7 +179,7 @@ const languageStrings = {
                 delete: 'Delete',
                 locations: 'My locations',
                 settings: 'Settings',
-                searchLocations: 'Search Locations',
+                searchLocations: 'Find locations',
                 weather: 'Weather',
                 addUserLocation: ['Find me', 'Searching...'],
             },
@@ -245,7 +245,7 @@ const languageStrings = {
         },
         locations: {
             header: 'My Locations',
-            searchPlaceholder: 'Find new location',
+            searchPlaceholder: 'Find locations',
             edit: ['Edit', 'Done'],
             restoreName: 'Restore original name',
         },
@@ -270,7 +270,7 @@ const languageStrings = {
             details: 'Show Details',
             about: {
                 header: 'About App',
-                text: "<p>Be aware of all the weather conditions and their changes, wherever you are! Get real-time information about temperature, humidity, barometric pressure and other factors that affect the weather, and make plans with the confidence that the wrong weather won't ruin them. </p> <p> Our application is easy to use, with an intuitive interface and easy access to various features, such as listing your favorite locations, choosing units of measurement, themes, 10-day and monthly forecasts. </p> <p> We always welcome feedback and are ready to improve our application in the future, so we look forward to your feedback! </p>",
+                text: "<p>Be aware of all the weather conditions and their changes, wherever you are! Get real-time information about temperature, humidity, barometric pressure and other factors that affect the weather, and make plans with the confidence that the wrong weather won't ruin them. </p> <p> Our application is easy to use, with an intuitive interface and easy access to various features, such as listing your favourite locations, choosing units of measurement, themes, 10-day and monthly forecasts. </p> <p> We always welcome feedback and are ready to improve our application in the future, so we look forward to your feedback! </p>",
                 links: [
                     'Send review',
                     'Заказать дизайн и разработку',
@@ -308,8 +308,8 @@ const languageStrings = {
         },
         placeholders: {
             main: {
-                header: 'There’s no bad weather, only bad clothes ;)',
-                text: 'See the weather around the world and save your favorite locations.',
+                header: 'There’s no bad weather, <br> only bad clothes',
+                text: 'See the weather around the world <br> and save your favourite locations.',
             },
             locations: {
                 header: 'Add your locations',

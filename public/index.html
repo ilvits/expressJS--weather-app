@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta
             name="description"
-            content="Real-time, hourly and next 10 and 30 days forecast. Search, add and edit your favorite locations. Customize units."
+            content="Real-time, hourly and next 10 and 30 days forecast. Search, add and edit your favourite locations. Customize units."
         />
         <meta name="author" content="ILViTs tsoyilya@fairybrains.com" />
         <meta name="designer" content="Kate Dementeva kate@fairybrains.com" />
@@ -21,7 +21,7 @@
         <meta name="og:site_name" content="Fairy Weather App" />
         <meta
             name="og:description"
-            content="Real-time, hourly and next 10 and 30 days forecast. Search, add and edit your favorite locations. Customize units."
+            content="Real-time, hourly and next 10 and 30 days forecast. Search, add and edit your favourite locations. Customize units."
         />
         <meta name="og:email" content="admin@fairybrains.com" />
 
@@ -337,9 +337,9 @@
         <script defer src="js/moment/locales/ru.min.js"></script>
         <script defer src="js/alpine/i18n.min.js"></script>
         <script defer src="js/alpine/timeout.min.js"></script>
+        <script defer src="js/alpine/intersect.min.js"></script>
         <script defer src="js/alpine/alpine.min.js"></script>
         <script defer src="js/slip/slip.min.js"></script>
-        <script defer src="js/lazysizes.min.js"></script>
         <script>
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
@@ -1140,21 +1140,23 @@
                     <div
                         id="main-page--placeholder"
                         x-cloak
+                        x-intersect:enter.once="$el.firstElementChild.src = $el.firstElementChild.dataset.src"
                         x-show="slides.length === 0"
                         class="absolute bottom-1/3 left-1/2 flex w-[calc(100%_-_84px)] -translate-x-1/2 transform-gpu flex-col items-center gap-6 text-center transition-[opacity,translate] duration-300 ease-[cubic-bezier(.23,1,.32,1)]"
                     >
                         <img
-                            class="h-[197px] w-[195px]"
-                            src="img/assets/icons/globe.svg"
+                            x-cloak
+                            class="transition-all-500 h-24- w-24"
+                            data-src="img/assets/icons/sunshine.svg"
                             alt=""
                         />
                         <div>
                             <h3
-                                x-text="lang.placeholders.main.header"
+                                x-html="lang.placeholders.main.header"
                                 class="pb-3"
                             ></h3>
                             <div
-                                x-text="lang.placeholders.main.text"
+                                x-html="lang.placeholders.main.text"
                                 class="text-sm dark:text-cosmic-400"
                             ></div>
                         </div>
@@ -2584,6 +2586,7 @@
                                                         x-data="detailedDay"
                                                     >
                                                         <li
+                                                            x-init="icon = checkIcon(detailedDay.weatherData.hours[index].icon, detailedDay.weatherData.sunrise, detailedDay.weatherData.sunset, index); console.log(icon);"
                                                             class="mb-4 border-b border-gray-100 px-6 pb-4 dark:border-cosmic-800"
                                                         >
                                                             <header
@@ -2627,7 +2630,7 @@
                                                                     <div>
                                                                         <img
                                                                             class="h-14 w-14 rounded-2xl"
-                                                                            :src="weatherIconsPath + weatherIcons[detailedDay.weatherData.hours[index].icon]"
+                                                                            :src="weatherIconsPath + icon + '.svg'"
                                                                             alt=""
                                                                         />
                                                                     </div>
@@ -3894,13 +3897,16 @@
                 x-cloak
                 class="hidden lg:absolute lg:left-[calc(40%_+_200px)] lg:top-1/4 lg:flex lg:-translate-y-1/4 lg:flex-col"
             >
-                <img
-                    class="lazyload rounded-lg"
-                    width="128"
-                    height="128"
-                    src="img/assets/qr-code.svg"
-                    alt=""
-                />
+                <div
+                    class="h-32 w-32"
+                    x-intersect:enter="$el.firstElementChild.src = $el.firstElementChild.dataset.src;"
+                >
+                    <img
+                        class="transition-all-500 h-32 w-32 rounded-lg"
+                        data-src="img/assets/qr-code.svg"
+                        alt=""
+                    />
+                </div>
                 <header class="pb-4 pt-8 text-7xl font-black">Weather</header>
                 <h1 class="text-3xl font-medium">
                     Weather Forecast App by FairyBrains
@@ -3910,7 +3916,7 @@
                 </div>
                 <div class="w-96 text-xl">
                     Current, hourly and next 10 and 30 days forecast. Search,
-                    add and edit your favorite locations. Customize units.
+                    add and edit your favourite locations. Customize units.
                 </div>
             </div>
         </div>

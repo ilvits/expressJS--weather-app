@@ -1,6 +1,6 @@
 'use strict';
 
-let splide, splide2, updateInterval;
+let splide, splide2, updateInterval, lazyLoadInstance;
 document.body.style.webkitTouchCallout = 'none';
 const active_slide = localStorage.getItem('activeSlide') || 0;
 const moonPhaseIconsPath = 'img/assets/icons/moonphases/';
@@ -75,7 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
             page: 'bg-primary-light/30 dark:bg-primary-dark/40 h-1.5 w-1.5 [&.is-active]:bg-primary-light dark:[&.is-active]:bg-primary-dark rounded-full',
         },
     });
-
     splide.on('overflow', function (isOverflow) {
         splide.options = {
             pagination: isOverflow,
@@ -621,7 +620,6 @@ function setupSlip(list) {
 
     list.addEventListener('slip:swipe', function (event) {
         event.preventDefault(); // will animate back to original position
-        // }
     });
 
     list.addEventListener(
