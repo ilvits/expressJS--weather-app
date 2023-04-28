@@ -47,7 +47,7 @@
 
         <meta
             name="viewport"
-            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+            content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=no"
         />
         <meta name="theme-color" content="" />
         <!-- <meta name="apple-mobile-web-app-status-bar-style" content="#1B2541"> -->
@@ -2281,8 +2281,6 @@
                                 id="mainpage--tapbar--locations-btn"
                                 @click="menuLocations = true; menuSettings = false; settingsChanged ? updateInfo(true) : undefined; settingsChanged = false; modalAbout = false;"
                                 class="flex w-20 shrink-0 grow-0 flex-col items-center gap-[6px]"
-                                aria-controls="sidebarLeft"
-                                aria-label="Toggle locations menu"
                             >
                                 <svg
                                     id="locations-btn-svg"
@@ -2387,12 +2385,7 @@
                                 id="mainpage--tapbar--settings-btn"
                                 @click="menuSettings = true; menuLocations = false; settingsChanged ? updateInfo(true) : false; settingsChanged = false;"
                                 class="flex w-20 shrink-0 grow-0 flex-col items-center gap-[6px]"
-                                aria-controls="sidebarRight"
-                                aria-label="Toggle settings menu"
                             >
-                                <span class="sr-only"
-                                    >Toggle settings menu</span
-                                >
                                 <svg
                                     id="settings_btn_svg"
                                     :class="{ 'stroke-primary-light dark:stroke-primary-dark': menuSettings === true }"
