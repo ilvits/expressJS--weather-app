@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
     ) {
         const Token_1 = process.env.VISUAL_CROSSING__API_TOKEN;
         const Token_2 = process.env.VISUAL_CROSSING__API_TOKEN_2;
-        const Token_3 = process.env.VISUAL_CROSSING__API_TOKEN_3;
+        const Token_3 = process.env.VISUAL_CROSSING__API_TOKEN_3; // admin token
         const lang = req.query.lang;
         let paramsArray = [];
         const baseurl = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline`;
@@ -62,9 +62,9 @@ router.get('/', async (req, res) => {
         const lat = req.query.lat;
         const lon = req.query.lon;
 
-        const url = baseurl + `/${lat},${lon}?` + paramsArray.join('&');
-        // const url =
-        // 	baseurl + `/${lat},${lon}/next30days?` + paramsArray.join("&");
+        // const url = baseurl + `/${lat},${lon}?` + paramsArray.join('&');
+        const url =
+            baseurl + `/${lat},${lon}/next30days?` + paramsArray.join('&');
         axios({
             method: 'GET',
             url: url,
