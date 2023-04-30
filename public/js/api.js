@@ -44,6 +44,8 @@ async function getWeather(
 
 function parseWeatherData(location, data, isPreview, geoPositionUpdate) {
     // console.log(data);
+    console.log(data.alerts || 'no alerts');
+    console.log(data.events || 'no events');
     const id = Number(location.id);
     const delta =
         data.currentConditions.sunsetEpoch -
@@ -132,7 +134,7 @@ function parseWeatherData(location, data, isPreview, geoPositionUpdate) {
             .utcOffset(timezone)
             .locale(language)
             .format('HH:mm');
-        day.hours.forEach(hour => {
+        day.hours?.forEach(hour => {
             hour.temp = tempConverter(hour.temp);
             hour.humidity = Math.round(hour.humidity);
             hour.precipprob = Math.round(hour.precipprob);
@@ -182,7 +184,7 @@ async function getSuggestions(query) {
             lang: language,
         },
     })
-        .then(response => parseSuggestions(response.data.features, query))
+        .then(response => parseSuggestions(response.data, query))
         .catch(error => {
             if (error.code === 'ERR_NETWORK') {
                 const message = languageStrings[language].errors.network;
@@ -201,11 +203,13 @@ async function getSuggestions(query) {
 }
 
 function parseSuggestions(
-    features,
+    data,
     searchText,
     isUserLocation = false,
     update = false
 ) {
+    // console.log('data', data);
+    const features = data.features || data;
     const suggestionList = document.querySelector('.suggestions-list');
     const searchInput = document.querySelector('#searchInput');
     const nothingFound = document.querySelector(
