@@ -236,7 +236,7 @@ const languageStrings = {
         },
         slides: {
             header: {
-                details: ['Details', 'Hide'],
+                details: ['Show more', 'Show less'],
             },
             headers: {
                 tenDaysForecast: '10-day forecast',

@@ -483,12 +483,13 @@
                                     >
                                         <!-- * HEADER * -->
                                         <header
-                                            class="transition-opacity-500 sticky top-0 z-50 flex gap-1 bg-gray-100 px-6 py-4 dark:bg-cosmic-900"
+                                            class="transition-opacity-500 sticky top-0 z-50 flex justify-between gap-1 bg-gray-100 px-6 py-4 dark:bg-cosmic-900"
                                         >
                                             <label
-                                                class="location-slide--header-title flex w-4/5 items-center gap-2 truncate text-xl font-semibold leading-5"
+                                                class="location-slide--header-title flex items-center gap-2 truncate text-xl font-semibold leading-5"
                                             >
                                                 <div
+                                                    class="truncate"
                                                     x-text="slide.location.name"
                                                 ></div>
                                                 <svg
@@ -509,7 +510,7 @@
                                                 x-show="!atTop"
                                                 x-transition:enter-start="opacity-0"
                                                 x-transition:leave-end="opacity-0"
-                                                class="location-slide--header-temp transition-opacity-500 absolute right-6 flex items-center gap-2 text-sm font-bold"
+                                                class="location-slide--header-temp transition-opacity-500 absolute right-6 flex items-center gap-2 bg-gray-100 text-sm font-bold dark:bg-cosmic-900"
                                             >
                                                 <div
                                                     x-text="slide.weatherData.currentConditions.temp + '°'"
@@ -525,14 +526,14 @@
                                                 x-transition:enter-start="opacity-0"
                                                 x-transition:leave-end="opacity-0"
                                                 @click="details = !details"
-                                                class="detail-weather-toggle hs-collapse-toggle transition-opacity-500 flex items-end gap-1 text-sm text-gray-300 dark:text-cosmic-400"
+                                                class="detail-weather-toggle hs-collapse-toggle transition-opacity-500 flex shrink-0 items-end gap-1 text-sm text-gray-300 dark:text-cosmic-500"
                                             >
                                                 <div
                                                     x-text="details ? lang.slides.header.details[1] : lang.slides.header.details[0]"
                                                     class="detail-weather-toggle--label"
                                                 ></div>
                                                 <svg
-                                                    class="detail-weather-toggle--img fill-gray-300 dark:fill-cosmic-400"
+                                                    class="detail-weather-toggle--img fill-gray-300 dark:fill-cosmic-500"
                                                     :class="details && 'rotate-180'"
                                                     width="16"
                                                     height="17"
@@ -614,7 +615,7 @@
                                                         class="weather-icon"
                                                     >
                                                         <img
-                                                            class="h-[120px] w-[120px] shrink-0"
+                                                            class="h-32 w-32 shrink-0"
                                                             :src="weatherIconsPath + weatherIcons[checkIcon(slide.weatherData.currentConditions.icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(slide.weatherData.timezone).format('HH')))]"
                                                             alt=""
                                                         />
@@ -881,7 +882,7 @@
                                         </section>
                                         <!-- * HOURLY * -->
                                         <ul
-                                            class="hourlyToday hourly no-drag no-scrollbar relative flex snap-x snap-mandatory gap-2 overflow-hidden overflow-x-scroll scroll-smooth px-3 pt-4"
+                                            class="hourlyToday hourly no-drag no-scrollbar relative flex snap-x snap-mandatory gap-0.5 overflow-hidden overflow-x-scroll scroll-smooth px-3 pt-4"
                                         >
                                             <template x-for="i in 24" :key="i">
                                                 <li
@@ -891,7 +892,7 @@
                                                             ? checkIcon(slide.weatherData.currentConditions.icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(slide.weatherData.timezone).format('HH'))) 
                                                             : checkIcon(slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH')))
                                                             "
-                                                    class="no-drag flex w-[60px] snap-start scroll-ml-3 flex-col items-center justify-end px-2"
+                                                    class="no-drag flex snap-start scroll-ml-2 flex-col items-center justify-end px-2.5"
                                                 >
                                                     <!-- Date -->
                                                     <div
@@ -899,27 +900,28 @@
                                                         class="no-drag date truncate pb-1 text-xs font-light text-gray-300 dark:text-cosmic-500"
                                                     ></div>
                                                     <div
-                                                        class="no-drag icon relative flex h-11 w-11 items-center justify-center rounded-xl bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645]"
+                                                        class="no-drag icon relative flex h-12 w-12 items-center justify-center rounded-xl bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645]"
                                                     >
                                                         <img
                                                             :src="weatherIconsSmallPath + weatherIcons[i === 0 ? checkIcon(slide.weatherData.currentConditions.icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(slide.weatherData.timezone).format('HH'))) : checkIcon(slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH')))]"
-                                                            class="no-drag h-6 w-6"
+                                                            class="no-drag h-7 w-7"
                                                             alt=""
                                                         />
                                                         <!-- Precipprob -->
                                                         <div
                                                             x-show="i === 0 ? slide.weatherData.currentConditions.precipprob > 30 : slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].precipprob > 30"
                                                             x-text="i === 0 ? slide.weatherData.currentConditions.precipprob : slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].precipprob + '%'"
-                                                            class="no-drag absolute -bottom-2 -right-2 rounded-3xl bg-gray-100 p-[5px] text-xxs text-gray-300 dark:bg-cosmic-900 dark:text-cosmic-300"
+                                                            class="no-drag absolute -bottom-2.5 -right-2 rounded-3xl bg-gray-100 p-[5px] text-xxs text-gray-300 dark:bg-cosmic-900"
+                                                            :class="icon.includes('night') ? 'text-violetDark' : 'text-cosmic-600'"
                                                         ></div>
                                                     </div>
                                                     <div
                                                         x-text="moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))]) ? lang.datetime.now : moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH:00')"
-                                                        class="no-drag time pt-3 text-xs font-light text-gray-300 dark:text-cosmic-400"
+                                                        class="no-drag time pt-3 text-xs font-light text-gray-300 dark:text-cosmic-500"
                                                     ></div>
                                                     <div
                                                         x-text="i === 0 ? slide.weatherData.currentConditions.temp : slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].temp + '°'"
-                                                        class="no-drag pt-1 text-lg font-semibold leading-5"
+                                                        class="no-drag pt-[5px] text-base font-semibold leading-5"
                                                     ></div>
                                                 </li>
                                             </template>
@@ -956,17 +958,17 @@
                                                 >
                                                     <div
                                                         x-show="day.icon"
-                                                        class="small-icon relative h-[52px] w-[52px] shrink-0 rounded-2xl bg-white py-1 dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645]"
+                                                        class="small-icon relative h-12 w-12 shrink-0 rounded-2xl bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645]"
                                                     >
                                                         <img
-                                                            class="mx-auto h-[44px] w-[44px]"
-                                                            :src="weatherIconsPath + weatherIcons[day.icon]"
+                                                            class="m-2.5 h-7 w-7"
+                                                            :src="weatherIconsSmallPath + weatherIcons[day.icon]"
                                                             alt=""
                                                         />
                                                         <div
                                                             x-show="day.precipprob > 30"
                                                             x-text="day.precipprob + '%'"
-                                                            class="absolute -bottom-2 -right-2 rounded-3xl bg-gray-100 p-[5px] text-xxs font-medium text-gray-300 dark:bg-cosmic-900 dark:text-cosmic-300"
+                                                            class="absolute -bottom-3 -right-2 rounded-3xl bg-gray-100 p-[5px] text-xxs font-medium text-cosmic-600 dark:bg-cosmic-900"
                                                         ></div>
                                                     </div>
                                                     <div
@@ -982,7 +984,7 @@
                                                         ></div>
                                                         <div
                                                             x-text="day.conditions"
-                                                            class="text-xs font-medium leading-[14px] text-gray-300 dark:text-cosmic-400"
+                                                            class="text-xs font-medium leading-[14px] text-gray-300 dark:text-cosmic-500"
                                                         ></div>
                                                     </div>
                                                     <div class="my-4 w-full">
@@ -991,7 +993,7 @@
                                                         >
                                                             <div
                                                                 x-text="day.tempmin + '°'"
-                                                                class="text-gray-300 dark:text-cosmic-400"
+                                                                class="text-gray-300 dark:text-cosmic-500"
                                                             ></div>
                                                             <div
                                                                 class="font-semibold"
@@ -1065,7 +1067,7 @@
                                                     class="grow pl-5 text-base font-medium leading-5"
                                                 ></div>
                                                 <svg
-                                                    class="detail-weather-toggle--img -rotate-90 fill-gray-300 dark:fill-cosmic-400"
+                                                    class="detail-weather-toggle--img -rotate-90 fill-gray-300 dark:fill-cosmic-500"
                                                     width="16"
                                                     height="17"
                                                     viewBox="0 0 16 17"
@@ -1133,7 +1135,7 @@
                                                     class="grow pl-5 text-base font-medium leading-5"
                                                 ></div>
                                                 <svg
-                                                    class="detail-weather-toggle--img -rotate-90 fill-gray-300 dark:fill-cosmic-400"
+                                                    class="detail-weather-toggle--img -rotate-90 fill-gray-300 dark:fill-cosmic-500"
                                                     width="16"
                                                     height="17"
                                                     viewBox="0 0 16 17"
@@ -1172,7 +1174,7 @@
                             ></h3>
                             <div
                                 x-html="lang.placeholders.main.text"
-                                class="text-sm dark:text-cosmic-400"
+                                class="text-sm dark:text-cosmic-500"
                             ></div>
                         </div>
                         <button
@@ -1344,7 +1346,7 @@
                                         ></h3>
                                         <div
                                             x-text="lang.placeholders.addUserLocation.text"
-                                            class="text-sm dark:text-cosmic-400"
+                                            class="text-sm dark:text-cosmic-500"
                                         ></div>
 
                                         <button
@@ -1417,7 +1419,7 @@
                                         ></div>
                                         <div
                                             x-text="lang.placeholders.nothingFound.text"
-                                            class="text-sm dark:text-cosmic-400"
+                                            class="text-sm dark:text-cosmic-500"
                                         ></div>
                                     </div>
                                 </section>
@@ -1487,7 +1489,7 @@
                                                 :class="card.location.isUserLocation === 'true' ? 'opacity-50' : 'opacity-100'"
                                             >
                                                 <svg
-                                                    class="no-swipe instant fill-gray-300 dark:fill-cosmic-400"
+                                                    class="no-swipe instant fill-gray-300 dark:fill-cosmic-500"
                                                     width="40"
                                                     height="40"
                                                     viewBox="0 0 40 40"
@@ -1571,7 +1573,7 @@
                                                 x-show="!locationsEditMode"
                                                 x-transition:enter-start="opacity-0 scale-50 translate-x-20"
                                                 x-transition:leave-end="opacity-0 scale-50 translate-x-20"
-                                                class="card__weather-info transition-500 absolute right-16 flex w-20 shrink-0 flex-col items-center"
+                                                class="card__weather-info transition-500 absolute right-[72px] flex w-20 shrink-0 flex-col items-center"
                                             >
                                                 <div
                                                     x-text="card.weatherData.currentConditions.temp + '°'"
@@ -1823,7 +1825,7 @@
                                     ></h3>
                                     <div
                                         x-text="lang.placeholders.locations.text"
-                                        class="text-sm dark:text-cosmic-400"
+                                        class="text-sm dark:text-cosmic-500"
                                     ></div>
                                 </div>
                             </section>
@@ -2283,7 +2285,7 @@
                     <!-- *? TAP BAR ?* -->
                     <section
                         id="tapbar"
-                        class="transition-colors-500 fixed bottom-0 left-0 h-20 w-full bg-white/60 text-gray-300 backdrop-blur-lg dark:bg-cosmic-900/80 dark:text-cosmic-400"
+                        class="transition-colors-500 fixed bottom-0 left-0 h-20 w-full bg-white/60 text-gray-300 backdrop-blur-lg dark:bg-cosmic-900/80 dark:text-cosmic-500"
                     >
                         <div
                             class="relative mx-8 mt-3 flex items-center justify-between overflow-hidden"
@@ -2296,7 +2298,7 @@
                                 <svg
                                     id="locations-btn-svg"
                                     :class="{ 'stroke-primary-light dark:stroke-primary-dark': menuLocations === true }"
-                                    class="transition-colors-500 stroke-gray-300 dark:stroke-cosmic-400"
+                                    class="transition-colors-500 stroke-gray-300 dark:stroke-cosmic-500"
                                     width="25"
                                     height="24"
                                     viewBox="0 0 25 24"
@@ -2334,7 +2336,7 @@
                                     class="flex shrink-0 grow-0 flex-col items-center gap-[6px]"
                                 >
                                     <svg
-                                        class="transition-colors-500 stroke-gray-300 dark:stroke-cosmic-400"
+                                        class="transition-colors-500 stroke-gray-300 dark:stroke-cosmic-500"
                                         :class="(menuLocations || menuSettings) || 'stroke-primary-light dark:stroke-primary-dark'"
                                         width="25"
                                         height="24"
@@ -2400,7 +2402,7 @@
                                 <svg
                                     id="settings_btn_svg"
                                     :class="{ 'stroke-primary-light dark:stroke-primary-dark': menuSettings === true }"
-                                    class="transition-colors-500 stroke-gray-300 dark:stroke-cosmic-400"
+                                    class="transition-colors-500 stroke-gray-300 dark:stroke-cosmic-500"
                                     width="25"
                                     height="24"
                                     viewBox="0 0 25 24"
@@ -2754,7 +2756,7 @@
                                                                 </div>
                                                                 <div
                                                                     x-text="lang.datetime.sunrise"
-                                                                    class="place-self-start self-end text-xs font-light leading-[14px] text-gray-300 dark:text-cosmic-400"
+                                                                    class="place-self-start self-end text-xs font-light leading-[14px] text-gray-300 dark:text-cosmic-500"
                                                                 ></div>
                                                                 <div
                                                                     x-text="detailedDay.weatherData.sunrise"
@@ -2775,7 +2777,7 @@
                                                                 </div>
                                                                 <div
                                                                     x-text="lang.datetime.sunset"
-                                                                    class="place-self-start self-end text-xs font-light leading-[14px] text-gray-300 dark:text-cosmic-400"
+                                                                    class="place-self-start self-end text-xs font-light leading-[14px] text-gray-300 dark:text-cosmic-500"
                                                                 ></div>
                                                                 <div
                                                                     x-text="detailedDay.weatherData.sunset"
@@ -2796,7 +2798,7 @@
                                                                 </div>
                                                                 <div
                                                                     x-text="lang.datetime.daylight"
-                                                                    class="place-self-start self-end text-xs font-light leading-[14px] text-gray-300 dark:text-cosmic-400"
+                                                                    class="place-self-start self-end text-xs font-light leading-[14px] text-gray-300 dark:text-cosmic-500"
                                                                 ></div>
                                                                 <div
                                                                     x-text="detailedDay.weatherData.daylight"
@@ -2817,7 +2819,7 @@
                                                                 </div>
                                                                 <div
                                                                     x-text="lang.datetime.moon"
-                                                                    class="place-self-start self-end text-xs font-light leading-[14px] text-gray-300 dark:text-cosmic-400"
+                                                                    class="place-self-start self-end text-xs font-light leading-[14px] text-gray-300 dark:text-cosmic-500"
                                                                 ></div>
                                                                 <div
                                                                     x-text="lang.weather.moonphase[moonphaseConverter(detailedDay.weatherData.moonphase)]"
@@ -2971,17 +2973,17 @@
                                     >
                                         <div
                                             x-show="day.icon"
-                                            class="small-icon relative h-[52px] w-[52px] shrink-0 rounded-2xl bg-white py-1 dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645]"
+                                            class="small-icon relative h-12 w-12 shrink-0 rounded-2xl bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645]"
                                         >
                                             <img
-                                                class="mx-auto h-[44px] w-[44px]"
-                                                :src="weatherIconsPath + weatherIcons[day.icon]"
+                                                class="m-2.5 h-7 w-7"
+                                                :src="weatherIconsSmallPath + weatherIcons[day.icon]"
                                                 alt=""
                                             />
                                             <div
                                                 x-show="day.precipprob > 30"
                                                 x-text="day.precipprob + '%'"
-                                                class="absolute -bottom-2 -right-2 rounded-3xl bg-gray-100 p-[5px] text-xxs font-medium text-gray-300 dark:bg-cosmic-900 dark:text-cosmic-300"
+                                                class="absolute -bottom-3 -right-2 rounded-3xl bg-gray-100 p-[5px] text-xxs font-medium text-cosmic-600 dark:bg-cosmic-900"
                                             ></div>
                                         </div>
                                         <div
@@ -2997,7 +2999,7 @@
                                             ></div>
                                             <div
                                                 x-text="day.conditions"
-                                                class="text-xs font-medium leading-[14px] text-gray-300 dark:text-cosmic-400"
+                                                class="text-xs font-medium leading-[14px] text-gray-300 dark:text-cosmic-500"
                                             ></div>
                                         </div>
                                         <div class="my-4 w-full">
@@ -3006,7 +3008,7 @@
                                             >
                                                 <div
                                                     x-text="day.tempmin + '°'"
-                                                    class="text-gray-300 dark:text-cosmic-400"
+                                                    class="text-gray-300 dark:text-cosmic-500"
                                                 ></div>
                                                 <div
                                                     class="font-semibold"
@@ -3440,7 +3442,7 @@
                                         </section>
                                         <!-- * HOURLY * -->
                                         <ul
-                                            class="hourlyToday hourly no-drag no-scrollbar relative flex snap-x snap-mandatory gap-2 overflow-hidden overflow-x-scroll scroll-smooth px-3 pt-4"
+                                            class="hourlyToday hourly no-drag no-scrollbar relative flex snap-x snap-mandatory gap-0.5 overflow-hidden overflow-x-scroll scroll-smooth px-3 pt-4"
                                         >
                                             <template x-for="i in 24" :key="i">
                                                 <li
@@ -3450,7 +3452,7 @@
                                                             ? checkIcon(slide.weatherData.currentConditions.icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(slide.weatherData.timezone).format('HH'))) 
                                                             : checkIcon(slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH')))
                                                             "
-                                                    class="no-drag flex w-[60px] snap-start scroll-ml-3 flex-col items-center justify-end px-2"
+                                                    class="no-drag flex snap-start scroll-ml-2.5 flex-col items-center justify-end px-2.5"
                                                 >
                                                     <!-- Date -->
                                                     <div
@@ -3458,7 +3460,7 @@
                                                         class="no-drag date truncate pb-1 text-xs font-light text-gray-300 dark:text-cosmic-500"
                                                     ></div>
                                                     <div
-                                                        class="no-drag icon relative flex h-11 w-11 items-center justify-center rounded-xl bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645]"
+                                                        class="no-drag icon relative flex h-12 w-12 items-center justify-center rounded-xl bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645]"
                                                     >
                                                         <img
                                                             :src="weatherIconsSmallPath + weatherIcons[i === 0 ? checkIcon(slide.weatherData.currentConditions.icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(slide.weatherData.timezone).format('HH'))) : checkIcon(slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH')))]"
@@ -3469,16 +3471,17 @@
                                                         <div
                                                             x-show="i === 0 ? slide.weatherData.currentConditions.precipprob > 30 : slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].precipprob > 30"
                                                             x-text="i === 0 ? slide.weatherData.currentConditions.precipprob : slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].precipprob + '%'"
-                                                            class="no-drag absolute -bottom-2 -right-2 rounded-3xl bg-gray-100 p-[5px] text-xxs text-gray-300 dark:bg-cosmic-900 dark:text-cosmic-300"
+                                                            class="no-drag absolute -bottom-2.5 -right-2 rounded-3xl bg-gray-100 p-[5px] text-xxs text-gray-300 dark:bg-cosmic-900 dark:text-cosmic-300"
+                                                            :class="icon.includes('night') ? 'text-violetDark' : 'text-cosmic-600'"
                                                         ></div>
                                                     </div>
                                                     <div
                                                         x-text="moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))]) ? lang.datetime.now : moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH:00')"
-                                                        class="no-drag time pt-3 text-xs font-light text-gray-300 dark:text-cosmic-400"
+                                                        class="no-drag time pt-3 text-xs font-light text-gray-300 dark:text-cosmic-500"
                                                     ></div>
                                                     <div
                                                         x-text="i === 0 ? slide.weatherData.currentConditions.temp : slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].temp + '°'"
-                                                        class="no-drag pt-1 text-lg font-semibold leading-5"
+                                                        class="no-drag pt-[5px] text-base font-semibold leading-5"
                                                     ></div>
                                                 </li>
                                             </template>
@@ -3515,17 +3518,17 @@
                                                 >
                                                     <div
                                                         x-show="day.icon"
-                                                        class="small-icon relative h-[52px] w-[52px] shrink-0 rounded-2xl bg-white py-1 dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645]"
+                                                        class="small-icon relative h-12 w-12 shrink-0 rounded-2xl bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645]"
                                                     >
                                                         <img
-                                                            class="mx-auto h-[44px] w-[44px]"
-                                                            :src="weatherIconsPath + weatherIcons[day.icon]"
+                                                            class="m-2.5 h-7 w-7"
+                                                            :src="weatherIconsSmallPath + weatherIcons[day.icon]"
                                                             alt=""
                                                         />
                                                         <div
                                                             x-show="day.precipprob > 30"
                                                             x-text="day.precipprob + '%'"
-                                                            class="absolute -bottom-2 -right-2 rounded-3xl bg-gray-100 p-[5px] text-xxs font-medium text-gray-300 dark:bg-cosmic-900 dark:text-cosmic-300"
+                                                            class="absolute -bottom-3 -right-2 rounded-3xl bg-gray-100 p-[5px] text-xxs font-medium text-cosmic-600 dark:bg-cosmic-900"
                                                         ></div>
                                                     </div>
                                                     <div
@@ -3541,7 +3544,7 @@
                                                         ></div>
                                                         <div
                                                             x-text="day.conditions"
-                                                            class="text-xs font-medium leading-[14px] text-gray-300 dark:text-cosmic-400"
+                                                            class="text-xs font-medium leading-[14px] text-gray-300 dark:text-cosmic-500"
                                                         ></div>
                                                     </div>
                                                     <div class="my-4 w-full">
@@ -3550,7 +3553,7 @@
                                                         >
                                                             <div
                                                                 x-text="day.tempmin + '°'"
-                                                                class="text-gray-300 dark:text-cosmic-400"
+                                                                class="text-gray-300 dark:text-cosmic-500"
                                                             ></div>
                                                             <div
                                                                 class="font-semibold"
@@ -3624,7 +3627,7 @@
                                                     class="grow pl-5 text-base font-medium leading-5"
                                                 ></div>
                                                 <svg
-                                                    class="detail-weather-toggle--img -rotate-90 fill-gray-300 dark:fill-cosmic-400"
+                                                    class="detail-weather-toggle--img -rotate-90 fill-gray-300 dark:fill-cosmic-500"
                                                     width="16"
                                                     height="17"
                                                     viewBox="0 0 16 17"
@@ -3692,7 +3695,7 @@
                                                     class="grow pl-5 text-base font-medium leading-5"
                                                 ></div>
                                                 <svg
-                                                    class="detail-weather-toggle--img -rotate-90 fill-gray-300 dark:fill-cosmic-400"
+                                                    class="detail-weather-toggle--img -rotate-90 fill-gray-300 dark:fill-cosmic-500"
                                                     width="16"
                                                     height="17"
                                                     viewBox="0 0 16 17"
