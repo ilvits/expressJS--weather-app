@@ -248,7 +248,7 @@ document.addEventListener('alpine:init', () => {
     Alpine.data('main', () => ({
         slides: [],
         phonePower: false,
-        theme: '',
+        theme: 'light',
         atTop: true,
         detailedAtTop: false,
         orientation: '',
