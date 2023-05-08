@@ -3,7 +3,7 @@
 let splide, splide2, updateInterval, lazyLoadInstance;
 document.body.style.webkitTouchCallout = 'none';
 const active_slide = localStorage.getItem('activeSlide') || 0;
-const moonPhaseIconsPath = 'img/assets/icons/moonphases/';
+const moonPhaseIconsPath = 'img/assets/icons/moonPhases/';
 const weatherIconsPath = 'img/assets/icons/weather-conditions/';
 const weatherIconsSmallPath = 'img/assets/icons/weather-conditions/small/';
 const locationCardsContainer = document.querySelector(
@@ -56,6 +56,7 @@ const weatherIcons = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+    themeInit();
     requestUserCountry();
 
     splide = new Splide('#main', {
@@ -247,6 +248,7 @@ document.addEventListener('alpine:init', () => {
     Alpine.data('main', () => ({
         slides: [],
         phonePower: false,
+        theme: '',
         atTop: true,
         detailedAtTop: false,
         orientation: '',
@@ -272,10 +274,13 @@ document.addEventListener('alpine:init', () => {
         details: false,
         userLocation: false,
         showUserLocationPlaceholder: settings.userGeo,
-        displaymode: displayMode(),
+        displayMode: displayMode(),
         lang: languageStrings[language],
         checkDetails() {
             this.details = settings.details;
+        },
+        changeTheme(event) {
+            this.theme = event.detail.theme;
         },
         checkScreenOrientation() {
             if (isDesktop()) {
@@ -1015,3 +1020,7 @@ function showError(error) {
             break;
     }
 }
+const Person = function (fullName, birthYear) {
+    this.fullName = fullName;
+    this.birthYear = birthYear;
+};

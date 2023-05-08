@@ -6,6 +6,7 @@
 	],
 	"settings": {
 		"liveServer.settings.port": 5501,
-		"svgPreview.scaleToFit": false
+		"svgPreview.scaleToFit": false,
+		"workbench.colorTheme": "Monokai Pro"
 	}
 }

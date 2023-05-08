@@ -1,29 +1,41 @@
 <!DOCTYPE html>
 <html lang="en" class="no-scrollbar">
     <head>
-        <meta charset="UTF-8" />
+        <!-- COMMON TAGS -->
+        <meta charset="utf-8" />
+        <title>Accurate Weather App</title>
+        <!-- Search Engine -->
         <meta
             name="description"
             content="Real-time, hourly and next 10 and 30 days forecast. Search, add and edit your favourite locations. Customize units."
         />
-        <meta name="author" content="ILViTs tsoyilya@fairybrains.com" />
-        <meta name="designer" content="Kate Dementeva kate@fairybrains.com" />
-        <meta name="reply-to" content="admin@fairybrains.com" />
-        <meta name="owner" content="FairyBrains" />
-        <meta name="url" content="https://weather.fairybrains.com" />
-        <meta name="category" content="weather" />
-        <meta name="coverage" content="Worldwide" />
-        <meta name="distribution" content="Global" />
-
-        <meta name="og:title" content="Weather" />
-        <meta name="og:url" content="https://weather.fairybrains.com" />
-        <meta name="og:image" content="img/assets/pwa/icons/icon-512x512.png" />
-        <meta name="og:site_name" content="Fairy Weather App" />
+        <meta
+            name="image"
+            content="https://weather.fairybrains.com/img/assets/screentg.png"
+        />
+        <!-- Schema.org for Google -->
+        <meta itemprop="name" content="Accurate Weather App" />
+        <meta
+            itemprop="description"
+            content="Real-time, hourly and next 10 and 30 days forecast. Search, add and edit your favourite locations. Customize units."
+        />
+        <meta
+            itemprop="image"
+            content="https://weather.fairybrains.com/img/assets/screentg.png"
+        />
+        <!-- Open Graph general (Facebook, Pinterest & Google+) -->
+        <meta name="og:title" content="Accurate Weather App" />
         <meta
             name="og:description"
             content="Real-time, hourly and next 10 and 30 days forecast. Search, add and edit your favourite locations. Customize units."
         />
-        <meta name="og:email" content="admin@fairybrains.com" />
+        <meta
+            name="og:image"
+            content="https://weather.fairybrains.com/img/assets/screentg.png"
+        />
+        <meta name="og:url" content="https://weather.fairybrains.com" />
+        <meta name="og:site_name" content="Fairy Weather App" />
+        <meta name="og:type" content="website" />
 
         <meta name="msapplication-TileColor" content="#131e32" />
         <meta
@@ -325,8 +337,6 @@
             as="style"
             onload="this.rel='stylesheet'"
         />
-        <!-- <link preload rel="stylesheet" href="css/style.css" />
-        <link preload rel="stylesheet" href="css/splidejs/splide.min.css" /> -->
         <script defer src="js/init.js"></script>
         <script defer src="js/theme.js"></script>
         <script defer src="js/api.js"></script>
@@ -340,6 +350,8 @@
         <script defer src="js/alpine/intersect.min.js"></script>
         <script defer src="js/alpine/alpine.min.js"></script>
         <script defer src="js/slip/slip.min.js"></script>
+        <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
+
         <script>
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
@@ -379,6 +391,7 @@
         @swapslides.window="swap($event)"
         @updateslide.window="update($event)"
         @removecard.window="removecard($event)"
+        @changetheme.window="changeTheme($event)"
         @orientationchange.window="checkScreenOrientation($event)"
     >
         <div class="sm:relative sm:flex sm:h-screen sm:w-screen sm:gap-1">
@@ -465,6 +478,8 @@
                         </svg>
                     </div>
                 </header>
+                <div></div>
+
                 <main
                     id="main"
                     class="splide h-full overflow-x-hidden"
@@ -478,7 +493,7 @@
                                 <li class="splide__slide w-full">
                                     <section
                                         class="no-scrollbar h-full overflow-y-scroll bg-gray-100 pb-24 dark:bg-cosmic-900"
-                                        :class="{'pb-44': displaymode !== 'standalone'}"
+                                        :class="{'pb-44': displayMode !== 'standalone'}"
                                         @scroll="atTop = $el.scrollTop < 180 ? true : false"
                                     >
                                         <!-- * HEADER * -->
@@ -517,7 +532,7 @@
                                                 ></div>
                                                 <img
                                                     class="h-6 w-6"
-                                                    :src="weatherIconsSmallPath + weatherIcons[checkIcon(slide.weatherData.currentConditions.icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(slide.weatherData.timezone).format('HH')))]"
+                                                    :src="weatherIconsSmallPath + theme + '/' + weatherIcons[checkIcon(slide.weatherData.currentConditions.icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(slide.weatherData.timezone).format('HH')))]"
                                                     alt=""
                                                 />
                                             </div>
@@ -616,7 +631,7 @@
                                                     >
                                                         <img
                                                             class="h-32 w-32 shrink-0"
-                                                            :src="weatherIconsPath + weatherIcons[checkIcon(slide.weatherData.currentConditions.icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(slide.weatherData.timezone).format('HH')))]"
+                                                            :src="weatherIconsPath + theme + '/' + weatherIcons[checkIcon(slide.weatherData.currentConditions.icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(slide.weatherData.timezone).format('HH')))]"
                                                             alt=""
                                                         />
                                                     </div>
@@ -638,23 +653,23 @@
                                                             >
                                                                 <div
                                                                     class="h-full w-full rounded-t-full border border-b-0 border-solid"
-                                                                    :class="slide.weatherData.currentConditions.sunposition ? 'border-dashed border-cyan/60' : 'border-solid border-violetDark'"
+                                                                    :class="slide.weatherData.currentConditions.sunposition ? 'border-dashed border-gray-300 dark:border-cosmic-400' : 'border-solid border-violetDark'"
                                                                 ></div>
                                                                 <!-- ? SKY -->
                                                                 <div
                                                                     :style="slide.weatherData.currentConditions.sunposition ? `rotate: ${slide.weatherData.currentConditions.sunposition}deg` : 'display: none'"
-                                                                    class="sky absolute top-0 h-full w-full origin-bottom rounded-t-full border border-b-0 border-solid border-cyan bg-gradient-to-b from-[#EDF8FF] dark:from-[#0F3C5C]"
+                                                                    class="sky absolute top-0 h-full w-full origin-bottom rounded-t-full border border-b-0 border-solid border-gray-300 bg-gradient-to-b from-[#BEBEBE] dark:border-cosmic-300 dark:from-[#0F3C5C]"
                                                                 ></div>
                                                                 <div
                                                                     class="absolute hidden h-[75px] w-[150px] rounded-b-full bg-white from-[#192848] to-[#182847] dark:bg-gradient-to-r"
                                                                 ></div>
                                                                 <div
                                                                     class="absolute -bottom-[4px] -left-[4px] h-2 w-2 rounded-full"
-                                                                    :class="slide.weatherData.currentConditions.sunposition ? 'bg-cyan' : 'bg-violetDark'"
+                                                                    :class="slide.weatherData.currentConditions.sunposition ? 'bg-gray-300 dark:bg-cosmic-300' : 'bg-violetDark'"
                                                                 ></div>
                                                                 <div
                                                                     class="absolute -bottom-[4px] -right-[4px] h-2 w-2 rounded-full"
-                                                                    :class="slide.weatherData.currentConditions.sunposition ? 'bg-cyan' : 'bg-violetDark'"
+                                                                    :class="slide.weatherData.currentConditions.sunposition ? 'bg-gray-200 dark:bg-gray-400' : 'bg-violetDark'"
                                                                 ></div>
                                                                 <!-- ! SUN -->
                                                                 <div
@@ -664,7 +679,12 @@
                                                                     <div
                                                                         class="absolute -bottom-[4px] -right-[4px] h-[7.5px] w-[7.5px] rounded-full bg-yellow outline outline-[5px] outline-offset-0 outline-white dark:outline-cosmic-800"
                                                                     ></div>
-                                                                    <svg
+                                                                    <img
+                                                                        class="absolute -bottom-[9px] -right-[9px] h-[18px] w-[18px] rounded-full"
+                                                                        src="img/assets/icons/clear-day2.svg"
+                                                                        alt=""
+                                                                    />
+                                                                    <!-- <svg
                                                                         class="absolute -bottom-[9px] -right-[9px] h-[18px] w-[18px] rounded-full"
                                                                         width="18"
                                                                         height="18"
@@ -676,7 +696,7 @@
                                                                             d="M9.17923 2.28564C9.28979 2.28564 9.39582 2.33174 9.47399 2.41379C9.55217 2.49583 9.59609 2.60711 9.59609 2.72314V3.59581C9.59609 3.71184 9.55217 3.82312 9.47399 3.90517C9.39582 3.98722 9.28979 4.03331 9.17923 4.03331C9.06867 4.03331 8.96264 3.98722 8.88446 3.90517C8.80628 3.82312 8.76236 3.71184 8.76236 3.59581V2.72314C8.76236 2.60711 8.80628 2.49583 8.88446 2.41379C8.96264 2.33174 9.06867 2.28564 9.17923 2.28564ZM15.4322 9.72314C15.5427 9.72314 15.6488 9.67705 15.7269 9.595C15.8051 9.51296 15.849 9.40168 15.849 9.28564C15.849 9.16961 15.8051 9.05833 15.7269 8.97629C15.6488 8.89424 15.5427 8.84814 15.4322 8.84814H14.6001C14.4896 8.84814 14.3835 8.89424 14.3053 8.97629C14.2272 9.05833 14.1833 9.16961 14.1833 9.28564C14.1833 9.40168 14.2272 9.51296 14.3053 9.595C14.3835 9.67705 14.4896 9.72314 14.6001 9.72314H15.4322ZM9.17923 14.538C9.28979 14.538 9.39582 14.5841 9.47399 14.6661C9.55217 14.7482 9.59609 14.8594 9.59609 14.9755V15.8481C9.59609 15.9642 9.55217 16.0755 9.47399 16.1575C9.39582 16.2396 9.28979 16.2856 9.17923 16.2856C9.06867 16.2856 8.96264 16.2396 8.88446 16.1575C8.80628 16.0755 8.76236 15.9642 8.76236 15.8481V14.9755C8.76236 14.8594 8.80628 14.7482 8.88446 14.6661C8.96264 14.5841 9.06867 14.538 9.17923 14.538ZM3.76 9.72314C3.87056 9.72314 3.97659 9.67705 4.05477 9.595C4.13295 9.51296 4.17687 9.40168 4.17687 9.28564C4.17687 9.16961 4.13295 9.05833 4.05477 8.97629C3.97659 8.89424 3.87056 8.84814 3.76 8.84814H2.92628C2.81572 8.84814 2.70969 8.89424 2.63151 8.97629C2.55333 9.05833 2.50941 9.16961 2.50941 9.28564C2.50941 9.40168 2.55333 9.51296 2.63151 9.595C2.70969 9.67705 2.81572 9.72314 2.92628 9.72314H3.76ZM4.29859 4.16339C4.37675 4.08146 4.48271 4.03545 4.59317 4.03545C4.70364 4.03545 4.8096 4.08146 4.88776 4.16339L5.72148 5.03839C5.79512 5.12133 5.83521 5.23102 5.8333 5.34437C5.8314 5.45771 5.78765 5.56585 5.71127 5.64601C5.63489 5.72617 5.53185 5.77208 5.42386 5.77408C5.31586 5.77608 5.21134 5.73401 5.13232 5.65673L4.29859 4.78173C4.22053 4.6997 4.17668 4.5885 4.17668 4.47256C4.17668 4.35662 4.22053 4.24543 4.29859 4.16339ZM4.88776 14.4067C4.80873 14.484 4.70422 14.5261 4.59622 14.5241C4.48822 14.5221 4.38518 14.4762 4.30881 14.396C4.23243 14.3158 4.18868 14.2077 4.18678 14.0944C4.18487 13.981 4.22496 13.8713 4.29859 13.7884L5.13232 12.9134C5.21134 12.8361 5.31586 12.794 5.42386 12.796C5.53185 12.798 5.63489 12.844 5.71127 12.9241C5.78765 13.0043 5.8314 13.1124 5.8333 13.2258C5.83521 13.3391 5.79512 13.4488 5.72148 13.5317L4.88776 14.4067ZM14.0587 4.16339C13.9806 4.08146 13.8746 4.03545 13.7642 4.03545C13.6537 4.03545 13.5477 4.08146 13.4696 4.16339L12.6359 5.03839C12.5622 5.12133 12.5221 5.23102 12.524 5.34437C12.5259 5.45771 12.5697 5.56585 12.6461 5.64601C12.7224 5.72617 12.8255 5.77208 12.9335 5.77408C13.0415 5.77608 13.146 5.73401 13.225 5.65673L14.0587 4.78173C14.1368 4.6997 14.1807 4.5885 14.1807 4.47256C14.1807 4.35662 14.1368 4.24543 14.0587 4.16339ZM13.4701 14.4073C13.5083 14.4503 13.5543 14.4848 13.6055 14.5087C13.6566 14.5326 13.7118 14.5455 13.7678 14.5465C13.8237 14.5475 13.8793 14.5367 13.9312 14.5147C13.9831 14.4927 14.0303 14.46 14.0699 14.4184C14.1095 14.3769 14.1407 14.3274 14.1616 14.2729C14.1826 14.2184 14.1929 14.1601 14.1919 14.1013C14.1909 14.0426 14.1787 13.9847 14.1559 13.931C14.1331 13.8773 14.1003 13.829 14.0593 13.789L13.2256 12.914C13.1874 12.871 13.1414 12.8365 13.0903 12.8126C13.0391 12.7887 12.9839 12.7758 12.928 12.7748C12.872 12.7738 12.8164 12.7846 12.7645 12.8066C12.7126 12.8286 12.6654 12.8613 12.6258 12.9029C12.5862 12.9444 12.555 12.9939 12.5341 13.0484C12.5131 13.1029 12.5028 13.1612 12.5038 13.2199C12.5048 13.2787 12.517 13.3366 12.5398 13.3903C12.5626 13.444 12.5955 13.4923 12.6364 13.5323L13.4701 14.4073Z"
                                                                             fill="#FEB800"
                                                                         ></path>
-                                                                    </svg>
+                                                                    </svg> -->
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -734,7 +754,12 @@
                                                                 <div
                                                                     class="flex items-center"
                                                                 >
-                                                                    <svg
+                                                                    <img
+                                                                        class="-mr-0.5 stroke-gray-300 dark:stroke-cosmic-300"
+                                                                        src="img/assets/icons/arrow-narrow.svg"
+                                                                        alt=""
+                                                                    />
+                                                                    <!-- <svg
                                                                         class="-mr-0.5 stroke-gray-300 dark:stroke-cosmic-300"
                                                                         width="14"
                                                                         height="14"
@@ -747,11 +772,16 @@
                                                                             stroke-linecap="round"
                                                                             stroke-linejoin="round"
                                                                         ></path>
-                                                                    </svg>
+                                                                    </svg> -->
                                                                     <div
                                                                         x-text="`${slide.weatherData.currentConditions.tempmax}°`"
                                                                     ></div>
-                                                                    <svg
+                                                                    <img
+                                                                        class="-mr-0.5 rotate-180 stroke-gray-300 dark:stroke-cosmic-300"
+                                                                        src="img/assets/icons/arrow-narrow.svg"
+                                                                        alt=""
+                                                                    />
+                                                                    <!-- <svg
                                                                         class="-mr-0.5 rotate-180 stroke-gray-300 dark:stroke-cosmic-300"
                                                                         width="14"
                                                                         height="14"
@@ -764,7 +794,7 @@
                                                                             stroke-linecap="round"
                                                                             stroke-linejoin="round"
                                                                         ></path>
-                                                                    </svg>
+                                                                    </svg> -->
                                                                     <div
                                                                         x-text="`${slide.weatherData.currentConditions.tempmin}°`"
                                                                     ></div>
@@ -793,19 +823,23 @@
                                                                     class="text-xs font-light text-gray-300 dark:text-cosmic-500"
                                                                 ></div>
                                                                 <div
-                                                                    class="relative my-2 h-0.5 w-20 rounded-full bg-gradient-to-r from-cyan via-lemon to-[#FF3326]"
+                                                                    class="relative flex h-[18px] justify-center"
                                                                 >
+                                                                    <img
+                                                                        src="img/assets/icons/uvIndexBar2.svg"
+                                                                        alt=""
+                                                                    />
                                                                     <div
                                                                         x-text="slide.weatherData.currentConditions.uvindex"
-                                                                        class="absolute top-1/2 left-0 -translate-y-1/2 rounded-[4px] px-[3px] py-px pt-[1.5px] text-sm leading-4 text-cosmic-900"
+                                                                        class="absolute top-1/2 left-0 -translate-y-1/2 rounded-[4px] p-px pt-[1.5px] text-base leading-4 text-cosmic-900"
                                                                         :class="{
-                                                                            'bg-cyan': slide.weatherData.currentConditions.uvindex < 3,
-                                                                            'bg-yellowDark': slide.weatherData.currentConditions.uvindex >= 3 && slide.weatherData.currentConditions.uvindex < 6,
-                                                                            'bg-orange': slide.weatherData.currentConditions.uvindex >= 6 && slide.weatherData.currentConditions.uvindex < 8,
-                                                                            'bg-red': slide.weatherData.currentConditions.uvindex >= 8 && slide.weatherData.currentConditions.uvindex < 10,
-                                                                            'bg-violet pr-1': slide.weatherData.currentConditions.uvindex >= 10,
+                                                                            'bg-white dark:bg-cosmic-800 text-green': slide.weatherData.currentConditions.uvindex < 3,
+                                                                            'bg-white dark:bg-cosmic-800 text-yellowDark': slide.weatherData.currentConditions.uvindex >= 3 && slide.weatherData.currentConditions.uvindex < 6,
+                                                                            'bg-white dark:bg-cosmic-800 text-orange': slide.weatherData.currentConditions.uvindex >= 6 && slide.weatherData.currentConditions.uvindex < 8,
+                                                                            'bg-white dark:bg-cosmic-800 text-red': slide.weatherData.currentConditions.uvindex >= 8 && slide.weatherData.currentConditions.uvindex < 10,
+                                                                            'bg-white dark:bg-cosmic-800 text-violet': slide.weatherData.currentConditions.uvindex >= 10,
                                                                             }"
-                                                                        :style="`left: ${slide.weatherData.currentConditions.uvindex * 100 / 12}%`"
+                                                                        :style="`left: ${slide.weatherData.currentConditions.uvindex * 86 / 11 - 10 }px`"
                                                                     ></div>
                                                                 </div>
                                                             </div>
@@ -839,7 +873,7 @@
                                                                         x-text="slide.weatherData.currentConditions.pressure"
                                                                     ></div>
                                                                     <div
-                                                                        :class="!settings.pressure && language === 'ru' ? 'text-sm leading-[19px]' : 'text-base leading-[18px]'"
+                                                                        :class="!settings.pressure && language === 'ru' ? 'text-sm leading-[19px]' : 'text-xs font-normal leading-[19px]'"
                                                                         x-text="settings.pressure ? lang.weather.units.pressure[1] : lang.weather.units.pressure[0]"
                                                                     ></div>
                                                                 </div>
@@ -903,7 +937,7 @@
                                                         class="no-drag icon relative flex h-12 w-12 items-center justify-center rounded-xl bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645]"
                                                     >
                                                         <img
-                                                            :src="weatherIconsSmallPath + weatherIcons[i === 0 ? checkIcon(slide.weatherData.currentConditions.icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(slide.weatherData.timezone).format('HH'))) : checkIcon(slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH')))]"
+                                                            :src="weatherIconsSmallPath + theme + '/' + weatherIcons[i === 0 ? checkIcon(slide.weatherData.currentConditions.icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(slide.weatherData.timezone).format('HH'))) : checkIcon(slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH')))]"
                                                             class="no-drag h-7 w-7"
                                                             alt=""
                                                         />
@@ -942,8 +976,8 @@
                                                             dotShift: 0
                                                             }"
                                                     x-effect="
-                                                            temprange = minMax(slide.weatherData.days.slice(0, 10), 10)
-                                                            lineStyles = tempRangeLineStyles(day, temprange, slide.weatherData.currentConditions.temp);
+                                                            tempRange = minMax(slide.weatherData.days.slice(0, 10), 10)
+                                                            lineStyles = tempRangeLineStyles(day, tempRange, slide.weatherData.currentConditions.temp);
                                                             lineWidth = lineStyles.width;
                                                             lineLeft = lineStyles.left;
                                                             dotShift = lineStyles.dotShift;
@@ -962,7 +996,7 @@
                                                     >
                                                         <img
                                                             class="m-2.5 h-7 w-7"
-                                                            :src="weatherIconsSmallPath + weatherIcons[day.icon]"
+                                                            :src="weatherIconsSmallPath + theme + '/' + weatherIcons[day.icon]"
                                                             alt=""
                                                         />
                                                         <div
@@ -1001,16 +1035,16 @@
                                                             ></div>
                                                         </div>
                                                         <div
-                                                            class="relative h-1 rounded-md bg-[#D4D4D4]/40 dark:bg-cosmic-800"
+                                                            class="relative h-1 rounded-md bg-gradient-to-l from-gray-200 to-gray-200 dark:from-cosmic-400/50 dark:to-cosmic-500/50"
                                                         >
                                                             <div
                                                                 x-ref="templine"
-                                                                :style="{width: lineWidth + '%', left: lineLeft+ '%'}"
-                                                                class="absolute h-full rounded-md bg-gradient-to-l from-[#647DFF] to-[#14CDFF] dark:from-[#DEDEDE] dark:to-[#3FD5FE]"
+                                                                :style="{ width: lineWidth + '%', left: lineLeft+ '%' }"
+                                                                class="absolute h-full rounded-md bg-gradient-to-l from-[#131E32] to-[#ABACB2] dark:from-[#F6F6F6] dark:to-[#6892B9]"
                                                             >
                                                                 <div
                                                                     x-show="id === 0"
-                                                                    class="absolute -top-[2px] h-[8px] w-[8px] -translate-x-1/2 rounded-full border-[1.5px] border-gray-100 bg-[#6390F0] dark:border-cosmic-900 dark:bg-white"
+                                                                    class="absolute -top-[2px] h-[8px] w-[8px] -translate-x-1/2 rounded-full border-[1.5px] border-gray-100 bg-[#132846] dark:border-cosmic-900 dark:bg-white"
                                                                     :style="{left: dotShift + '%'}"
                                                                 ></div>
                                                             </div>
@@ -1027,41 +1061,15 @@
                                                 @click="$dispatch('addpopup2', slide); setTimeout(() => {$dispatch('detaileddaysadd', { dayid : 0, days: slide.weatherData.days.slice(0,10) })}, 150);"
                                                 class="flex items-center justify-between py-2"
                                             >
-                                                <svg
-                                                    class="h-[52px] w-[52px] rounded-2xl bg-white p-1 dark:bg-cosmic-800"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    fill="none"
-                                                    viewBox="0 0 44 44"
+                                                <div
+                                                    class="flex h-[52px] w-[52px] items-center justify-center rounded-2xl bg-white dark:bg-cosmic-800"
                                                 >
-                                                    <rect
-                                                        fill="#37F"
-                                                        width="8"
-                                                        height="3"
-                                                        x="9"
-                                                        y="14"
-                                                        rx="1.5"
+                                                    <img
+                                                        class="h-7 w-7"
+                                                        src="img/assets/icons/10days.svg"
+                                                        alt=""
                                                     />
-                                                    <rect
-                                                        fill="#37F"
-                                                        width="10"
-                                                        height="3"
-                                                        x="9"
-                                                        y="22"
-                                                        rx="1.5"
-                                                    />
-                                                    <rect
-                                                        fill="#37F"
-                                                        width="23"
-                                                        height="3"
-                                                        x="9"
-                                                        y="30"
-                                                        rx="1.5"
-                                                    />
-                                                    <path
-                                                        d="M29 11.83c2.11 0 3.31 1.49 3.48 3.28h.06a2.33 2.33 0 0 1 1.74.77 2.63 2.63 0 0 1 .72 1.84 2.75 2.75 0 0 1-.72 1.85 2.45 2.45 0 0 1-1.74.76h-.4L31.1 22.2a.5.5 0 0 1-.28.24.47.47 0 0 1-.37-.03.52.52 0 0 1-.25-.3.56.56 0 0 1 0-.38l.04-.06.77-1.34h-1.4l-1.05 1.87a.5.5 0 0 1-.3.24.47.47 0 0 1-.36-.03.52.52 0 0 1-.24-.3.56.56 0 0 1 0-.38l.03-.06.77-1.34H27l-1.06 1.87a.5.5 0 0 1-.29.24.47.47 0 0 1-.37-.03.52.52 0 0 1-.24-.3.56.56 0 0 1 0-.38l.03-.06.77-1.34h-.38a2.33 2.33 0 0 1-1.74-.76 2.63 2.63 0 0 1-.72-1.85 2.75 2.75 0 0 1 .72-1.84 2.45 2.45 0 0 1 1.74-.77h.05c.18-1.8 1.38-3.28 3.5-3.28Z"
-                                                        fill="#3FD5FE"
-                                                    />
-                                                </svg>
+                                                </div>
                                                 <div
                                                     x-text="lang.slides.headers.tenDaysForecast"
                                                     class="grow pl-5 text-base font-medium leading-5"
@@ -1083,53 +1091,15 @@
                                                 @click="$dispatch('addpopup1', slide)"
                                                 class="flex items-center justify-between py-2"
                                             >
-                                                <svg
-                                                    class="h-[52px] w-[52px] rounded-2xl bg-white p-1 dark:bg-cosmic-800"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    fill="none"
-                                                    viewBox="0 0 44 44"
+                                                <div
+                                                    class="flex h-[52px] w-[52px] items-center justify-center rounded-2xl bg-white dark:bg-cosmic-800"
                                                 >
-                                                    <rect
-                                                        fill="#3FD5FE"
-                                                        width="26.4"
-                                                        height="22.88"
-                                                        x="8.8"
-                                                        y="12.32"
-                                                        rx="6"
+                                                    <img
+                                                        class="h-7 w-7"
+                                                        src="img/assets/icons/calendar.svg"
+                                                        alt=""
                                                     />
-                                                    <rect
-                                                        fill="#37F"
-                                                        width="26.4"
-                                                        height="22.88"
-                                                        x="8.8"
-                                                        y="12.32"
-                                                        rx="4"
-                                                    />
-                                                    <path
-                                                        d="M10.56 17.6h22.88v12.84a3 3 0 0 1-3 3H13.56a3 3 0 0 1-3-3V17.6Z"
-                                                        fill="#3FD5FE"
-                                                    />
-                                                    <path
-                                                        d="M25.96 29.22a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm-5.72 0a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm-5.72 0a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm11.44-4.4a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm-5.72 0a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm-5.72 0a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm11.44-4.4a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm-5.72 0a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm-5.72 0a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Z"
-                                                        fill="#37F"
-                                                    />
-                                                    <path
-                                                        d="M14.96 12.32v-1.5c0-.63.5-1.14 1.1-1.14.6 0 1.1.51 1.1 1.15v1.49h-2.2Zm11 12.5a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm-11.44-4.4a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm5.72 0a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm5.72 0a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm-11.44 4.4a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm5.72 0a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm-5.72 4.4a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm5.72 0a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm6.6-18.4v1.5h2.2v-1.5c0-.63-.5-1.14-1.1-1.14-.6 0-1.1.51-1.1 1.15Z"
-                                                        fill="#37F"
-                                                    />
-                                                    <path
-                                                        d="M26.84 13.81v-1.5h2.2v1.5c0 .64-.5 1.15-1.1 1.15-.6 0-1.1-.51-1.1-1.15Z"
-                                                        fill="#3FD5FE"
-                                                    />
-                                                    <path
-                                                        d="M14.96 10.83v1.49h2.2v-1.5c0-.63-.5-1.14-1.1-1.14-.6 0-1.1.51-1.1 1.15Z"
-                                                        fill="#37F"
-                                                    />
-                                                    <path
-                                                        d="M14.96 13.81v-1.5h2.2v1.5c0 .64-.5 1.15-1.1 1.15-.6 0-1.1-.51-1.1-1.15Z"
-                                                        fill="#3FD5FE"
-                                                    />
-                                                </svg>
+                                                </div>
                                                 <div
                                                     x-text="lang.slides.headers.monthlyForecast"
                                                     class="grow pl-5 text-base font-medium leading-5"
@@ -1428,7 +1398,7 @@
                             <ol
                                 id="location-cards--container"
                                 class="slip-swiping-container no-scrollbar transition-all-500 flex h-full w-full flex-col px-4"
-                                :class="{'pb-20': displaymode !== 'standalone'}"
+                                :class="{'pb-20': displayMode !== 'standalone'}"
                                 tabindex="0"
                                 role="listbox"
                             >
@@ -1628,7 +1598,7 @@
                                             >
                                                 <img
                                                     class="h-12 w-12 shrink-0"
-                                                    :src="weatherIconsPath + weatherIcons[checkIcon(card.weatherData.currentConditions.icon, card.weatherData.currentConditions.sunrise, card.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(card.weatherData.timezone).format('HH')))]"
+                                                    :src="weatherIconsPath + theme + '/' + weatherIcons[checkIcon(card.weatherData.currentConditions.icon, card.weatherData.currentConditions.sunrise, card.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(card.weatherData.timezone).format('HH')))]"
                                                     alt=""
                                                 />
                                             </div>
@@ -2292,30 +2262,19 @@
                         >
                             <button
                                 id="mainpage--tapbar--locations-btn"
-                                @click="menuLocations = true; menuSettings = false; settingsChanged ? updateInfo(true) : undefined; settingsChanged = false; modalAbout = false;"
-                                class="flex w-20 shrink-0 grow-0 flex-col items-center gap-[6px]"
+                                @click="
+                                    modalAbout = false;
+                                    menuLocations = true; 
+                                    menuSettings = false; 
+                                    settingsChanged ? updateInfo(true) : undefined; 
+                                    settingsChanged = false;
+                                    "
+                                class="flex w-20 shrink-0 grow-0 flex-col items-center gap-0.5"
                             >
-                                <svg
-                                    id="locations-btn-svg"
-                                    :class="{ 'stroke-primary-light dark:stroke-primary-dark': menuLocations === true }"
-                                    class="transition-colors-500 stroke-gray-300 dark:stroke-cosmic-500"
-                                    width="25"
-                                    height="24"
-                                    viewBox="0 0 25 24"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        d="M18.1569 16.6569C17.2202 17.5935 15.2616 19.5521 13.9138 20.8999C13.1327 21.681 11.8677 21.6814 11.0866 20.9003C9.76234 19.576 7.84159 17.6553 6.84315 16.6569C3.71895 13.5327 3.71895 8.46734 6.84315 5.34315C9.96734 2.21895 15.0327 2.21895 18.1569 5.34315C21.281 8.46734 21.281 13.5327 18.1569 16.6569Z"
-                                        stroke-width="1.5"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    />
-                                    <path
-                                        d="M14.3425 9C14.0579 9.00003 13.7762 9.05552 13.514 9.16319C13.2518 9.27086 13.0145 9.42854 12.816 9.62689L12.5016 9.94189L12.184 9.62689C11.9855 9.42858 11.7482 9.27094 11.486 9.16331C11.2238 9.05567 10.9421 9.00022 10.6575 9.00022C10.3729 9.00022 10.0912 9.05567 9.82899 9.16331C9.5668 9.27094 9.32946 9.42858 9.131 9.62689C8.72629 10.0331 8.5 10.5765 8.5 11.142C8.5 11.7075 8.72629 12.2509 9.131 12.6571L12.5016 16L15.869 12.6571C16.2737 12.2509 16.5 11.7075 16.5 11.142C16.5 10.5765 16.2737 10.0331 15.869 9.62689C15.6706 9.42854 15.4332 9.27086 15.171 9.16319C14.9089 9.05552 14.6271 9.00003 14.3425 9V9Z"
-                                        stroke-width="1.5"
-                                    />
-                                </svg>
+                                <img
+                                    :src="`/img/assets/icons/menu-location-${theme}${menuLocations ? '-active' : ''}.svg`"
+                                    alt=""
+                                />
                                 <div
                                     class="transition-colors-500 text-xs"
                                     :class="{ 'text-primary-light dark:text-primary-dark': menuLocations === true }"
@@ -2333,60 +2292,12 @@
                                 <button
                                     id="weather-btn"
                                     @click="menuLocations = false; menuSettings = false; modalAbout = false; settingsChanged ? updateInfo(true) : false; settingsChanged = false;"
-                                    class="flex shrink-0 grow-0 flex-col items-center gap-[6px]"
+                                    class="flex shrink-0 grow-0 flex-col items-center gap-0.5"
                                 >
-                                    <svg
-                                        class="transition-colors-500 stroke-gray-300 dark:stroke-cosmic-500"
-                                        :class="(menuLocations || menuSettings) || 'stroke-primary-light dark:stroke-primary-dark'"
-                                        width="25"
-                                        height="24"
-                                        viewBox="0 0 25 24"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            d="M5.64285 16.9286C5.64285 15.1534 7.08194 13.7143 8.85714 13.7143H9.07142C9.07142 13.7143 9.07142 9 13.6786 9C18.2857 9 18.2857 13.7143 18.2857 13.7143H18.7143C20.4895 13.7143 21.9286 15.1534 21.9286 16.9286V16.9286C21.9286 18.7038 20.4895 20.1429 18.7143 20.1429H8.85714C7.08194 20.1429 5.64285 18.7038 5.64285 16.9286V16.9286Z"
-                                            stroke-width="1.5"
-                                            stroke-linejoin="round"
-                                        />
-                                        <path
-                                            d="M5.40322 12.0735C4.8843 11.2146 4.68322 10.2008 4.83503 9.20887C4.98685 8.21694 5.48193 7.30972 6.23399 6.64534C6.98605 5.98097 7.94739 5.60156 8.95048 5.57324C9.95357 5.54492 10.9348 5.86949 11.7231 6.49038"
-                                            stroke-width="1.5"
-                                            stroke-linecap="round"
-                                        />
-                                        <line
-                                            x1="6.11768"
-                                            y1="2.49752"
-                                            x2="6.40517"
-                                            y2="3.07251"
-                                            stroke-width="1.5"
-                                            stroke-linecap="round"
-                                        />
-                                        <line
-                                            x1="12.4234"
-                                            y1="3.17607"
-                                            x2="12.1223"
-                                            y2="3.74402"
-                                            stroke-width="1.5"
-                                            stroke-linecap="round"
-                                        />
-                                        <line
-                                            x1="1.92798"
-                                            y1="6.92679"
-                                            x2="2.50853"
-                                            y2="7.20289"
-                                            stroke-width="1.5"
-                                            stroke-linecap="round"
-                                        />
-                                        <line
-                                            x1="1.78997"
-                                            y1="12.2234"
-                                            x2="2.38574"
-                                            y2="11.9819"
-                                            stroke-width="1.5"
-                                            stroke-linecap="round"
-                                        />
-                                    </svg>
+                                    <img
+                                        :src="`/img/assets/icons/menu-weather-${theme}${menuLocations || menuSettings ? '' : '-active'}.svg`"
+                                        alt=""
+                                    />
                                     <div
                                         class="transition-colors-500 text-xs"
                                         :class="(menuLocations || menuSettings) || 'text-primary-light dark:text-primary-dark'"
@@ -2397,31 +2308,12 @@
                             <button
                                 id="mainpage--tapbar--settings-btn"
                                 @click="menuSettings = true; menuLocations = false; settingsChanged ? updateInfo(true) : false; settingsChanged = false;"
-                                class="flex w-20 shrink-0 grow-0 flex-col items-center gap-[6px]"
+                                class="flex w-20 shrink-0 grow-0 flex-col items-center gap-0.5"
                             >
-                                <svg
-                                    id="settings_btn_svg"
-                                    :class="{ 'stroke-primary-light dark:stroke-primary-dark': menuSettings === true }"
-                                    class="transition-colors-500 stroke-gray-300 dark:stroke-cosmic-500"
-                                    width="25"
-                                    height="24"
-                                    viewBox="0 0 25 24"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        d="M10.8246 4.31731C11.251 2.5609 13.749 2.5609 14.1754 4.31731C14.4508 5.45193 15.7507 5.99038 16.7478 5.38285C18.2913 4.44239 20.0576 6.2087 19.1172 7.75218C18.5096 8.74925 19.0481 10.0492 20.1827 10.3246C21.9391 10.751 21.9391 13.249 20.1827 13.6754C19.0481 13.9508 18.5096 15.2507 19.1172 16.2478C20.0576 17.7913 18.2913 19.5576 16.7478 18.6172C15.7507 18.0096 14.4508 18.5481 14.1754 19.6827C13.749 21.4391 11.251 21.4391 10.8246 19.6827C10.5492 18.5481 9.24926 18.0096 8.25219 18.6172C6.7087 19.5576 4.94239 17.7913 5.88285 16.2478C6.49038 15.2507 5.95193 13.9508 4.81731 13.6754C3.0609 13.249 3.0609 10.751 4.81731 10.3246C5.95193 10.0492 6.49037 8.74926 5.88285 7.75218C4.94239 6.2087 6.7087 4.44239 8.25219 5.38285C9.24926 5.99037 10.5492 5.45193 10.8246 4.31731Z"
-                                        stroke-width="1.5"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    />
-                                    <path
-                                        d="M15.5 12C15.5 13.6569 14.1569 15 12.5 15C10.8431 15 9.5 13.6569 9.5 12C9.5 10.3431 10.8431 9 12.5 9C14.1569 9 15.5 10.3431 15.5 12Z"
-                                        stroke-width="1.5"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    />
-                                </svg>
+                                <img
+                                    :src="`/img/assets/icons/menu-settings-${theme}${menuSettings ? '-active' : ''}.svg`"
+                                    alt=""
+                                />
                                 <div
                                     class="transition-colors-500 text-xs"
                                     :class="{ 'text-primary-light dark:text-primary-dark': menuSettings === true }"
@@ -2533,7 +2425,7 @@
                             </header>
                             <section id="daysDetailed" class="splide">
                                 <div class="splide__track">
-                                    <!-- !Daylist -->
+                                    <!-- !DayList -->
                                     <ul
                                         x-ref="daylist"
                                         :class="detailedAtTop ? 'bg-white dark:bg-cosmic-900' : 'bg-gray-100 dark:bg-cosmic-800'"
@@ -2588,7 +2480,7 @@
                                                 >
                                                     <template
                                                         x-for="(dayPart, index) in {
-                                                            6: 'morning',
+                                                            8: 'morning',
                                                             14: 'afternoon',
                                                             18: 'evening',
                                                             23: 'night'
@@ -2596,7 +2488,6 @@
                                                         x-data="detailedDay"
                                                     >
                                                         <li
-                                                            x-init="icon = checkIcon(detailedDay.weatherData.hours[index].icon, detailedDay.weatherData.sunrise, detailedDay.weatherData.sunset, index);"
                                                             class="mb-4 border-b border-gray-100 px-6 pb-4 dark:border-cosmic-800"
                                                         >
                                                             <header
@@ -2640,7 +2531,7 @@
                                                                     <div>
                                                                         <img
                                                                             class="h-14 w-14 rounded-2xl"
-                                                                            :src="weatherIconsPath + icon + '.svg'"
+                                                                            :src="weatherIconsPath + theme + '/' + checkIcon(detailedDay.weatherData.hours[index].icon, detailedDay.weatherData.sunrise, detailedDay.weatherData.sunset, index) + '.svg'"
                                                                             alt=""
                                                                         />
                                                                     </div>
@@ -2958,11 +2849,11 @@
                             <ul class="daily mx-4 grid grid-flow-row">
                                 <template
                                     x-for="(day, id) in monthlyForecast.weatherData.days"
-                                    x-init="temprange = minMax(monthlyForecast.weatherData.days, monthlyForecast.weatherData.days.length)"
+                                    x-init="tempRange = minMax(monthlyForecast.weatherData.days, monthlyForecast.weatherData.days.length)"
                                     :key="id"
                                 >
                                     <li
-                                        x-init="lineStyles = tempRangeLineStyles(day, temprange, monthlyForecast.weatherData.currentConditions.temp);
+                                        x-init="lineStyles = tempRangeLineStyles(day, tempRange, monthlyForecast.weatherData.currentConditions.temp);
                                             date = 
                                             id === 0 
                                             ? lang.datetime.today 
@@ -2977,7 +2868,7 @@
                                         >
                                             <img
                                                 class="m-2.5 h-7 w-7"
-                                                :src="weatherIconsSmallPath + weatherIcons[day.icon]"
+                                                :src="weatherIconsSmallPath + theme + '/' + weatherIcons[day.icon]"
                                                 alt=""
                                             />
                                             <div
@@ -3093,7 +2984,7 @@
                                 >
                                     <section
                                         class="h-screen overflow-y-scroll bg-gray-100 pb-20 dark:bg-cosmic-900"
-                                        :class="{'pb-40': displaymode !== 'standalone'}"
+                                        :class="{'pb-40': displayMode !== 'standalone'}"
                                     >
                                         <!-- * HEADER * -->
                                         <header
@@ -3176,7 +3067,7 @@
                                                     >
                                                         <img
                                                             class="h-[120px] w-[120px] shrink-0"
-                                                            :src="weatherIconsPath + weatherIcons[checkIcon(slide.weatherData.currentConditions.icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(slide.weatherData.timezone).format('HH')))]"
+                                                            :src="weatherIconsPath + theme + '/' + weatherIcons[checkIcon(slide.weatherData.currentConditions.icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(slide.weatherData.timezone).format('HH')))]"
                                                             alt=""
                                                         />
                                                     </div>
@@ -3198,7 +3089,7 @@
                                                             >
                                                                 <div
                                                                     class="h-full w-full rounded-t-full border border-b-0 border-solid"
-                                                                    :class="slide.weatherData.currentConditions.sunposition ? 'border-dashed border-cyan/60' : 'border-solid border-violetDark'"
+                                                                    :class="slide.weatherData.currentConditions.sunposition ? 'border-dashed border-cosmic-400' : 'border-solid border-violetDark'"
                                                                 ></div>
                                                                 <!-- ? SKY -->
                                                                 <div
@@ -3463,7 +3354,7 @@
                                                         class="no-drag icon relative flex h-12 w-12 items-center justify-center rounded-xl bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645]"
                                                     >
                                                         <img
-                                                            :src="weatherIconsSmallPath + weatherIcons[i === 0 ? checkIcon(slide.weatherData.currentConditions.icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(slide.weatherData.timezone).format('HH'))) : checkIcon(slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH')))]"
+                                                            :src="weatherIconsSmallPath + theme + '/' + weatherIcons[i === 0 ? checkIcon(slide.weatherData.currentConditions.icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(slide.weatherData.timezone).format('HH'))) : checkIcon(slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH')))]"
                                                             class="no-drag h-6 w-6"
                                                             alt=""
                                                         />
@@ -3502,8 +3393,8 @@
                                                             dotShift: 0
                                                             }"
                                                     x-effect="
-                                                            temprange = minMax(slide.weatherData.days.slice(0, 10), 10)
-                                                            lineStyles = tempRangeLineStyles(day, temprange, slide.weatherData.currentConditions.temp);
+                                                            tempRange = minMax(slide.weatherData.days.slice(0, 10), 10)
+                                                            lineStyles = tempRangeLineStyles(day, tempRange, slide.weatherData.currentConditions.temp);
                                                             lineWidth = lineStyles.width;
                                                             lineLeft = lineStyles.left;
                                                             dotShift = lineStyles.dotShift;
@@ -3522,7 +3413,7 @@
                                                     >
                                                         <img
                                                             class="m-2.5 h-7 w-7"
-                                                            :src="weatherIconsSmallPath + weatherIcons[day.icon]"
+                                                            :src="weatherIconsSmallPath + theme + '/' + weatherIcons[day.icon]"
                                                             alt=""
                                                         />
                                                         <div
@@ -3587,41 +3478,15 @@
                                                 @click="$dispatch('addpopup2', slide); setTimeout(() => {$dispatch('detaileddaysadd', { dayid : 0, days: slide.weatherData.days.slice(0,10) })}, 150);"
                                                 class="flex items-center justify-between py-2"
                                             >
-                                                <svg
-                                                    class="h-[52px] w-[52px] rounded-2xl bg-white p-1 dark:bg-cosmic-800"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    fill="none"
-                                                    viewBox="0 0 44 44"
+                                                <div
+                                                    class="flex h-[52px] w-[52px] items-center justify-center rounded-2xl bg-white dark:bg-cosmic-800"
                                                 >
-                                                    <rect
-                                                        fill="#37F"
-                                                        width="8"
-                                                        height="3"
-                                                        x="9"
-                                                        y="14"
-                                                        rx="1.5"
+                                                    <img
+                                                        class="h-7 w-7"
+                                                        src="img/assets/icons/10days.svg"
+                                                        alt=""
                                                     />
-                                                    <rect
-                                                        fill="#37F"
-                                                        width="10"
-                                                        height="3"
-                                                        x="9"
-                                                        y="22"
-                                                        rx="1.5"
-                                                    />
-                                                    <rect
-                                                        fill="#37F"
-                                                        width="23"
-                                                        height="3"
-                                                        x="9"
-                                                        y="30"
-                                                        rx="1.5"
-                                                    />
-                                                    <path
-                                                        d="M29 11.83c2.11 0 3.31 1.49 3.48 3.28h.06a2.33 2.33 0 0 1 1.74.77 2.63 2.63 0 0 1 .72 1.84 2.75 2.75 0 0 1-.72 1.85 2.45 2.45 0 0 1-1.74.76h-.4L31.1 22.2a.5.5 0 0 1-.28.24.47.47 0 0 1-.37-.03.52.52 0 0 1-.25-.3.56.56 0 0 1 0-.38l.04-.06.77-1.34h-1.4l-1.05 1.87a.5.5 0 0 1-.3.24.47.47 0 0 1-.36-.03.52.52 0 0 1-.24-.3.56.56 0 0 1 0-.38l.03-.06.77-1.34H27l-1.06 1.87a.5.5 0 0 1-.29.24.47.47 0 0 1-.37-.03.52.52 0 0 1-.24-.3.56.56 0 0 1 0-.38l.03-.06.77-1.34h-.38a2.33 2.33 0 0 1-1.74-.76 2.63 2.63 0 0 1-.72-1.85 2.75 2.75 0 0 1 .72-1.84 2.45 2.45 0 0 1 1.74-.77h.05c.18-1.8 1.38-3.28 3.5-3.28Z"
-                                                        fill="#3FD5FE"
-                                                    />
-                                                </svg>
+                                                </div>
                                                 <div
                                                     x-text="lang.slides.headers.tenDaysForecast"
                                                     class="grow pl-5 text-base font-medium leading-5"
@@ -3643,53 +3508,15 @@
                                                 @click="$dispatch('addpopup1', slide)"
                                                 class="flex items-center justify-between py-2"
                                             >
-                                                <svg
-                                                    class="h-[52px] w-[52px] rounded-2xl bg-white p-1 dark:bg-cosmic-800"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    fill="none"
-                                                    viewBox="0 0 44 44"
+                                                <div
+                                                    class="flex h-[52px] w-[52px] items-center justify-center rounded-2xl bg-white dark:bg-cosmic-800"
                                                 >
-                                                    <rect
-                                                        fill="#3FD5FE"
-                                                        width="26.4"
-                                                        height="22.88"
-                                                        x="8.8"
-                                                        y="12.32"
-                                                        rx="6"
+                                                    <img
+                                                        class="h-7 w-7"
+                                                        src="img/assets/icons/calendar.svg"
+                                                        alt=""
                                                     />
-                                                    <rect
-                                                        fill="#37F"
-                                                        width="26.4"
-                                                        height="22.88"
-                                                        x="8.8"
-                                                        y="12.32"
-                                                        rx="4"
-                                                    />
-                                                    <path
-                                                        d="M10.56 17.6h22.88v12.84a3 3 0 0 1-3 3H13.56a3 3 0 0 1-3-3V17.6Z"
-                                                        fill="#3FD5FE"
-                                                    />
-                                                    <path
-                                                        d="M25.96 29.22a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm-5.72 0a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm-5.72 0a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm11.44-4.4a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm-5.72 0a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm-5.72 0a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm11.44-4.4a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm-5.72 0a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm-5.72 0a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Z"
-                                                        fill="#37F"
-                                                    />
-                                                    <path
-                                                        d="M14.96 12.32v-1.5c0-.63.5-1.14 1.1-1.14.6 0 1.1.51 1.1 1.15v1.49h-2.2Zm11 12.5a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm-11.44-4.4a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm5.72 0a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm5.72 0a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm-11.44 4.4a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm5.72 0a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm-5.72 4.4a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm5.72 0a.62.62 0 0 1 .62-.62h2.28a.62.62 0 0 1 .62.62v2.28a.62.62 0 0 1-.62.62h-2.28a.62.62 0 0 1-.62-.62v-2.28Zm6.6-18.4v1.5h2.2v-1.5c0-.63-.5-1.14-1.1-1.14-.6 0-1.1.51-1.1 1.15Z"
-                                                        fill="#37F"
-                                                    />
-                                                    <path
-                                                        d="M26.84 13.81v-1.5h2.2v1.5c0 .64-.5 1.15-1.1 1.15-.6 0-1.1-.51-1.1-1.15Z"
-                                                        fill="#3FD5FE"
-                                                    />
-                                                    <path
-                                                        d="M14.96 10.83v1.49h2.2v-1.5c0-.63-.5-1.14-1.1-1.14-.6 0-1.1.51-1.1 1.15Z"
-                                                        fill="#37F"
-                                                    />
-                                                    <path
-                                                        d="M14.96 13.81v-1.5h2.2v1.5c0 .64-.5 1.15-1.1 1.15-.6 0-1.1-.51-1.1-1.15Z"
-                                                        fill="#3FD5FE"
-                                                    />
-                                                </svg>
+                                                </div>
                                                 <div
                                                     x-text="lang.slides.headers.monthlyForecast"
                                                     class="grow pl-5 text-base font-medium leading-5"
