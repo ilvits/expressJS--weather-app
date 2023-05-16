@@ -423,13 +423,13 @@
                     x-transition:leave-end="opacity-0"
                     class="transition-all-300 absolute -top-3 left-0 z-[100000] h-[calc(100%_+_12px)] w-full bg-black"
                 ></div>
-                <header class="hidden items-center px-6 sm:flex">
+                <header class="items-center hidden px-6 sm:flex">
                     <div
                         x-text="moment().format('HH:mm')"
-                        class="grow-0 text-sm font-semibold"
+                        class="text-sm font-semibold grow-0"
                     ></div>
                     <div class="grow"></div>
-                    <div class="flex grow-0 items-center gap-2">
+                    <div class="flex items-center gap-2 grow-0">
                         <svg
                             width="19"
                             height="11"
@@ -482,26 +482,26 @@
 
                 <main
                     id="main"
-                    class="splide h-full overflow-x-hidden"
+                    class="h-full overflow-x-hidden splide"
                     aria-label="Splide"
                 >
                     <!-- *? Main Slides ?* -->
-                    <div class="splide__track h-full">
+                    <div class="h-full splide__track">
                         <ul class="splide__list">
                             <!-- ! Slide -->
                             <template x-for="slide in slides" :key="slide.id">
-                                <li class="splide__slide w-full">
+                                <li class="w-full splide__slide">
                                     <section
-                                        class="no-scrollbar h-full overflow-y-scroll bg-gray-100 pb-24 dark:bg-cosmic-900"
+                                        class="h-full pb-24 overflow-y-scroll bg-gray-100 no-scrollbar dark:bg-cosmic-900"
                                         :class="{'pb-44': displayMode !== 'standalone'}"
                                         @scroll="atTop = $el.scrollTop < 180 ? true : false"
                                     >
                                         <!-- * HEADER * -->
                                         <header
-                                            class="transition-opacity-500 sticky top-0 z-50 flex justify-between gap-1 bg-gray-100 px-6 py-4 dark:bg-cosmic-900"
+                                            class="sticky top-0 z-50 flex justify-between gap-1 px-6 py-4 bg-gray-100 transition-opacity-500 dark:bg-cosmic-900"
                                         >
                                             <label
-                                                class="location-slide--header-title flex items-center gap-2 truncate text-xl font-semibold leading-5"
+                                                class="flex items-center gap-2 text-xl font-semibold leading-5 truncate location-slide--header-title"
                                             >
                                                 <div
                                                     class="truncate"
@@ -525,13 +525,13 @@
                                                 x-show="!atTop"
                                                 x-transition:enter-start="opacity-0"
                                                 x-transition:leave-end="opacity-0"
-                                                class="location-slide--header-temp transition-opacity-500 absolute right-6 flex items-center gap-2 bg-gray-100 text-sm font-bold dark:bg-cosmic-900"
+                                                class="absolute flex items-center gap-2 text-sm font-bold bg-gray-100 location-slide--header-temp transition-opacity-500 right-6 dark:bg-cosmic-900"
                                             >
                                                 <div
                                                     x-text="slide.weatherData.currentConditions.temp + '°'"
                                                 ></div>
                                                 <img
-                                                    class="h-6 w-6"
+                                                    class="w-6 h-6"
                                                     :src="weatherIconsSmallPath + theme + '/' + weatherIcons[checkIcon(slide.weatherData.currentConditions.icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(slide.weatherData.timezone).format('HH')))]"
                                                     alt=""
                                                 />
@@ -541,7 +541,7 @@
                                                 x-transition:enter-start="opacity-0"
                                                 x-transition:leave-end="opacity-0"
                                                 @click="details = !details"
-                                                class="detail-weather-toggle hs-collapse-toggle transition-opacity-500 flex shrink-0 items-end gap-1 text-sm text-gray-300 dark:text-cosmic-500"
+                                                class="flex items-end gap-1 text-sm text-gray-300 detail-weather-toggle hs-collapse-toggle transition-opacity-500 shrink-0 dark:text-cosmic-500"
                                             >
                                                 <div
                                                     x-text="details ? lang.slides.header.details[1] : lang.slides.header.details[0]"
@@ -565,14 +565,14 @@
                                         <!-- * MAIN INFO * -->
                                         <section
                                             id="general-weather-info"
-                                            class="mx-auto px-4 dark:bg-cosmic-900"
+                                            class="px-4 mx-auto dark:bg-cosmic-900"
                                         >
                                             <div
                                                 class="transition-all-500 flex w-full flex-col rounded-2xl bg-white p-5 dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645]"
                                             >
                                                 <!-- * GENERAL * -->
                                                 <div
-                                                    class="transition-all-500 flex flex-row justify-between"
+                                                    class="flex flex-row justify-between transition-all-500"
                                                     @click="details = !details"
                                                 >
                                                     <div
@@ -583,7 +583,7 @@
                                                                 moment().locale(language).utcOffset(slide.weatherData.timezone).format(', D MMMM, HH:mm')"
                                                             x-timeout:10000="$el.innerText=capitalize(moment().locale(language).utcOffset(slide.weatherData.timezone).format('ddd')) + 
                                                                 moment().locale(language).utcOffset(slide.weatherData.timezone).format(', D MMMM, HH:mm')"
-                                                            class="current-day transition-all-500 text-xs font-light text-gray-300 dark:text-cosmic-500"
+                                                            class="text-xs font-light text-gray-300 current-day transition-all-500 dark:text-cosmic-500"
                                                         ></div>
                                                         <div
                                                             class="temperature relative flex align-text-top text-6xl font-semibold leading-[60px]"
@@ -610,7 +610,7 @@
                                                                 class="windgust"
                                                             ></div>
                                                             <div
-                                                                class="feelslike flex items-baseline gap-1"
+                                                                class="flex items-baseline gap-1 feelslike"
                                                             >
                                                                 <div
                                                                     x-text="lang.weather.feelslike"
@@ -630,7 +630,7 @@
                                                         class="weather-icon"
                                                     >
                                                         <img
-                                                            class="h-32 w-32 shrink-0"
+                                                            class="w-32 h-32 shrink-0"
                                                             :src="weatherIconsPath + theme + '/' + weatherIcons[checkIcon(slide.weatherData.currentConditions.icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(slide.weatherData.timezone).format('HH')))]"
                                                             alt=""
                                                         />
@@ -638,7 +638,7 @@
                                                 </div>
                                                 <!-- * DETAILS * -->
                                                 <div
-                                                    class="transition-all-500 -mx-4 overflow-hidden font-semibold"
+                                                    class="-mx-4 overflow-hidden font-semibold transition-all-500"
                                                     :class="details ?' h-[232px] opacity-100' : 'h-[0px] opacity-0'"
                                                 >
                                                     <div
@@ -646,19 +646,19 @@
                                                         class="relative grid h-[120px] w-full grid-cols-3 items-end justify-around"
                                                     >
                                                         <div
-                                                            class="detail-item transition-300 absolute flex h-full w-full -translate-x-1 -translate-y-5 justify-center overflow-hidden"
+                                                            class="absolute flex justify-center w-full h-full overflow-hidden -translate-x-1 -translate-y-5 detail-item transition-300"
                                                         >
                                                             <div
                                                                 class="absolute bottom-1 h-[75px] w-[150px]"
                                                             >
                                                                 <div
-                                                                    class="h-full w-full rounded-t-full border border-b-0 border-solid"
+                                                                    class="w-full h-full border border-b-0 border-solid rounded-t-full"
                                                                     :class="slide.weatherData.currentConditions.sunposition ? 'border-dashed border-gray-300 dark:border-cosmic-400' : 'border-solid border-violetDark'"
                                                                 ></div>
                                                                 <!-- ? SKY -->
                                                                 <div
                                                                     :style="slide.weatherData.currentConditions.sunposition ? `rotate: ${slide.weatherData.currentConditions.sunposition}deg` : 'display: none'"
-                                                                    class="sky absolute top-0 h-full w-full origin-bottom rounded-t-full border border-b-0 border-solid border-gray-300 bg-gradient-to-b from-[#BEBEBE] dark:border-cosmic-300 dark:from-[#0F3C5C]"
+                                                                    class="sky absolute top-0 h-full w-full origin-bottom rounded-t-full border border-b-0 border-solid border-gray-300 bg-gradient-to-b from-[#BEBEBE]/30 dark:border-cosmic-300 dark:from-[#0F3C5C]"
                                                                 ></div>
                                                                 <div
                                                                     class="absolute hidden h-[75px] w-[150px] rounded-b-full bg-white from-[#192848] to-[#182847] dark:bg-gradient-to-r"
@@ -674,7 +674,7 @@
                                                                 <!-- ! SUN -->
                                                                 <div
                                                                     :style="slide.weatherData.currentConditions.sunposition ? `rotate: ${slide.weatherData.currentConditions.sunposition}deg` : 'display: none'"
-                                                                    class="sun absolute left-1/2 w-1/2 origin-left"
+                                                                    class="absolute w-1/2 origin-left sun left-1/2"
                                                                 >
                                                                     <div
                                                                         class="absolute -bottom-[4px] -right-[4px] h-[7.5px] w-[7.5px] rounded-full bg-yellow outline outline-[5px] outline-offset-0 outline-white dark:outline-cosmic-800"
@@ -709,7 +709,7 @@
                                                             ></div>
                                                             <div
                                                                 x-text="slide.weatherData.currentConditions.sunrise"
-                                                                class="sunrise font-semibold"
+                                                                class="font-semibold sunrise"
                                                             ></div>
                                                         </div>
                                                         <div
@@ -721,7 +721,7 @@
                                                             ></div>
                                                             <div
                                                                 x-text="slide.weatherData.currentConditions.daylight"
-                                                                class="daylight font-semibold"
+                                                                class="font-semibold daylight"
                                                             ></div>
                                                         </div>
                                                         <div
@@ -733,7 +733,7 @@
                                                             ></div>
                                                             <div
                                                                 x-text="slide.weatherData.currentConditions.sunset"
-                                                                class="sunset font-semibold"
+                                                                class="font-semibold sunset"
                                                             ></div>
                                                         </div>
                                                     </div>
@@ -742,7 +742,7 @@
                                                         class="relative grid grid-cols-3"
                                                     >
                                                         <div
-                                                            class="detail-item transition-300 flex flex-col gap-5 text-center"
+                                                            class="flex flex-col gap-5 text-center detail-item transition-300"
                                                         >
                                                             <div
                                                                 class="flex flex-col items-center gap-1.5 leading-[18px]"
@@ -813,7 +813,7 @@
                                                             </div>
                                                         </div>
                                                         <div
-                                                            class="detail-item transition-300 flex flex-col gap-5 text-center"
+                                                            class="flex flex-col gap-5 text-center detail-item transition-300"
                                                         >
                                                             <div
                                                                 class="flex flex-col items-center gap-1.5 leading-[18px]"
@@ -857,7 +857,7 @@
                                                             </div>
                                                         </div>
                                                         <div
-                                                            class="detail-item transition-300 flex flex-col gap-5 text-center"
+                                                            class="flex flex-col gap-5 text-center detail-item transition-300"
                                                         >
                                                             <div
                                                                 class="flex flex-col items-center gap-1.5 leading-[18px]"
@@ -931,7 +931,7 @@
                                                     <!-- Date -->
                                                     <div
                                                         x-text="moment().add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH') === '00' ? moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('D MMMM') : ''"
-                                                        class="no-drag date truncate pb-1 text-xs font-light text-gray-300 dark:text-cosmic-500"
+                                                        class="pb-1 text-xs font-light text-gray-300 truncate no-drag date dark:text-cosmic-500"
                                                     ></div>
                                                     <div
                                                         class="no-drag icon relative flex h-12 w-12 items-center justify-center rounded-xl bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645]"
@@ -951,7 +951,7 @@
                                                     </div>
                                                     <div
                                                         x-text="moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))]) ? lang.datetime.now : moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH:00')"
-                                                        class="no-drag time pt-3 text-xs font-light text-gray-300 dark:text-cosmic-500"
+                                                        class="pt-3 text-xs font-light text-gray-300 no-drag time dark:text-cosmic-500"
                                                     ></div>
                                                     <div
                                                         x-text="i === 0 ? slide.weatherData.currentConditions.temp : slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].temp + '°'"
@@ -962,7 +962,7 @@
                                         </ul>
                                         <!-- * DAILY * -->
                                         <ul
-                                            class="daily mx-4 grid grid-flow-row py-6"
+                                            class="grid grid-flow-row py-6 mx-4 daily"
                                         >
                                             <template
                                                 x-for="(day, id) in slide.weatherData.days.slice(0, 10)"
@@ -1006,7 +1006,7 @@
                                                         ></div>
                                                     </div>
                                                     <div
-                                                        class="flex w-28 shrink-0 flex-col justify-center gap-1"
+                                                        class="flex flex-col justify-center gap-1 w-28 shrink-0"
                                                     >
                                                         <div
                                                             x-text="id === 0 
@@ -1021,9 +1021,9 @@
                                                             class="text-xs font-medium leading-[14px] text-gray-300 dark:text-cosmic-500"
                                                         ></div>
                                                     </div>
-                                                    <div class="my-4 w-full">
+                                                    <div class="w-full my-4">
                                                         <div
-                                                            class="mx-auto flex justify-between pb-2 leading-5"
+                                                            class="flex justify-between pb-2 mx-auto leading-5"
                                                         >
                                                             <div
                                                                 x-text="day.tempmin + '°'"
@@ -1055,7 +1055,7 @@
                                         </ul>
                                         <!-- ! 10-day forecast & Monthly Forecast Btns -->
                                         <section
-                                            class="mx-4 flex flex-col border-t border-gray-200/30 pt-4 dark:border-cosmic-800"
+                                            class="flex flex-col pt-4 mx-4 border-t border-gray-200/30 dark:border-cosmic-800"
                                         >
                                             <div
                                                 @click="$dispatch('addpopup2', slide); setTimeout(() => {$dispatch('detaileddaysadd', { dayid : 0, days: slide.weatherData.days.slice(0,10) })}, 150);"
@@ -1072,10 +1072,10 @@
                                                 </div>
                                                 <div
                                                     x-text="lang.slides.headers.tenDaysForecast"
-                                                    class="grow pl-5 text-base font-medium leading-5"
+                                                    class="pl-5 text-base font-medium leading-5 grow"
                                                 ></div>
                                                 <svg
-                                                    class="detail-weather-toggle--img -rotate-90 fill-gray-300 dark:fill-cosmic-500"
+                                                    class="-rotate-90 detail-weather-toggle--img fill-gray-300 dark:fill-cosmic-500"
                                                     width="16"
                                                     height="17"
                                                     viewBox="0 0 16 17"
@@ -1102,10 +1102,10 @@
                                                 </div>
                                                 <div
                                                     x-text="lang.slides.headers.monthlyForecast"
-                                                    class="grow pl-5 text-base font-medium leading-5"
+                                                    class="pl-5 text-base font-medium leading-5 grow"
                                                 ></div>
                                                 <svg
-                                                    class="detail-weather-toggle--img -rotate-90 fill-gray-300 dark:fill-cosmic-500"
+                                                    class="-rotate-90 detail-weather-toggle--img fill-gray-300 dark:fill-cosmic-500"
                                                     width="16"
                                                     height="17"
                                                     viewBox="0 0 16 17"
@@ -1150,7 +1150,7 @@
                         <button
                             x-text="lang.common.buttons.searchLocations"
                             id="mainpage--search-btn"
-                            class="rounded-md bg-primary-light px-12 py-3 text-white dark:bg-primary-dark dark:text-cosmic-900"
+                            class="px-12 py-3 text-white rounded-md bg-primary-light dark:bg-primary-dark dark:text-cosmic-900"
                             @click="
                                 menuLocations = true; 
                                 setTimeout(() => { inputFocus = true }, 1000);
@@ -1191,7 +1191,7 @@
                             })
                             "
                         x-data="{ locationsEditMode: false, locationEditModal: false }"
-                        class="transition-all-500 absolute top-0 left-0 h-full w-full overflow-x-hidden overflow-y-scroll bg-gray-100 pb-20 dark:bg-cosmic-900"
+                        class="absolute top-0 left-0 w-full h-full pb-20 overflow-x-hidden overflow-y-scroll bg-gray-100 transition-all-500 dark:bg-cosmic-900"
                     >
                         <!-- Backdrop -->
                         <div
@@ -1199,20 +1199,20 @@
                             x-show="menuLocationsBackdrop"
                             x-transition:enter-start="opacity-0"
                             x-transition:leave-end="opacity-0"
-                            class="transition-all-500 fixed top-0 left-0 z-10 h-full w-full backdrop-blur-lg dark:bg-cosmic-900/80"
+                            class="fixed top-0 left-0 z-10 w-full h-full transition-all-500 backdrop-blur-lg dark:bg-cosmic-900/80"
                         ></div>
 
                         <section
-                            class="relative flex h-full flex-col gap-6 overflow-x-hidden overflow-y-scroll"
+                            class="relative flex flex-col h-full gap-6 overflow-x-hidden overflow-y-scroll"
                         >
                             <!-- HEADER -->
                             <header
-                                class="sticky top-0 flex h-12 w-full items-center justify-center bg-gray-100 px-4 pt-4 pb-1 dark:bg-cosmic-900"
+                                class="sticky top-0 flex items-center justify-center w-full h-12 px-4 pt-4 pb-1 bg-gray-100 dark:bg-cosmic-900"
                             >
                                 <div class="w-16 shrink-0 grow-0"></div>
                                 <div
                                     x-text="lang.locations.header"
-                                    class="transition-opacity-500 shrink-0 grow text-center text-lg font-semibold leading-8"
+                                    class="text-lg font-semibold leading-8 text-center transition-opacity-500 shrink-0 grow"
                                     :class="inputFocus && 'opacity-0'"
                                 ></div>
                                 <button
@@ -1225,7 +1225,7 @@
                             </header>
                             <!-- Search section -->
                             <section
-                                class="transition-all-500 relative z-10 h-12 w-full px-4"
+                                class="relative z-10 w-full h-12 px-4 transition-all-500"
                                 :class="inputFocus && '-translate-y-14'"
                             >
                                 <div class="relative flex h-12 flex-nowrap">
@@ -1256,7 +1256,7 @@
                                         @click="inputFocus = false"
                                     ></button>
                                     <div
-                                        class="pointer-events-none absolute top-4 pl-3"
+                                        class="absolute pl-3 pointer-events-none top-4"
                                     >
                                         <svg
                                             class="stroke-gray-300 dark:stroke-cosmic-500"
@@ -1274,7 +1274,7 @@
                                         </svg>
                                     </div>
                                     <button
-                                        class="clear-text-cross transition-opacity-500 absolute right-20 top-1/2 -translate-y-1/2"
+                                        class="absolute -translate-y-1/2 clear-text-cross transition-opacity-500 right-20 top-1/2"
                                         x-show="searchClearText"
                                         @click="
                                                 searchClearText = false,
@@ -1397,7 +1397,7 @@
                             <!-- ! Location Cards List -->
                             <ol
                                 id="location-cards--container"
-                                class="slip-swiping-container no-scrollbar transition-all-500 flex h-full w-full flex-col px-4"
+                                class="flex flex-col w-full h-full px-4 slip-swiping-container no-scrollbar transition-all-500"
                                 :class="{'pb-20': displayMode !== 'standalone'}"
                                 tabindex="0"
                                 role="listbox"
@@ -1455,7 +1455,7 @@
                                             ></div>
                                             <button
                                                 type="button"
-                                                class="no-swipe instant w-10"
+                                                class="w-10 no-swipe instant"
                                                 :class="card.location.isUserLocation === 'true' ? 'opacity-50' : 'opacity-100'"
                                             >
                                                 <svg
@@ -1488,34 +1488,34 @@
                                         </section>
                                         <!-- *** card *** -->
                                         <section
-                                            class="card__wrapper no-reorder no-swipe pointer-events-none items-center"
+                                            class="items-center pointer-events-none card__wrapper no-reorder no-swipe"
                                             :class="locationsEditMode ? 'h-[80px] w-[calc(100%_-_100px)]' : 'h-[85px] w-full'"
                                         >
                                             <div
                                                 x-show="locationsEditMode && card.location.isUserLocation === 'true'"
                                                 x-transition:enter-start="opacity-0"
                                                 x-transition:leave-end="opacity-0"
-                                                class="transition-opacity-500 absolute top-0 left-0 z-10 h-full w-full rounded-2xl bg-white/60 dark:bg-primary-backdrop/40"
+                                                class="absolute top-0 left-0 z-10 w-full h-full transition-opacity-500 rounded-2xl bg-white/60 dark:bg-primary-backdrop/40"
                                             ></div>
                                             <div
-                                                class="card__location-info absolute flex flex-auto flex-col"
+                                                class="absolute flex flex-col flex-auto card__location-info"
                                                 :class="locationsEditMode ? 'w-[calc(100%_-_64px)] ' : 'w-[calc(100%_-_160px)]'"
                                             >
                                                 <small
                                                     x-text="moment().locale(language).utcOffset(card.weatherData.timezone).format('HH:mm')"
                                                     x-timeout:5000="$el.innerText=moment().locale(language).utcOffset(card.weatherData.timezone).format('HH:mm')"
-                                                    class="card__current-time mb-1 text-cosmic-500"
+                                                    class="mb-1 card__current-time text-cosmic-500"
                                                 ></small>
-                                                <div class="relative mb-2 flex">
+                                                <div class="relative flex mb-2">
                                                     <div
                                                         x-text="card.location.name"
-                                                        class="card__location-name transition-all-500 truncate text-lg font-semibold leading-5"
+                                                        class="text-lg font-semibold leading-5 truncate card__location-name transition-all-500"
                                                     ></div>
                                                     <div
                                                         x-show="card.location.isUserLocation === 'true'"
                                                         x-transition:enter-start="opacity-0 scale-50"
                                                         x-transition:leave-end="opacity-0 scale-50"
-                                                        class="card__location-pin transition-all-500 ml-2"
+                                                        class="ml-2 card__location-pin transition-all-500"
                                                     >
                                                         <svg
                                                             class="fill-cosmic-900 dark:fill-white"
@@ -1547,7 +1547,7 @@
                                             >
                                                 <div
                                                     x-text="card.weatherData.currentConditions.temp + '°'"
-                                                    class="card__current-temp transition-500 text-center text-3xl font-medium"
+                                                    class="text-3xl font-medium text-center card__current-temp transition-500"
                                                 ></div>
                                                 <small
                                                     class="card__temp-range flex items-center gap-[2px] text-gray-300 dark:text-cosmic-300"
@@ -1594,10 +1594,10 @@
                                                 x-show="card.location.isUserLocation === 'true' ? true : !locationsEditMode"
                                                 x-transition:enter-start="opacity-0 scale-50"
                                                 x-transition:leave-end="opacity-0 scale-50"
-                                                class="card__weather-icon transition-all-500 absolute right-4 h-12 w-12 shrink-0"
+                                                class="absolute w-12 h-12 card__weather-icon transition-all-500 right-4 shrink-0"
                                             >
                                                 <img
-                                                    class="h-12 w-12 shrink-0"
+                                                    class="w-12 h-12 shrink-0"
                                                     :src="weatherIconsPath + theme + '/' + weatherIcons[checkIcon(card.weatherData.currentConditions.icon, card.weatherData.currentConditions.sunrise, card.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(card.weatherData.timezone).format('HH')))]"
                                                     alt=""
                                                 />
@@ -1616,7 +1616,7 @@
                                                     $refs.editLocationConfirmBtn.removeAttribute('disabled');
                                                     setTimeout(() => $refs.editLocationInput.focus(), 500)
                                                     "
-                                            class="card__edit-btn transition-all-500 no-reorder no-swipe absolute right-14"
+                                            class="absolute card__edit-btn transition-all-500 no-reorder no-swipe right-14"
                                         >
                                             <svg
                                                 class="no-reorder no-swipe fill-cosmic-900 dark:fill-white"
@@ -1711,19 +1711,19 @@
                                                 });
                                                 $dispatch('toast', { content: `${lang.toasts.renameLocation} <b>${editedCard.originalName}</b>` })
                                             "
-                                        class="pt-4 text-left text-sm text-primary-light dark:text-primary-dark"
+                                        class="pt-4 text-sm text-left text-primary-light dark:text-primary-dark"
                                     ></button>
                                 </div>
                                 <div class="flex justify-around">
                                     <button
-                                        class="settings--modal--cancel-btn mr-2 w-1/2 rounded-lg border border-primary-light p-2 text-sm font-semibold text-primary-light dark:border-primary-dark dark:text-primary-dark"
+                                        class="w-1/2 p-2 mr-2 text-sm font-semibold border rounded-lg settings--modal--cancel-btn border-primary-light text-primary-light dark:border-primary-dark dark:text-primary-dark"
                                         type="button"
                                         @click="locationEditModal = false; menuLocationsBackdrop = false"
                                         x-text="lang.common.buttons.cancel"
                                     ></button>
                                     <button
                                         x-ref="editLocationConfirmBtn"
-                                        class="settings--modal--ok-btn ml-2 w-1/2 rounded-lg bg-primary-light p-2 text-sm font-semibold text-white disabled:bg-primary-light/50 dark:bg-primary-dark dark:text-cosmic-900 disabled:dark:bg-primary-dark/50 disabled:dark:text-cosmic-900"
+                                        class="w-1/2 p-2 ml-2 text-sm font-semibold text-white rounded-lg settings--modal--ok-btn bg-primary-light disabled:bg-primary-light/50 dark:bg-primary-dark dark:text-cosmic-900 disabled:dark:bg-primary-dark/50 disabled:dark:text-cosmic-900"
                                         type="button"
                                         @click="
                                                 locationEditModal = false; 
@@ -1749,7 +1749,7 @@
                                 id="locations-placeholder"
                                 x-show="!slides.length && menuLocations"
                                 x-transition:enter-start="opacity-0"
-                                class="transition-all-500 absolute top-40 left-1/2 flex w-full -translate-x-1/2 transform-gpu flex-col duration-1000"
+                                class="absolute flex flex-col w-full duration-1000 -translate-x-1/2 transition-all-500 top-40 left-1/2 transform-gpu"
                             >
                                 <div class="w-full">
                                     <svg
@@ -1805,7 +1805,7 @@
                     <!-- *? Settings ?* -->
                     <section
                         x-cloak
-                        class="transition-all-500 absolute top-0 left-0 h-full w-full overflow-x-hidden overflow-y-scroll bg-gray-100 pb-20 dark:bg-cosmic-900"
+                        class="absolute top-0 left-0 w-full h-full pb-20 overflow-x-hidden overflow-y-scroll bg-gray-100 transition-all-500 dark:bg-cosmic-900"
                         x-show="menuSettings"
                         x-data="{ themeDropdown: false }"
                     >
@@ -1814,13 +1814,13 @@
                             x-cloak
                             x-transition:enter-start="opacity-0"
                             x-transition:leave-end="opacity-0"
-                            class="transition-all-500 fixed top-0 left-0 z-20 h-full w-full bg-primary-backdrop/60 backdrop-blur-lg dark:bg-primary-backdrop/50"
+                            class="fixed top-0 left-0 z-20 w-full h-full transition-all-500 bg-primary-backdrop/60 backdrop-blur-lg dark:bg-primary-backdrop/50"
                         ></div>
                         <section class="relative grid grid-flow-row gap-6">
                             <!-- HEADER -->
                             <header
                                 @click="settingsChanged ? updateInfo(true) : ''; settingsChanged = false;"
-                                class="transition-500 sticky top-0 flex h-12 w-full flex-col items-center justify-center bg-gray-100 px-4 pt-4 pb-1 dark:bg-cosmic-900"
+                                class="sticky top-0 flex flex-col items-center justify-center w-full h-12 px-4 pt-4 pb-1 bg-gray-100 transition-500 dark:bg-cosmic-900"
                             >
                                 <div
                                     x-text="lang.settings.header"
@@ -1841,14 +1841,14 @@
                                         x-text="lang.settings.temperature"
                                     ></div>
                                     <div
-                                        class="relative h-7 w-32 rounded-md border border-primary-light dark:border-primary-dark"
+                                        class="relative w-32 border rounded-md h-7 border-primary-light dark:border-primary-dark"
                                     >
                                         <div
                                             class="transition-all-500 absolute -left-[1px] -top-[1px] h-7 w-16 rounded-l-md bg-primary-light dark:bg-primary-dark"
                                             :class="{'translate-x-16 rounded-r-md rounded-l-none' : settings.temp === true }"
                                         ></div>
                                         <div
-                                            class="transition-colors-500 absolute w-16 text-center"
+                                            class="absolute w-16 text-center transition-colors-500"
                                             :class="{ 
                                                     'text-primary-light dark:text-primary-dark': settings.temp === true,
                                                     'text-white dark:text-cosmic-900': settings.temp === false,
@@ -1857,7 +1857,7 @@
                                             °C
                                         </div>
                                         <div
-                                            class="transition-colors-500 absolute left-16 w-16 text-center"
+                                            class="absolute w-16 text-center transition-colors-500 left-16"
                                             :class="{ 
                                                     'text-primary-light dark:text-primary-dark': settings.temp === false, 
                                                     'text-white dark:text-cosmic-900': settings.temp === true,
@@ -1877,14 +1877,14 @@
                                         x-text="lang.settings.wind.label"
                                     ></div>
                                     <div
-                                        class="relative h-7 w-32 rounded-md border border-primary-light dark:border-primary-dark"
+                                        class="relative w-32 border rounded-md h-7 border-primary-light dark:border-primary-dark"
                                     >
                                         <div
                                             class="transition-all-500 absolute -left-[1px] -top-[1px] h-7 w-16 rounded-l-md bg-primary-light dark:bg-primary-dark"
                                             :class="{'translate-x-16 rounded-r-md rounded-l-none' : settings.wind === true }"
                                         ></div>
                                         <div
-                                            class="transition-colors-500 absolute w-16 text-center"
+                                            class="absolute w-16 text-center transition-colors-500"
                                             x-text="lang.weather.units.wind[0]"
                                             :class="{ 
                                                     'text-primary-light dark:text-primary-dark': settings.wind === true,
@@ -1892,7 +1892,7 @@
                                                     }"
                                         ></div>
                                         <div
-                                            class="transition-colors-500 absolute left-16 w-16 text-center"
+                                            class="absolute w-16 text-center transition-colors-500 left-16"
                                             x-text="lang.weather.units.wind[1]"
                                             :class="{ 
                                                     'text-primary-light dark:text-primary-dark': settings.wind === false, 
@@ -1911,14 +1911,14 @@
                                         x-text="lang.settings.pressure.label"
                                     ></div>
                                     <div
-                                        class="relative h-7 w-32 rounded-md border border-primary-light dark:border-primary-dark"
+                                        class="relative w-32 border rounded-md h-7 border-primary-light dark:border-primary-dark"
                                     >
                                         <div
                                             class="transition-all-500 absolute -left-[1px] -top-[1px] h-7 w-16 rounded-l-md bg-primary-light dark:bg-primary-dark"
                                             :class="{'translate-x-16 rounded-r-md rounded-l-none' : settings.pressure === true }"
                                         ></div>
                                         <div
-                                            class="transition-colors-500 absolute w-16 text-center text-primary-light dark:text-primary-dark"
+                                            class="absolute w-16 text-center transition-colors-500 text-primary-light dark:text-primary-dark"
                                             x-text="lang.weather.units.pressure[0]"
                                             :class="{ 
                                                     'text-white dark:text-cosmic-900': settings.pressure === false,
@@ -1926,7 +1926,7 @@
                                                     }"
                                         ></div>
                                         <div
-                                            class="transition-colors-500 absolute left-16 w-16 text-center text-primary-light dark:text-primary-dark"
+                                            class="absolute w-16 text-center transition-colors-500 left-16 text-primary-light dark:text-primary-dark"
                                             x-text="lang.weather.units.pressure[1]"
                                             :class="{ 
                                                     'text-white dark:text-cosmic-900': settings.pressure === true,
@@ -1937,7 +1937,7 @@
                                 </section>
                             </div>
                             <div
-                                class="transition-colors-500 flex w-full flex-col gap-4 bg-white p-6 text-sm leading-7 dark:bg-cosmic-800"
+                                class="flex flex-col w-full gap-4 p-6 text-sm leading-7 bg-white transition-colors-500 dark:bg-cosmic-800"
                             >
                                 <section
                                     id="set_lang"
@@ -1952,14 +1952,14 @@
                                         x-text="lang.settings.lang.label"
                                     ></div>
                                     <div
-                                        class="relative h-7 w-32 rounded-md border border-primary-light dark:border-primary-dark"
+                                        class="relative w-32 border rounded-md h-7 border-primary-light dark:border-primary-dark"
                                     >
                                         <div
                                             class="transition-all-500 absolute -left-[1px] -top-[1px] h-7 w-16 rounded-l-md bg-primary-light dark:bg-primary-dark"
                                             :class="{'translate-x-16 rounded-r-md rounded-l-none' : settings.lang === true }"
                                         ></div>
                                         <div
-                                            class="transition-colors-500 absolute w-16 text-center"
+                                            class="absolute w-16 text-center transition-colors-500"
                                             x-text="lang.settings.lang.switchOff"
                                             :class="{ 
                                                     'text-white dark:text-cosmic-900': settings.lang === false,
@@ -1967,7 +1967,7 @@
                                                     }"
                                         ></div>
                                         <div
-                                            class="transition-colors-500 absolute left-16 w-16 text-center"
+                                            class="absolute w-16 text-center transition-colors-500 left-16"
                                             x-text="lang.settings.lang.switchOn"
                                             :class="{ 
                                                     'text-primary-light dark:text-primary-dark': settings.lang === false, 
@@ -1992,7 +1992,7 @@
                                         @click="themeDropdown = true"
                                     ></button>
                                     <div
-                                        class="transition-500 fixed left-0 z-20 h-screen w-full bg-primary-backdrop/30 dark:bg-primary-backdrop/50"
+                                        class="fixed left-0 z-20 w-full h-screen transition-500 bg-primary-backdrop/30 dark:bg-primary-backdrop/50"
                                         x-show="themeDropdown"
                                         x-transition:enter-start="opacity-0"
                                         x-transition:leave-end="opacity-0"
@@ -2081,7 +2081,7 @@
                                 </section>
                             </div>
                             <div
-                                class="flex w-full flex-col items-start gap-2 truncate text-base font-medium leading-5"
+                                class="flex flex-col items-start w-full gap-2 text-base font-medium leading-5 truncate"
                             >
                                 <button
                                     class="px-6 py-2.5"
@@ -2124,13 +2124,13 @@
                                 </div>
                                 <div class="flex justify-around">
                                     <button
-                                        class="settings--modal--cancel-btn mr-2 w-1/2 rounded-lg border border-primary-light p-2 text-sm font-semibold text-primary-light dark:border-primary-dark dark:text-primary-dark"
+                                        class="w-1/2 p-2 mr-2 text-sm font-semibold border rounded-lg settings--modal--cancel-btn border-primary-light text-primary-light dark:border-primary-dark dark:text-primary-dark"
                                         type="button"
                                         @click="modalClearLocations = false; menuSettingsBackdrop = false"
                                         x-text="lang.common.buttons.cancel"
                                     ></button>
                                     <button
-                                        class="settings--modal--ok-btn ml-2 w-1/2 rounded-lg bg-primary-light p-2 text-sm font-semibold text-white disabled:bg-primary-light/50 dark:bg-primary-dark dark:text-cosmic-900 disabled:dark:bg-primary-dark/50 disabled:dark:text-cosmic-900"
+                                        class="w-1/2 p-2 ml-2 text-sm font-semibold text-white rounded-lg settings--modal--ok-btn bg-primary-light disabled:bg-primary-light/50 dark:bg-primary-dark dark:text-cosmic-900 disabled:dark:bg-primary-dark/50 disabled:dark:text-cosmic-900"
                                         type="button"
                                         @click="
                                                 modalClearLocations = false; 
@@ -2168,13 +2168,13 @@
                                 </div>
                                 <div class="flex justify-around">
                                     <button
-                                        class="settings--modal--cancel-btn mr-2 w-1/2 rounded-lg border border-primary-light p-2 text-sm font-semibold text-primary-light dark:border-primary-dark dark:text-primary-dark"
+                                        class="w-1/2 p-2 mr-2 text-sm font-semibold border rounded-lg settings--modal--cancel-btn border-primary-light text-primary-light dark:border-primary-dark dark:text-primary-dark"
                                         type="button"
                                         @click="modalResetSettings = false; menuSettingsBackdrop = false;"
                                         x-text="lang.common.buttons.cancel"
                                     ></button>
                                     <button
-                                        class="settings--modal--ok-btn ml-2 w-1/2 rounded-lg bg-primary-light p-2 text-sm font-semibold text-white disabled:bg-primary-light/50 dark:bg-primary-dark dark:text-cosmic-900 disabled:dark:bg-primary-dark/50 disabled:dark:text-cosmic-900"
+                                        class="w-1/2 p-2 ml-2 text-sm font-semibold text-white rounded-lg settings--modal--ok-btn bg-primary-light disabled:bg-primary-light/50 dark:bg-primary-dark dark:text-cosmic-900 disabled:dark:bg-primary-dark/50 disabled:dark:text-cosmic-900"
                                         type="button"
                                         @click="
                                                 resetSettings();
@@ -2192,7 +2192,7 @@
                     </section>
                     <!-- About -->
                     <section
-                        class="transition-all-500 absolute top-0 left-0 h-full w-full overflow-x-hidden overflow-y-scroll bg-gray-100/80 pb-20 backdrop-blur-xl dark:bg-cosmic-900/80"
+                        class="absolute top-0 left-0 w-full h-full pb-20 overflow-x-hidden overflow-y-scroll transition-all-500 bg-gray-100/80 backdrop-blur-xl dark:bg-cosmic-900/80"
                         x-cloak
                         x-show="modalAbout"
                         x-transition:enter-start="opacity-0 scale-95"
@@ -2202,12 +2202,12 @@
                     >
                         <div class="relative flex flex-col gap-6">
                             <header
-                                class="sticky top-0 z-10 flex h-12 w-full items-center justify-between bg-gray-100/50 px-4 pt-4 pb-1 backdrop-blur-md dark:bg-cosmic-900/80"
+                                class="sticky top-0 z-10 flex items-center justify-between w-full h-12 px-4 pt-4 pb-1 bg-gray-100/50 backdrop-blur-md dark:bg-cosmic-900/80"
                             >
                                 <div class="w-6"></div>
                                 <div
                                     x-text="lang.settings.about.header"
-                                    class="grow text-center text-base font-semibold leading-8"
+                                    class="text-base font-semibold leading-8 text-center grow"
                                 ></div>
                                 <div
                                     class="w-6 stroke-primary-light dark:stroke-primary-dark"
@@ -2231,10 +2231,10 @@
                             </header>
                             <section
                                 x-html="lang.settings.about.text"
-                                class="flex w-full flex-col gap-4 bg-white p-6 text-sm leading-4 dark:bg-cosmic-800"
+                                class="flex flex-col w-full gap-4 p-6 text-sm leading-4 bg-white dark:bg-cosmic-800"
                             ></section>
                             <section
-                                class="flex w-full flex-col items-start gap-2 truncate text-base font-medium leading-5"
+                                class="flex flex-col items-start w-full gap-2 text-base font-medium leading-5 truncate"
                             >
                                 <button
                                     class="px-6 py-2.5"
@@ -2255,10 +2255,10 @@
                     <!-- *? TAP BAR ?* -->
                     <section
                         id="tapbar"
-                        class="transition-colors-500 fixed bottom-0 left-0 h-20 w-full bg-white/60 text-gray-300 backdrop-blur-lg dark:bg-cosmic-900/80 dark:text-cosmic-500"
+                        class="fixed bottom-0 left-0 w-full h-20 text-gray-300 transition-colors-500 bg-white/60 backdrop-blur-lg dark:bg-cosmic-900/80 dark:text-cosmic-500"
                     >
                         <div
-                            class="relative mx-8 mt-3 flex items-center justify-between overflow-hidden"
+                            class="relative flex items-center justify-between mx-8 mt-3 overflow-hidden"
                         >
                             <button
                                 id="mainpage--tapbar--locations-btn"
@@ -2276,7 +2276,7 @@
                                     alt=""
                                 />
                                 <div
-                                    class="transition-colors-500 text-xs"
+                                    class="text-xs transition-colors-500"
                                     :class="{ 'text-primary-light dark:text-primary-dark': menuLocations === true }"
                                     x-text="lang.common.buttons.locations"
                                 ></div>
@@ -2299,7 +2299,7 @@
                                         alt=""
                                     />
                                     <div
-                                        class="transition-colors-500 text-xs"
+                                        class="text-xs transition-colors-500"
                                         :class="(menuLocations || menuSettings) || 'text-primary-light dark:text-primary-dark'"
                                         x-text="lang.common.buttons.weather"
                                     ></div>
@@ -2315,7 +2315,7 @@
                                     alt=""
                                 />
                                 <div
-                                    class="transition-colors-500 text-xs"
+                                    class="text-xs transition-colors-500"
                                     :class="{ 'text-primary-light dark:text-primary-dark': menuSettings === true }"
                                     x-text="lang.common.buttons.settings"
                                 ></div>
@@ -2329,7 +2329,7 @@
                         x-show="mainBackdrop"
                         x-transition:enter-start="opacity-0"
                         x-transition:leave-end="opacity-0"
-                        class="transition-all-500 fixed top-0 left-0 z-10 h-full w-full backdrop-blur-lg dark:bg-cosmic-900/80"
+                        class="fixed top-0 left-0 z-10 w-full h-full transition-all-500 backdrop-blur-lg dark:bg-cosmic-900/80"
                     ></div>
                 </main>
                 <!-- ! PopUps -->
@@ -2370,9 +2370,9 @@
                         >
                             <header
                                 :class="detailedAtTop ? 'bg-white dark:bg-cosmic-900' : 'bg-gray-100 dark:bg-cosmic-800'"
-                                class="transition-500 top-0 flex flex-col gap-4 pt-3 duration-1000"
+                                class="top-0 flex flex-col gap-4 pt-3 duration-1000 transition-500"
                             >
-                                <div class="flex w-full items-center px-4">
+                                <div class="flex items-center w-full px-4">
                                     <button
                                         type="button"
                                         @click="transitionOut()"
@@ -2394,7 +2394,7 @@
                                     </button>
                                     <div
                                         x-text="lang.slides.headers.tenDaysForecast"
-                                        class="transition-all-500 shrink-0 grow text-center text-base font-semibold leading-5"
+                                        class="text-base font-semibold leading-5 text-center transition-all-500 shrink-0 grow"
                                     ></div>
                                     <div
                                         x-data="{ show: false }"
@@ -2432,7 +2432,7 @@
                                         class="transition-500 no-drag ten-days-forecast-detailed--dates no-scrollbar sticky top-0 z-10 grid snap-x snap-mandatory scroll-pl-4 grid-flow-col gap-2.5 overflow-x-scroll scroll-smooth py-4 px-4 duration-1000"
                                     >
                                         <div
-                                            class="no-drag transition-all-500 absolute z-0 mt-4 h-14 w-10 rounded-lg bg-primary-light dark:bg-primary-dark"
+                                            class="absolute z-0 w-10 mt-4 rounded-lg no-drag transition-all-500 h-14 bg-primary-light dark:bg-primary-dark"
                                             :style="'transform: translateX(' + offset + 'px)'"
                                         ></div>
                                         <template
@@ -2447,11 +2447,11 @@
                                             >
                                                 <div
                                                     x-text="moment.unix(day.datetimeEpoch).locale(language).format('dd')"
-                                                    class="no-drag text-xs font-bold"
+                                                    class="text-xs font-bold no-drag"
                                                 ></div>
                                                 <div
                                                     x-text="moment.unix(day.datetimeEpoch).locale(language).format('D')"
-                                                    class="no-drag text-base font-semibold leading-5"
+                                                    class="text-base font-semibold leading-5 no-drag"
                                                 ></div>
                                             </li>
                                         </template>
@@ -2473,10 +2473,10 @@
                                                 x-show="show"
                                                 x-transition:enter-start="opacity-0"
                                                 @detaileddayclose.window="closeday($event);"
-                                                class="splide__slide transition-500 flex w-full flex-col gap-4 bg-white duration-1000 dark:bg-cosmic-900"
+                                                class="flex flex-col w-full gap-4 duration-1000 bg-white splide__slide transition-500 dark:bg-cosmic-900"
                                             >
                                                 <ul
-                                                    class="mt-2 mb-4 flex flex-col sm:mb-4"
+                                                    class="flex flex-col mt-2 mb-4 sm:mb-4"
                                                 >
                                                     <template
                                                         x-for="(dayPart, index) in {
@@ -2488,14 +2488,14 @@
                                                         x-data="detailedDay"
                                                     >
                                                         <li
-                                                            class="mb-4 border-b border-gray-100 px-6 pb-4 dark:border-cosmic-800"
+                                                            class="px-6 pb-4 mb-4 border-b border-gray-100 dark:border-cosmic-800"
                                                         >
                                                             <header
                                                                 x-text="lang.datetime[dayPart]"
                                                                 class="h-6 text-sm text-gray-300 dark:text-cosmic-500"
                                                             ></header>
                                                             <div
-                                                                class="flex w-full flex-col gap-4 bg-white dark:bg-cosmic-900"
+                                                                class="flex flex-col w-full gap-4 bg-white dark:bg-cosmic-900"
                                                             >
                                                                 <div
                                                                     class="flex justify-between gap-2.5 pt-4"
@@ -2514,7 +2514,7 @@
                                                                                 class="flex items-end gap-1 text-base font-semibold leading-5"
                                                                             >
                                                                                 <img
-                                                                                    class="h-5 w-5"
+                                                                                    class="w-5 h-5"
                                                                                     src="img/assets/icons/feels-like.svg"
                                                                                     alt=""
                                                                                 />
@@ -2543,7 +2543,7 @@
                                                                         class="flex items-center gap-1.5"
                                                                     >
                                                                         <img
-                                                                            class="h-4 w-4"
+                                                                            class="w-4 h-4"
                                                                             :style="`rotate: ${-detailedDay.weatherData.hours[index].winddir}deg`"
                                                                             src="img/assets/icons/clarity_compass-line.svg"
                                                                             alt=""
@@ -2557,7 +2557,7 @@
                                                                         class="flex items-center gap-1.5"
                                                                     >
                                                                         <img
-                                                                            class="h-4 w-4"
+                                                                            class="w-4 h-4"
                                                                             src="img/assets/icons/wi_barometer.svg"
                                                                             alt=""
                                                                         />
@@ -2570,7 +2570,7 @@
                                                                         class="flex items-center gap-1.5"
                                                                     >
                                                                         <img
-                                                                            class="h-4 w-4"
+                                                                            class="w-4 h-4"
                                                                             src="img/assets/icons/ion_water-outline.svg"
                                                                             alt=""
                                                                         />
@@ -2586,7 +2586,7 @@
                                                                 class="flex items-center gap-1.5 pt-4"
                                                             >
                                                                 <img
-                                                                    class="h-4 w-4"
+                                                                    class="w-4 h-4"
                                                                     src="img/assets/icons/wind.svg"
                                                                     alt=""
                                                                 />
@@ -2600,7 +2600,7 @@
                                                                 class="flex items-center gap-1.5 pt-4"
                                                             >
                                                                 <img
-                                                                    class="h-4 w-4"
+                                                                    class="w-4 h-4"
                                                                     src="img/assets/icons/rain-percent.svg"
                                                                     alt=""
                                                                 />
@@ -2618,7 +2618,7 @@
                                                                 class="flex items-end gap-1.5 pt-4"
                                                             >
                                                                 <img
-                                                                    class="h-4 w-4"
+                                                                    class="w-4 h-4"
                                                                     :src="`img/assets/icons/uvindexSun/uv${uvindex}.svg`"
                                                                     alt=""
                                                                 />
@@ -2640,7 +2640,7 @@
                                                                     class="row-span-2 mr-1.5 self-center"
                                                                 >
                                                                     <img
-                                                                        class="h-6 w-6"
+                                                                        class="w-6 h-6"
                                                                         :src="`img/assets/icons/sunrise2.svg`"
                                                                         alt=""
                                                                     />
@@ -2661,7 +2661,7 @@
                                                                     class="row-span-2 mr-1.5 self-center"
                                                                 >
                                                                     <img
-                                                                        class="h-6 w-6"
+                                                                        class="w-6 h-6"
                                                                         :src="`img/assets/icons/sunset2.svg`"
                                                                         alt=""
                                                                     />
@@ -2682,7 +2682,7 @@
                                                                     class="row-span-2 mr-1.5 self-center"
                                                                 >
                                                                     <img
-                                                                        class="h-6 w-6"
+                                                                        class="w-6 h-6"
                                                                         :src="`img/assets/icons/clear-day2.svg`"
                                                                         alt=""
                                                                     />
@@ -2703,7 +2703,7 @@
                                                                     class="row-span-2 mr-1.5 self-center"
                                                                 >
                                                                     <img
-                                                                        class="h-6 w-6"
+                                                                        class="w-6 h-6"
                                                                         :src="moonPhaseIconsPath + moonPhaseIcons[moonphaseConverter(detailedDay.weatherData.moonphase)]"
                                                                         alt=""
                                                                     />
@@ -2728,12 +2728,12 @@
                                         </template>
                                     </ul>
                                     <!-- <div
-                                            class="sticky bottom-0 left-0 h-20 w-full bg-gradient-to-t from-gray-100 to-transparent dark:from-cosmic-900"
+                                            class="sticky bottom-0 left-0 w-full h-20 bg-gradient-to-t from-gray-100 to-transparent dark:from-cosmic-900"
                                         ></div> -->
                                 </div>
                                 <div
                                     id="main-backdrop"
-                                    class="transition-500 fixed top-0 left-0 z-50 h-screen w-full bg-primary-backdrop/30 dark:bg-primary-backdrop/50"
+                                    class="fixed top-0 left-0 z-50 w-full h-screen transition-500 bg-primary-backdrop/30 dark:bg-primary-backdrop/50"
                                     x-show="legend"
                                     x-transition:enter-start="opacity-0"
                                     x-transition:leave-end="opacity-0"
@@ -2749,12 +2749,12 @@
                                 >
                                     <header
                                         x-text="lang.modal.legend.header"
-                                        class="mb-4 text-left text-lg font-bold leading-5"
+                                        class="mb-4 text-lg font-bold leading-5 text-left"
                                     ></header>
                                     <ol class="flex flex-col gap-4">
                                         <li class="flex gap-2">
                                             <img
-                                                class="h-5 w-5"
+                                                class="w-5 h-5"
                                                 src="img/assets/icons/feels-like.svg"
                                             />
                                             <div
@@ -2764,7 +2764,7 @@
                                         </li>
                                         <li class="flex gap-2">
                                             <img
-                                                class="h-5 w-5"
+                                                class="w-5 h-5"
                                                 src="img/assets/icons/clarity_compass-line.svg"
                                             />
                                             <div
@@ -2774,7 +2774,7 @@
                                         </li>
                                         <li class="flex gap-2">
                                             <img
-                                                class="h-5 w-5"
+                                                class="w-5 h-5"
                                                 src="img/assets/icons/wi_barometer.svg"
                                             />
                                             <div
@@ -2784,7 +2784,7 @@
                                         </li>
                                         <li class="flex gap-2">
                                             <img
-                                                class="h-5 w-5"
+                                                class="w-5 h-5"
                                                 src="img/assets/icons/ion_water-outline.svg"
                                             />
                                             <div
@@ -2817,9 +2817,9 @@
                             class="transition-all-500 sm-pb-10 absolute top-0 left-0 z-[10000] h-full w-full overflow-y-scroll bg-gray-100 pb-4 text-cosmic-900 dark:bg-cosmic-900 dark:text-white sm:mt-10"
                         >
                             <header
-                                class="transition-500 sticky top-0 z-50 flex flex-col gap-4 bg-gray-100 pt-3 pb-2 duration-1000 dark:bg-cosmic-900"
+                                class="sticky top-0 z-50 flex flex-col gap-4 pt-3 pb-2 duration-1000 bg-gray-100 transition-500 dark:bg-cosmic-900"
                             >
-                                <div class="flex w-full items-center px-4">
+                                <div class="flex items-center w-full px-4">
                                     <button
                                         type="button"
                                         @click="transitionOut()"
@@ -2841,12 +2841,12 @@
                                     </button>
                                     <div
                                         x-text="lang.slides.headers.monthlyForecast"
-                                        class="transition-all-500 shrink-0 grow text-center text-base font-semibold leading-5"
+                                        class="text-base font-semibold leading-5 text-center transition-all-500 shrink-0 grow"
                                     ></div>
-                                    <div class="h-6 w-6"></div>
+                                    <div class="w-6 h-6"></div>
                                 </div>
                             </header>
-                            <ul class="daily mx-4 grid grid-flow-row">
+                            <ul class="grid grid-flow-row mx-4 daily">
                                 <template
                                     x-for="(day, id) in monthlyForecast.weatherData.days"
                                     x-init="tempRange = minMax(monthlyForecast.weatherData.days, monthlyForecast.weatherData.days.length)"
@@ -2878,7 +2878,7 @@
                                             ></div>
                                         </div>
                                         <div
-                                            class="flex w-28 shrink-0 flex-col justify-center gap-1"
+                                            class="flex flex-col justify-center gap-1 w-28 shrink-0"
                                         >
                                             <div
                                                 x-text="id === 0 
@@ -2893,9 +2893,9 @@
                                                 class="text-xs font-medium leading-[14px] text-gray-300 dark:text-cosmic-500"
                                             ></div>
                                         </div>
-                                        <div class="my-4 w-full">
+                                        <div class="w-full my-4">
                                             <div
-                                                class="mx-auto flex justify-between pb-2 leading-5"
+                                                class="flex justify-between pb-2 mx-auto leading-5"
                                             >
                                                 <div
                                                     x-text="day.tempmin + '°'"
@@ -2925,7 +2925,7 @@
                                 </template>
                             </ul>
                             <!-- <div
-                                    class="sticky bottom-0 left-0 h-20 w-full bg-gradient-to-t from-gray-100 to-transparent dark:from-cosmic-900"
+                                    class="sticky bottom-0 left-0 w-full h-20 bg-gradient-to-t from-gray-100 to-transparent dark:from-cosmic-900"
                                 ></div> -->
                         </div>
                     </template>
@@ -2980,20 +2980,20 @@
                                     x-transition:enter-start="opacity-0"
                                     x-transition:leave-end="opacity-0"
                                     x-data="slide"
-                                    class="splide__slide transition-500 w-full"
+                                    class="w-full splide__slide transition-500"
                                 >
                                     <section
-                                        class="h-screen overflow-y-scroll bg-gray-100 pb-20 dark:bg-cosmic-900"
+                                        class="h-screen pb-20 overflow-y-scroll bg-gray-100 dark:bg-cosmic-900"
                                         :class="{'pb-40': displayMode !== 'standalone'}"
                                     >
                                         <!-- * HEADER * -->
                                         <header
-                                            class="transition-opacity-500 sticky top-0 z-50 flex gap-1 bg-gray-100 px-6 py-4 dark:bg-cosmic-900"
+                                            class="sticky top-0 z-50 flex gap-1 px-6 py-4 bg-gray-100 transition-opacity-500 dark:bg-cosmic-900"
                                         >
                                             <div class="w-1/5"></div>
                                             <label
                                                 x-text="slide.location.name"
-                                                class="w-4/5 truncate text-center text-lg font-bold leading-5"
+                                                class="w-4/5 text-lg font-bold leading-5 text-center truncate"
                                             ></label>
 
                                             <div class="w-1/5"></div>
@@ -3001,14 +3001,14 @@
                                         <!-- * MAIN INFO * -->
                                         <section
                                             id="general-weather-info"
-                                            class="mx-auto px-4 dark:bg-cosmic-900"
+                                            class="px-4 mx-auto dark:bg-cosmic-900"
                                         >
                                             <div
                                                 class="transition-all-500 flex w-full flex-col rounded-2xl bg-white p-5 dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645]"
                                             >
                                                 <!-- * GENERAL * -->
                                                 <div
-                                                    class="transition-all-500 flex flex-row justify-between"
+                                                    class="flex flex-row justify-between transition-all-500"
                                                     @click="details = !details"
                                                 >
                                                     <div
@@ -3019,7 +3019,7 @@
                                                                 moment().locale(language).utcOffset(slide.weatherData.timezone).format(', D MMMM, HH:mm')"
                                                             x-timeout:10000="$el.innerText=capitalize(moment().locale(language).utcOffset(slide.weatherData.timezone).format('ddd')) + 
                                                                 moment().locale(language).utcOffset(slide.weatherData.timezone).format(', D MMMM, HH:mm')"
-                                                            class="current-day transition-all-500 text-xs font-light text-gray-300 dark:text-cosmic-500"
+                                                            class="text-xs font-light text-gray-300 current-day transition-all-500 dark:text-cosmic-500"
                                                         ></div>
                                                         <div
                                                             class="temperature relative flex align-text-top text-6xl font-semibold leading-[60px]"
@@ -3046,7 +3046,7 @@
                                                                 class="windgust"
                                                             ></div>
                                                             <div
-                                                                class="feelslike flex items-baseline gap-1"
+                                                                class="flex items-baseline gap-1 feelslike"
                                                             >
                                                                 <div
                                                                     x-text="lang.weather.feelslike"
@@ -3066,7 +3066,7 @@
                                                         class="weather-icon"
                                                     >
                                                         <img
-                                                            class="h-32 w-32 shrink-0"
+                                                            class="w-32 h-32 shrink-0"
                                                             :src="weatherIconsPath + theme + '/' + weatherIcons[checkIcon(slide.weatherData.currentConditions.icon, slide.weatherData.currentConditions.sunrise, slide.weatherData.currentConditions.sunset, Number(moment().locale(language).utcOffset(slide.weatherData.timezone).format('HH')))]"
                                                             alt=""
                                                         />
@@ -3074,7 +3074,7 @@
                                                 </div>
                                                 <!-- * DETAILS * -->
                                                 <div
-                                                    class="transition-all-500 -mx-4 overflow-hidden font-semibold"
+                                                    class="-mx-4 overflow-hidden font-semibold transition-all-500"
                                                     :class="details ?' h-[232px] opacity-100' : 'h-[0px] opacity-0'"
                                                 >
                                                     <div
@@ -3082,19 +3082,19 @@
                                                         class="relative grid h-[120px] w-full grid-cols-3 items-end justify-around"
                                                     >
                                                         <div
-                                                            class="detail-item transition-300 absolute flex h-full w-full -translate-x-1 -translate-y-5 justify-center overflow-hidden"
+                                                            class="absolute flex justify-center w-full h-full overflow-hidden -translate-x-1 -translate-y-5 detail-item transition-300"
                                                         >
                                                             <div
                                                                 class="absolute bottom-1 h-[75px] w-[150px]"
                                                             >
                                                                 <div
-                                                                    class="h-full w-full rounded-t-full border border-b-0 border-solid"
+                                                                    class="w-full h-full border border-b-0 border-solid rounded-t-full"
                                                                     :class="slide.weatherData.currentConditions.sunposition ? 'border-dashed border-gray-300 dark:border-cosmic-400' : 'border-solid border-violetDark'"
                                                                 ></div>
                                                                 <!-- ? SKY -->
                                                                 <div
                                                                     :style="slide.weatherData.currentConditions.sunposition ? `rotate: ${slide.weatherData.currentConditions.sunposition}deg` : 'display: none'"
-                                                                    class="sky absolute top-0 h-full w-full origin-bottom rounded-t-full border border-b-0 border-solid border-gray-300 bg-gradient-to-b from-[#BEBEBE] dark:border-cosmic-300 dark:from-[#0F3C5C]"
+                                                                    class="sky absolute top-0 h-full w-full origin-bottom rounded-t-full border border-b-0 border-solid border-gray-300 bg-gradient-to-b from-[#BEBEBE]/30 dark:border-cosmic-300 dark:from-[#0F3C5C]"
                                                                 ></div>
                                                                 <div
                                                                     class="absolute hidden h-[75px] w-[150px] rounded-b-full bg-white from-[#192848] to-[#182847] dark:bg-gradient-to-r"
@@ -3110,7 +3110,7 @@
                                                                 <!-- ! SUN -->
                                                                 <div
                                                                     :style="slide.weatherData.currentConditions.sunposition ? `rotate: ${slide.weatherData.currentConditions.sunposition}deg` : 'display: none'"
-                                                                    class="sun absolute left-1/2 w-1/2 origin-left"
+                                                                    class="absolute w-1/2 origin-left sun left-1/2"
                                                                 >
                                                                     <div
                                                                         class="absolute -bottom-[4px] -right-[4px] h-[7.5px] w-[7.5px] rounded-full bg-yellow outline outline-[5px] outline-offset-0 outline-white dark:outline-cosmic-800"
@@ -3145,7 +3145,7 @@
                                                             ></div>
                                                             <div
                                                                 x-text="slide.weatherData.currentConditions.sunrise"
-                                                                class="sunrise font-semibold"
+                                                                class="font-semibold sunrise"
                                                             ></div>
                                                         </div>
                                                         <div
@@ -3157,7 +3157,7 @@
                                                             ></div>
                                                             <div
                                                                 x-text="slide.weatherData.currentConditions.daylight"
-                                                                class="daylight font-semibold"
+                                                                class="font-semibold daylight"
                                                             ></div>
                                                         </div>
                                                         <div
@@ -3169,7 +3169,7 @@
                                                             ></div>
                                                             <div
                                                                 x-text="slide.weatherData.currentConditions.sunset"
-                                                                class="sunset font-semibold"
+                                                                class="font-semibold sunset"
                                                             ></div>
                                                         </div>
                                                     </div>
@@ -3178,7 +3178,7 @@
                                                         class="relative grid grid-cols-3"
                                                     >
                                                         <div
-                                                            class="detail-item transition-300 flex flex-col gap-5 text-center"
+                                                            class="flex flex-col gap-5 text-center detail-item transition-300"
                                                         >
                                                             <div
                                                                 class="flex flex-col items-center gap-1.5 leading-[18px]"
@@ -3249,7 +3249,7 @@
                                                             </div>
                                                         </div>
                                                         <div
-                                                            class="detail-item transition-300 flex flex-col gap-5 text-center"
+                                                            class="flex flex-col gap-5 text-center detail-item transition-300"
                                                         >
                                                             <div
                                                                 class="flex flex-col items-center gap-1.5 leading-[18px]"
@@ -3293,7 +3293,7 @@
                                                             </div>
                                                         </div>
                                                         <div
-                                                            class="detail-item transition-300 flex flex-col gap-5 text-center"
+                                                            class="flex flex-col gap-5 text-center detail-item transition-300"
                                                         >
                                                             <div
                                                                 class="flex flex-col items-center gap-1.5 leading-[18px]"
@@ -3367,7 +3367,7 @@
                                                     <!-- Date -->
                                                     <div
                                                         x-text="moment().add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH') === '00' ? moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('D MMMM') : ''"
-                                                        class="no-drag date truncate pb-1 text-xs font-light text-gray-300 dark:text-cosmic-500"
+                                                        class="pb-1 text-xs font-light text-gray-300 truncate no-drag date dark:text-cosmic-500"
                                                     ></div>
                                                     <div
                                                         class="no-drag icon relative flex h-12 w-12 items-center justify-center rounded-xl bg-white dark:bg-cosmic-900 dark:bg-gradient-to-br dark:from-[#192D52] dark:to-[#112645]"
@@ -3387,7 +3387,7 @@
                                                     </div>
                                                     <div
                                                         x-text="moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))]) ? lang.datetime.now : moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH:00')"
-                                                        class="no-drag time pt-3 text-xs font-light text-gray-300 dark:text-cosmic-500"
+                                                        class="pt-3 text-xs font-light text-gray-300 no-drag time dark:text-cosmic-500"
                                                     ></div>
                                                     <div
                                                         x-text="i === 0 ? slide.weatherData.currentConditions.temp : slide.weatherData.days[moment().isSame(moment().add(i, 'h').utcOffset(slide.weatherData.timezone), 'day') ? 0 : 1].hours[Number(moment().locale(language).add(i, 'h').utcOffset(slide.weatherData.timezone).format('HH'))].temp + '°'"
@@ -3398,7 +3398,7 @@
                                         </ul>
                                         <!-- * DAILY * -->
                                         <ul
-                                            class="daily mx-4 grid grid-flow-row py-6"
+                                            class="grid grid-flow-row py-6 mx-4 daily"
                                         >
                                             <template
                                                 x-for="(day, id) in slide.weatherData.days.slice(0, 10)"
@@ -3442,7 +3442,7 @@
                                                         ></div>
                                                     </div>
                                                     <div
-                                                        class="flex w-28 shrink-0 flex-col justify-center gap-1"
+                                                        class="flex flex-col justify-center gap-1 w-28 shrink-0"
                                                     >
                                                         <div
                                                             x-text="id === 0 
@@ -3457,9 +3457,9 @@
                                                             class="text-xs font-medium leading-[14px] text-gray-300 dark:text-cosmic-500"
                                                         ></div>
                                                     </div>
-                                                    <div class="my-4 w-full">
+                                                    <div class="w-full my-4">
                                                         <div
-                                                            class="mx-auto flex justify-between pb-2 leading-5"
+                                                            class="flex justify-between pb-2 mx-auto leading-5"
                                                         >
                                                             <div
                                                                 x-text="day.tempmin + '°'"
@@ -3491,7 +3491,7 @@
                                         </ul>
                                         <!-- ! 10-day forecast & Monthly Forecast Btns -->
                                         <section
-                                            class="mx-4 flex flex-col border-t border-gray-200/30 pt-4 dark:border-cosmic-800"
+                                            class="flex flex-col pt-4 mx-4 border-t border-gray-200/30 dark:border-cosmic-800"
                                         >
                                             <div
                                                 @click="$dispatch('addpopup2', slide); setTimeout(() => {$dispatch('detaileddaysadd', { dayid : 0, days: slide.weatherData.days.slice(0,10) })}, 150);"
@@ -3508,10 +3508,10 @@
                                                 </div>
                                                 <div
                                                     x-text="lang.slides.headers.tenDaysForecast"
-                                                    class="grow pl-5 text-base font-medium leading-5"
+                                                    class="pl-5 text-base font-medium leading-5 grow"
                                                 ></div>
                                                 <svg
-                                                    class="detail-weather-toggle--img -rotate-90 fill-gray-300 dark:fill-cosmic-500"
+                                                    class="-rotate-90 detail-weather-toggle--img fill-gray-300 dark:fill-cosmic-500"
                                                     width="16"
                                                     height="17"
                                                     viewBox="0 0 16 17"
@@ -3538,10 +3538,10 @@
                                                 </div>
                                                 <div
                                                     x-text="lang.slides.headers.monthlyForecast"
-                                                    class="grow pl-5 text-base font-medium leading-5"
+                                                    class="pl-5 text-base font-medium leading-5 grow"
                                                 ></div>
                                                 <svg
-                                                    class="detail-weather-toggle--img -rotate-90 fill-gray-300 dark:fill-cosmic-500"
+                                                    class="-rotate-90 detail-weather-toggle--img fill-gray-300 dark:fill-cosmic-500"
                                                     width="16"
                                                     height="17"
                                                     viewBox="0 0 16 17"
@@ -3577,7 +3577,7 @@
                             x-transition:leave-end="-translate-y-48 h-[0px] my-0 p-0 opacity-0"
                             class="toast--wrapper transition-all-500 my-1 flex items-center rounded-xl bg-[#424F69] p-4 text-white ease-[cubic-bezier(0.29,1.4,0.4,0.96)]"
                         >
-                            <div class="icon h-5 w-5 shrink-0">
+                            <div class="w-5 h-5 icon shrink-0">
                                 <svg
                                     x-show="toast.type === 'success'"
                                     width="20"
@@ -3690,7 +3690,7 @@
                             </div>
                             <div
                                 x-html="toast.content"
-                                class="toast--text grow pl-4 text-sm font-medium leading-4"
+                                class="pl-4 text-sm font-medium leading-4 toast--text grow"
                             ></div>
                             <button
                                 x-show="toast.type !== 'warning'"
@@ -3727,22 +3727,22 @@
                     class="fixed top-1/3 left-1/2 z-[10060] h-14 w-16 -translate-x-1/2 -translate-y-1/2 duration-500 ease-[cubic-bezier(.18,.89,.32,1)]"
                 >
                     <img
-                        class="absolute h-16 w-16 -translate-x-2 -translate-y-4 animate-fly"
+                        class="absolute w-16 h-16 -translate-x-2 -translate-y-4 animate-fly"
                         src="img/assets/icons/dark_cloud.svg"
                         alt=""
                     />
                     <img
-                        class="absolute h-16 w-16 animate-spin-slow"
+                        class="absolute w-16 h-16 animate-spin-slow"
                         src="img/assets/icons/clear-day_sun.svg"
                         alt=""
                     />
                     <img
-                        class="absolute h-16 w-16 animate-wiggle-6"
+                        class="absolute w-16 h-16 animate-wiggle-6"
                         src="img/assets/icons/face_sun.svg"
                         alt=""
                     />
                     <img
-                        class="absolute h-16 w-16 translate-x-6 translate-y-2 scale-90 animate-fly-reverse"
+                        class="absolute w-16 h-16 scale-90 translate-x-6 translate-y-2 animate-fly-reverse"
                         src="img/assets/icons/cyan_cloud.svg"
                         alt=""
                     />
@@ -3755,23 +3755,23 @@
                 class="hidden lg:absolute lg:left-[calc(40%_+_200px)] lg:top-1/4 lg:flex lg:-translate-y-1/4 lg:flex-col"
             >
                 <div
-                    class="h-32 w-32"
+                    class="w-32 h-32"
                     x-intersect:enter="$el.firstElementChild.src = $el.firstElementChild.dataset.src;"
                 >
                     <img
-                        class="transition-all-500 h-32 w-32 rounded-lg"
+                        class="w-32 h-32 rounded-lg transition-all-500"
                         data-src="img/assets/qr-code.svg"
                         alt=""
                     />
                 </div>
-                <header class="pb-4 pt-8 text-7xl font-black">Weather</header>
+                <header class="pt-8 pb-4 font-black text-7xl">Weather</header>
                 <h1 class="text-3xl font-medium">
                     Weather Forecast App by FairyBrains
                 </h1>
-                <div class="mt-16 pb-8 text-6xl font-semibold">
+                <div class="pb-8 mt-16 text-6xl font-semibold">
                     Light and dark colour theme
                 </div>
-                <div class="w-96 text-xl">
+                <div class="text-xl w-96">
                     Current, hourly and next 10 and 30 days forecast. Search,
                     add and edit your favourite locations. Customize units.
                 </div>
@@ -3781,7 +3781,7 @@
             x-cloak
             x-show="orientation === 'landscape'"
             x-transition:enter-start="opacity-0"
-            class="transition-opacity-500 fixed top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-4"
+            class="fixed flex flex-col items-center gap-4 -translate-x-1/2 -translate-y-1/2 transition-opacity-500 top-1/2 left-1/2"
         >
             <svg
                 :style="{
