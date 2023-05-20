@@ -1,0 +1,28 @@
+<svg aria-hidden="true" style="position:absolute;width:0;height:0" width="24" height="24" xmlns="http://www.w3.org/2000/svg" overflow="hidden">
+  <defs>
+    <symbol id="waxinggibbous" viewBox="0 0 24 24">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10c-4.021 0-6.767-5.285-6.767-10S7.98 2 12 2Z" fill="#D580FF" />
+    </symbol>
+    <symbol id="waninggibbous" viewBox="0 0 24 24">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10c4.021 0 6.767-5.285 6.767-10S16.02 2 12 2Z" fill="#D580FF" />
+    </symbol>
+    <symbol id="waxingcrescent" viewBox="0 0 24 24">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M12.854 21.96c-.314.029-.416-.391-.146-.555A10.994 10.994 0 0 0 18 12c0-3.985-2.12-7.475-5.292-9.405-.27-.164-.168-.584.146-.556C17.894 2.49 22 6.82 22 12c0 5.182-4.105 9.51-9.146 9.96Z" fill="#D580FF" />
+    </symbol>
+    <symbol id="waningcrescent" viewBox="0 0 24 24">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M11.146 21.96c.314.029.416-.391.146-.555A10.994 10.994 0 0 1 6 12c0-3.985 2.12-7.475 5.292-9.405.27-.164.168-.584-.146-.556C6.106 2.49 2 6.82 2 12c0 5.182 4.105 9.51 9.146 9.96Z" fill="#D580FF" />
+    </symbol>
+    <symbol id="lastquarter" viewBox="0 0 24 24">
+      <path d="M12 20.85c0 .105 0 .158-.008.22-.058.46-.518.869-.98.874-.064.001-.096-.003-.16-.01a10 10 0 0 1 0-19.868c.064-.007.096-.011.16-.01.462.005.922.415.98.874.008.062.008.115.008.22v17.7Z" fill="#D580FF" />
+    </symbol>
+    <symbol id="new" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9.25" stroke="#D580FF" stroke-width="1.5" />
+    </symbol>
+    <symbol id="firstquarter" viewBox="0 0 24 24">
+      <path d="M12 20.85c0 .105 0 .158.008.22.058.46.518.869.98.874.064.001.096-.003.16-.01a10 10 0 0 0 0-19.868 1.054 1.054 0 0 0-.16-.01c-.462.005-.922.415-.98.874-.008.062-.008.115-.008.22v17.7Z" fill="#D580FF" />
+    </symbol>
+    <symbol id="fullmoon" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" fill="#D580FF" />
+    </symbol>
+  </defs>
+</svg>

@@ -3,59 +3,27 @@
 let splide, splide2, updateInterval, lazyLoadInstance;
 document.body.style.webkitTouchCallout = 'none';
 const active_slide = localStorage.getItem('activeSlide') || 0;
-const moonPhaseIconsPath = 'img/assets/icons/moonPhases/';
-const weatherIconsPath = 'img/assets/icons/weather-conditions/';
-const weatherIconsSmallPath = 'img/assets/icons/weather-conditions/small/';
 const locationCardsContainer = document.querySelector(
     '#location-cards--container'
 );
-const moonPhaseIcons = {
-    new: 'new.svg',
-    waxingcrescent: 'waxingcrescent.svg',
-    firstquarter: 'firstquarter.svg',
-    waxinggibbous: 'waxinggibbous.svg',
-    fullmoon: 'fullmoon.svg',
-    waninggibbous: 'waninggibbous.svg',
-    lastquarter: 'lastquarter.svg',
-    waningcrescent: 'waningcrescent.svg',
-};
 
-const weatherIcons = {
-    'clear-day': 'clear-day.svg',
-    'clear-night': 'clear-night.svg',
-    'cloudy': 'cloudy.svg',
-    'cloudy-night': 'cloudy-night.svg',
-    'wind': 'wind.svg',
-    'wind-night': 'wind-night.svg',
-    'fog': 'fog.svg',
-    'fog-night': 'fog-night.svg',
-    'hail': 'hail.svg',
-    'hail-night': 'hail-night.svg',
-    'partly-cloudy-day': 'partly-cloudy-day.svg',
-    'partly-cloudy-night': 'partly-cloudy-night.svg',
-    'rain': 'rain.svg',
-    'rain-night': 'rain-night.svg',
-    'rain-snow': 'rain-snow.svg',
-    'rain-snow-night': 'rain-snow-night.svg',
-    'rain-snow-showers-day': 'rain-snow-showers-day.svg',
-    'rain-snow-showers-night': 'rain-snow-showers-night.svg',
-    'showers-day': 'showers-day.svg',
-    'showers-night': 'showers-night.svg',
-    'sleet': 'sleet.svg',
-    'sleet-night': 'sleet-night.svg',
-    'snow': 'snow.svg',
-    'snow-night': 'snow-night.svg',
-    'snow-showers-day': 'snow-showers-day.svg',
-    'snow-showers-night': 'snow-showers-night.svg',
-    'thunder': 'thunder.svg',
-    'thunder-night': 'thunder-night.svg',
-    'thunder-rain': 'thunder-rain.svg',
-    'thunder-rain-night': 'thunder-rain-night.svg',
-    'thunder-showers-day': 'thunder-showers-day.svg',
-    'thunder-showers-night': 'thunder-showers-night.svg',
+const svgCheck =
+    '<svg class="stroke-primary-light dark:stroke-primary-dark" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.66675 8L6.66675 12L13.3334 4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>';
+const svgClearText =
+    '<svg class="stroke-gray-300 dark:stroke-cosmic-500 stroke-1.5" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <circle cx="10" cy="10" r="9.25" /><path d="M7 13L10 10M10 10L13 7M10 10L7 7M10 10L13 13" stroke-linecap="round" stroke-linejoin="round" /></svg>';
+
+const loadWeatherIcons = async () => {
+    const res = await fetch('img/assets/weatherIcons-small.svg');
+    const res2 = await fetch('img/assets/weatherIcons.svg');
+    const img = await res.text();
+    const img2 = await res2.text();
+    const div = document.createElement('div');
+    div.innerHTML = img + img2;
+    document.body.appendChild(div);
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+    loadWeatherIcons();
     themeInit();
     requestUserCountry();
 
@@ -100,13 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.activeSlide = id;
     });
 });
-
-const svgCheck =
-    '<svg class="stroke-primary-light dark:stroke-primary-dark" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.66675 8L6.66675 12L13.3334 4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>';
-const svgSystemTheme =
-    '<svg class="fill-cosmic-900 dark:fill-white" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 5.375C6 4.74511 6.25022 4.14102 6.69562 3.69562C7.14102 3.25022 7.74511 3 8.375 3H15.5C16.1299 3 16.734 3.25022 17.1794 3.69562C17.6248 4.14102 17.875 4.74511 17.875 5.375V19.625C17.875 20.2549 17.6248 20.859 17.1794 21.3044C16.734 21.7498 16.1299 22 15.5 22H8.375C7.74511 22 7.14102 21.7498 6.69562 21.3044C6.25022 20.859 6 20.2549 6 19.625V5.375ZM13.125 18.4375C13.125 18.1226 12.9999 17.8205 12.7772 17.5978C12.5545 17.3751 12.2524 17.25 11.9375 17.25C11.6226 17.25 11.3205 17.3751 11.0978 17.5978C10.8751 17.8205 10.75 18.1226 10.75 18.4375C10.75 18.7524 10.8751 19.0545 11.0978 19.2772C11.3205 19.4999 11.6226 19.625 11.9375 19.625C12.2524 19.625 12.5545 19.4999 12.7772 19.2772C12.9999 19.0545 13.125 18.7524 13.125 18.4375Z" /></svg>';
-const svgClearText =
-    '<svg class="stroke-gray-300 dark:stroke-cosmic-500 stroke-1.5" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <circle cx="10" cy="10" r="9.25" /><path d="M7 13L10 10M10 10L13 7M10 10L7 7M10 10L13 13" stroke-linecap="round" stroke-linejoin="round" /></svg>';
 
 const checkDarkMode = () => document.documentElement.classList.contains('dark');
 
