@@ -7,7 +7,7 @@ Branch: " $(git branch --show-current)
 echo "Commit: " $(git show -s --oneline)
 
 npx tailwindcss -i ./src/css/input.css -o ./public/css/style.css
-workbox generateSW workbox-config.js
+npx workbox-cli generateSW workbox-config.js
 
 # echo "The following node processes were found:"
 # ps aux | grep " node " | grep -v grep
